@@ -80,6 +80,12 @@ function ValidationResponse (tipo, longitud) {
     return resp;
 };
 
+valid.equal = function (first, second) {
+    let tipo = first !== second ? true : false;
+    let resp = new ValidationResponse(tipo, true);
+    return resp;
+};
+
 valid.form = function(form) {
     var ok = false;
     var controls = form.elements;

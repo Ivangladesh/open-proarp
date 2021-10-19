@@ -19,6 +19,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     function registrarUsuario() {
+        let password = btoa(document.getElementById('txtRegistroPassword').value);
+        let passwordConfirm = btoa(document.getElementById('txtRegistroConfirmaPassword').value);
+        valid.equal(document.getElementById('txtRegistroPassword').value)
+        classList.remove('error');
         let nombre = document.getElementById('txtRegistroNombre').value;
         let paterno = document.getElementById('txtRegistroPaterno').value;
         let materno = document.getElementById('txtRegistroMaterno').value;

@@ -1,0 +1,195 @@
+:root {
+    --texto-base: #b6b6b6;
+    --texto-over: #ececec;
+    --color-base: #eeeeee;
+    --color-over: #e0e0e0;
+    --color-active: #db6a00;
+    --texto-alert: #e00000;
+    --color-alert: #2e2323;
+    --texto-over-alert: #e73939;
+    --color-over-alert: #351a1a;
+    --transicion: 600ms;
+  }
+
+/* Basic styling */
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+  nav {
+    background: #eeeeee;
+    padding: 5px 20px;
+  }
+  ul {
+    list-style-type: none;
+  }
+  a {
+    color: black;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .logo a:hover {
+    text-decoration: none;
+  }
+  .menu li {
+    font-size: 16px;
+    padding: 15px 5px;
+    white-space: nowrap;
+  }
+  .logo a,
+  .toggle a {
+    font-size: 20px;
+  }
+  .button.secondary {
+    border-bottom: 1px #444 solid;
+  }
+  /* Mobile menu */
+  .menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .toggle {
+    order: 1;
+  }
+  .item.button {
+    order: 2;
+  }
+  .item {
+    width: 100%;
+    text-align: center;
+    order: 3;
+    display: none;
+  }
+  .item.active {
+    display: block;
+  }
+  /* Tablet menu */
+  @media all and (min-width: 600px) {
+    .menu {
+      justify-content: center;
+    }
+    .logo {
+      flex: 1;
+    }
+    .toggle {
+      flex: 1;
+      text-align: right;
+    }
+    .item.button {
+      width: auto;
+      order: 1;
+      display: block;
+    }
+    .toggle {
+      order: 2;
+    }
+    .button.secondary {
+      border: 0;
+    }
+    .button a {
+      padding: 7.5px 15px;
+      background: #c0c0c0;
+      border: 1px #e0e0e0 solid;
+      background-color: #e6e6e6;
+      border: none;
+      color: black;
+      padding: 12px 30px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+      border-color: #414141;
+      cursor: pointer;
+    }
+    .button.secondary a {
+      background: transparent;
+    }
+    .button a:hover {
+      text-decoration: none;
+    }
+    .button:not(.secondary) a:hover {
+      background:  #b1b1b1;
+      border-color: #afafaf;
+    }
+    .button.secondary a:hover {
+      color: #ddd;
+    }
+  }
+  /* Desktop menu */
+  @media all and (min-width: 900px) {
+    .item {
+      display: block;
+      width: auto;
+    }
+    .toggle {
+      display: none;
+    }
+    .logo {
+      order: 0;
+    }
+    .item {
+      order: 1;
+    }
+    .button {
+      order: 2;
+    }
+    .menu li {
+      padding: 15px 10px;
+    }
+    .menu li.button {
+      padding-right: 0;
+    }
+  }
+
+  .animate-bottom {
+    position: relative;
+    -webkit-animation-name: animatebottom;
+    -webkit-animation-duration: 1s;
+    animation-name: animatebottom;
+    animation-duration: 1s
+  }
+  
+  @-webkit-keyframes animatebottom {
+    from { bottom:-100px; opacity:0 } 
+    to { bottom:0px; opacity:1 }
+  }
+  
+  @keyframes animatebottom { 
+    from{ bottom:-100px; opacity:0 } 
+    to{ bottom:0; opacity:1 }
+  }
+  
+  #div-registro-usuario, #div-inventario {
+    display: none;
+  }
+
+  .divlogin{
+    margin-top: 10%;
+    margin-left:25%;
+    margin-right:15%;
+    padding:1px 16px;
+    border: 2px solid rgb(88, 88, 88);
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 50%;
+  }
+  
+  .form {
+    padding: 5%,10%,10%,5%;
+  }
+  
+  input[type=text], input[type=email], input[type=password], input[type=date], select {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }

@@ -1,14 +1,23 @@
-DROP PROCEDURE `spRegistrarUsuario`;
-CREATE DEFINER=`id16866430_sa`@`%`
-PROCEDURE `spRegistrarUsuario`
-(IN `uNombreCompleto` VARCHAR(200) CHARSET utf8mb4,
-IN `uPassword` VARCHAR(200) CHARSET utf8mb4)
-NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER BEGIN
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `spRegistrarUsuario`(IN `uNombres` VARCHAR(100), IN `uPaterno` VARCHAR(100), IN `uMaterno` VARCHAR(100), IN `uTipoUsuario` INT, IN `uFechaNacimiento` DATE, IN `uEmail` VARCHAR(100), IN `uContrasena` VARCHAR(100))
+    COMMENT 'Registra usuarios de tipo cliente o empleado'
+BEGIN
      DECLARE UserID int(5) DEFAULT 0;
-         INSERT INTO `usuarios`(`Nombre_usuario`, `Tipo_usuario`, `Password`)
-            VALUES (uNombreCompleto,'C',uPassword);
+         INSERT INTO `usuario`(
+             `Nombres`,
+             `Paterno`,
+             `Materno`,
+             `TipoUsuario`,
+             `EstadoUsuario`,
+             `FechaNacimiento`,
+             `Email`)
+            VALUES (uNombres, uPaterno, uMaterno, uTipoUsuario, uFechaNacimiento, uEmail);
          SET UserID = LAST_INSERT_ID();
-         INSERT INTO `estado_sesion`(`ID_usuario`, `Estado`, `Cookie_sesion`)
-            VALUES (UserID,1,'');
-         SELECT UserID;
- END
+         INSERT INTO `sesionusuario`(
+             `UsuarioId`,
+             `Contrasena`,
+             `Sesion`)
+            VALUES (UserID, uContrasena, '');
+         SELECT uNombres, uPaterno, uMaterno;
+ END$$
+DELIMITER ;

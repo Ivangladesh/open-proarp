@@ -21,13 +21,14 @@
 
   function IniciarSesion () 
   { 
-    $username = $_POST['Username'];
-    $password = $_POST['Password'];
+    $email = $_POST['Email'];
+    $contrasena = $_POST['Contrasena'];
     $pdo = OpenCon();
-    $query = "SELECT Id, Username, Pass ,Activo FROM `sesionstorage` WHERE Username = ? AND Pass = ? ";
+    $procedure = "CALL spObtenerCredenciales('$email', '$contrasena')";
+    $query = "SELECT UsuarioId, Username, Pass ,Activo FROM `sesionstorage` WHERE Username = ? AND Pass = ? ";
     try {
-      $statement=$pdo->prepare($query);
-      $statement->execute([$username, $password]);
+      $statement=$pdo->prepare($procedure);
+      $statement->execute();
       if($statement->rowCount() > 0){
         $user = $statement->fetch();
         GenerarToken($user);
@@ -44,11 +45,11 @@
   }
   function GenerarToken ($r){
     $pdo = OpenCon();
-    $id = $r['Id'];
-    $username = $r['Username'];
+    $id = $r['UsuarioId'];
+    $username = $r['Email'];
     $hoy = date("m.d.y H:i:s");
-    $token = $username.'|'.base64_encode($r['Id'] . $username . $r['Pass'] . $hoy);
-    $insert = "UPDATE sesionstorage SET  CookieSession = '$token' WHERE Id = $id";
+    $token = $id.'|'.base64_encode($r['Id'] . $username . $hoy);
+    $insert = "CALL spActualizarToken('$token', '$id')";
     try {
         $statement=$pdo->prepare($insert);
         $statement->execute();
@@ -69,7 +70,7 @@
 
   function EnviarToken ($id){
     $pdo = OpenCon();
-    $select = "SELECT CookieSession FROM `sesionstorage` WHERE Id = $id";
+    $select = "CALL spObtenerToken('$id')";
     try {
         $statement=$pdo->prepare($select);
         $statement->execute();
@@ -91,7 +92,7 @@
   function ValidarSesion (){
     $token = $_POST['Token'];
     $pdo = OpenCon();
-    $select = "SELECT NombreCompleto, CookieSession FROM `sesionstorage` WHERE CookieSession = '$token'";
+    $select = "CALL spValidarSesion('$token')";
     try {
         $statement=$pdo->prepare($select);
         $statement->execute();
@@ -112,16 +113,18 @@
   }
 
   function RegistrarUsuario(){
-    $reCaptchaToken = $_POST['ReCaptchaToken'];
-    $cu = curl_init();
-    curl_setopt($cu, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-    curl_setopt($cu, CURLOPT_POST, 1);
-    curl_setopt($cu, CURLOPT_POSTFIELDS, http_build_query(array('secret' => CaptchaPrivateKey, 'response' => $reCaptchaToken)));
-    curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
-    $response = curl_exec($cu);
-    curl_close($cu);
-    $jsonResponse = json_decode($response,true);
-    if($jsonResponse['success'] == 1 && $jsonResponse['score'] >= 0.5){
+    // Habilitar cuando se habilite el reCaptcha
+
+    // $reCaptchaToken = $_POST['ReCaptchaToken'];
+    // $cu = curl_init();
+    // curl_setopt($cu, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
+    // curl_setopt($cu, CURLOPT_POST, 1);
+    // curl_setopt($cu, CURLOPT_POSTFIELDS, http_build_query(array('secret' => CaptchaPrivateKey, 'response' => $reCaptchaToken)));
+    // curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
+    // $response = curl_exec($cu);
+    // curl_close($cu);
+    // $jsonResponse = json_decode($response,true);
+    // if($jsonResponse['success'] == 1 && $jsonResponse['score'] >= 0.5){
       $pdo = OpenCon();
       $caracteres = "(#|$|-|_|&|%)";
       $nombre = $_POST['Nombre'];
@@ -169,14 +172,14 @@
               die();
           }
       }
-  } else{
-    $jsondata = array(
-    'status' => 200,
-    'data' => null,
-    'captcha' => 'Eres un robot'
-  );
-    echo json_encode($response);
-}
+  // } else{
+  //   $jsondata = array(
+  //   'status' => 200,
+  //   'data' => null,
+  //   'captcha' => 'Eres un robot'
+  // );
+//     echo json_encode($response);
+// }
 }
 
 function CerrarSesion (){
