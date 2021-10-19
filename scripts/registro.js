@@ -21,26 +21,31 @@ document.addEventListener("DOMContentLoaded", function () {
     function registrarUsuario() {
         let password = btoa(document.getElementById('txtRegistroPassword').value);
         let passwordConfirm = btoa(document.getElementById('txtRegistroConfirmaPassword').value);
-        valid.equal(document.getElementById('txtRegistroPassword').value)
-        classList.remove('error');
-        let nombre = document.getElementById('txtRegistroNombre').value;
-        let paterno = document.getElementById('txtRegistroPaterno').value;
-        let materno = document.getElementById('txtRegistroMaterno').value;
-        let fecha = document.getElementById('txtRegistroFecha').value;
-        let email = document.getElementById('txtRegistroEmail').value;
-        let password = btoa(document.getElementById('txtRegistroPassword').value);
-
-        let datos = {
-            Action: "RegistrarUsuario",
-            Nombre: nombre,
-            Paterno : paterno,
-            Materno : materno,
-            FechaNacimiento : fecha,
-            Email : email,
-            Password: password,
-            ReCaptchaToken : "token"
+        if(valid.equal(passwordConfirm, password)){
+            classList.remove('error');
+            let nombre = document.getElementById('txtRegistroNombre').value;
+            let paterno = document.getElementById('txtRegistroPaterno').value;
+            let materno = document.getElementById('txtRegistroMaterno').value;
+            let fecha = document.getElementById('txtRegistroFecha').value;
+            let email = document.getElementById('txtRegistroEmail').value;
+            let password = btoa(document.getElementById('txtRegistroPassword').value);
+    
+            let datos = {
+                Action: "RegistrarUsuario",
+                Nombre: nombre,
+                Paterno : paterno,
+                Materno : materno,
+                FechaNacimiento : fecha,
+                Email : email,
+                Password: password,
+                ReCaptchaToken : "token"
+            }
+            call.post("../php/session.php", datos, callback, true);
+        } else{
+            //TODO: Realizar el plugin de alertas;
+            alert('Error');
         }
-        call.post("../php/session.php", datos, callback, true);
+
     }
     function callback(){
 
