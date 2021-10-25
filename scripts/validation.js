@@ -6,6 +6,20 @@ function ValidationResponse (tipo, longitud) {
     this.tipo = tipo;
     this.longitud = longitud;
 }
+
+/**
+ * Validación de igualdad.
+ * @param {string} data Dato a validar.
+ * @returns {boolean}
+ */
+valid.equal = function (data) {
+    let secondId = data.getAttribute("for");
+    let second = document.getElementById(secondId);
+    let tipo = (data.value === second.value) ? true : false;
+    let resp = new ValidationResponse(tipo, true);
+    return resp;
+};
+
 /**
  * Validación si es un dato de tipo numérico.
  * @param {string} data Dato a validar.
@@ -15,7 +29,7 @@ function ValidationResponse (tipo, longitud) {
  valid.number = function (data,longitud) {
     const regNumeros = /^[0-9]+$/;
     let tipo = regNumeros.test(data.value);
-    let long = longitud !== undefined ? long = valid.longitud(data, longitud) : true;
+    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
     if(!tipo){
         data.classList.add('error');
      } else{
@@ -35,7 +49,7 @@ function ValidationResponse (tipo, longitud) {
  valid.email = function (data, longitud) {
      const regEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
      let tipo = regEmail.test(data.value);
-     let long = longitud !== undefined ? long = valid.longitud(data, longitud) : true;
+     let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
      if(!tipo){
         data.classList.add('error');
      } else{
@@ -56,13 +70,46 @@ function ValidationResponse (tipo, longitud) {
  valid.text = function (data, longitud) {
     const regText = /^[a-zA-Z]+$/;
     let tipo = regText.test(data.value);
-    let long = longitud !== undefined ? long = valid.longitud(data, longitud) : true;
+    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
     if(!tipo){
        data.classList.add('error');
     } else{
        data.classList.remove('error');
     }
     let resp = new ValidationResponse(tipo, long);
+    return resp;
+};
+
+/**
+ * Validación si es un dato corresponde a un texto.
+ * Expresión regular tomada de:
+ * https://www.regular-expressions.info/email.html
+ * @param {string} data Dato a validar.
+ * @param {number} longitud Dato a validar.
+ * @returns {boolean}
+ **/
+ valid.password = function (data, longitud) {
+    const regText = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[#$^+=!*()@%&]).{8,}$/;
+    let tipo = regText.test(data.value);
+    let equal = (data.getAttribute("for") !== null) ? valid.equal(data) : true;
+    var htmlItem = document.createElement("small");
+    htmlItem.style.color = "red";
+    htmlItem.id = 'errorPassword';
+    if(!tipo) {
+        htmlItem.innerHTML = 'Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres) o no contiene caracteres especiales (#$^+=!*()@%&).';
+    }
+    if(!equal){
+        htmlItem.innerHTML += ' Las contraseñas no coinciden';
+    }
+
+    if(!tipo){
+       data.classList.add('error');
+       data.parentNode.insertBefore(htmlItem, data.nextSibling);
+    } else{
+       data.classList.remove('error');
+       htmlItem.remove();
+    }
+    let resp = new ValidationResponse(tipo, equal);
     return resp;
 };
 
@@ -75,14 +122,8 @@ function ValidationResponse (tipo, longitud) {
  valid.decimal = function (data, longitud) {
     const regDecimal = /^\d+(\.\d{1,2})?$/;
     let tipo = regDecimal.test(data.value);
-    let long = longitud !== undefined ? long = valid.longitud(data, longitud) : true;
+    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
     let resp = new ValidationResponse(tipo, long);
-    return resp;
-};
-
-valid.equal = function (first, second) {
-    let tipo = first !== second ? true : false;
-    let resp = new ValidationResponse(tipo, true);
     return resp;
 };
 
@@ -111,11 +152,20 @@ valid.form = function(form) {
                     }
                     break;
                 case 'password':
-                    if(valid.text(controls[i]).tipo) { 
+                    var htmlItem = document.createElement("small");
+                    htmlItem.style.color = "red";
+                    htmlItem.id = 'errorPassword';
+                    if(valid.password(controls[i]).tipo) { 
                         controls[i].classList.remove('error');
+                        if(htmlItem !== null){
+                            htmlItem.remove();
+                        }
                         ok = true;
                     } else{
+                        htmlItem.innerHTML = 'Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres) o no contiene caracteres especiales (#$^+=!*()@%&).';
+                        (!valid.password(controls[i]).longitud) ? htmlItem.innerHTML += ' Las contraseñas no coinciden' : "";
                         controls[i].classList.add('error');
+                        controls[i].parentNode.insertBefore(htmlItem, controls[i].nextSibling);
                         ok = false;
                     }
                     break;

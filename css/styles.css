@@ -14,6 +14,7 @@
   --proarp-verde: #48a22c;
   --proarp-anaranjado: #e66110;
   --proarp-azul: #0094d6;
+  --notif-background: #1a1a1a;
   --transicion: 600ms;
 }
 
@@ -89,21 +90,21 @@ hr.divider-base {
 h1 {
   color: var(--texto-titulo);
   font-weight: normal;
-  font-size: 40px;
+  font-size: 30px;
   font-family: Arial;
   text-transform: uppercase;
 }
 h2 {
   color: var(--texto-titulo);
   font-weight: normal;
-  font-size: 35px;
+  font-size: 25px;
   font-family: Arial;
   text-transform: uppercase;
 }
 h3 {
   color: var(--texto-titulo);
   font-weight: normal;
-  font-size: 25px;
+  font-size: 18px;
   font-family: Arial;
   text-transform: uppercase;
   text-align:right !important;
@@ -111,14 +112,14 @@ h3 {
 h4 {
   color: var(--texto-titulo);
   font-weight: normal;
-  font-size: 25px;
+  font-size: 18px;
   font-family: Arial;
   text-transform: lowercase;
 }
 h5 {
   color: var(--texto-titulo);
   font-weight: normal;
-  font-size: 20px;
+  font-size: 18px;
   font-family: Arial;
   text-transform: lowercase;
 }
@@ -184,11 +185,7 @@ button {
   padding-top: 2%;
 } */
 
-h3 {
-  display: block;
-  text-align: center;
-  font-size: 40px;
-}
+
 
 
 /* NAVBAR */
@@ -308,6 +305,21 @@ h3 {
     width: 70%;
     padding: 10px;
   }
+  .frm-col-3{
+    float: left;
+    width: 33%;
+    padding: 10px;
+  }
+  .frm-col-2{
+    float: left;
+    width: 50%;
+    padding: 10px;
+  }
+  .frm-col-1{
+    float: left;
+    width: 100%;
+    padding: 10px;
+  }
   .column {
     float: left;
     width: 50%;
@@ -338,8 +350,44 @@ a.link{
   height: auto;
 }
 
+.card-body {
+  padding: 2rem;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: var(--transicion);
+  /* width: 70%; */
+  border-radius: 5px;
+}
 
-/* NAVBAR */
+.card-body:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container-notification{
+  position:absolute;
+  top:6rem;
+  right: -10%;
+  transform:translate(-50%);
+  background:var(--notif-background);
+  padding:1rem;
+  color:#fff;
+  padding:1rem;
+  opacity: .7;
+  transition: opacity 1s;
+}
+.notification-success{
+  background:var(--proarp-verde) !important;
+  color:#fff !important;
+}
+
+.notification-fail{
+  background:var(--texto-alert) !important;
+  color:#fff !important;
+}
+
+.notification-info{
+  background:var(--proarp-azul) !important;
+  color:#fff !important;
+}
 
 .error{
   border: 1px solid var(--texto-alert) !important;
@@ -354,4 +402,48 @@ a.link{
   -webkit-box-shadow: 1px 5px 7px 0 rgba(216, 0, 0, 0.3) !important;
   box-shadow: 1px 5px 7px 0 rgba(167, 0, 0, 0.3) !important;
   opacity: 90%s;
+}
+
+/*Carrousel STARTS*/
+
+.carrousel-slide {
+  display: none
+}
+img {
+  vertical-align: middle;
+}
+
+/* Slideshow container */
+.slideshow-container {
+  max-width: 1000px;
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -22px;
+  color: var(--color-base);
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a grey background color */
+.prev:hover, .next:hover {
+  background-color: var(--color-over);
+  color: var(--notif-background);
 }

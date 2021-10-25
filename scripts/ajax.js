@@ -17,10 +17,11 @@ call.send = function (url, callback, method, data, async) {
         request.open(method, url, async);
         request.onreadystatechange = function () {
             if (request.readyState == 4 && request.status === 200) {
-                callback(request.responseText)
+                callback(JSON.parse(request.responseText))
             }
         };
-        request.setRequestHeader('Content-type', "application/json", "text/javascript");
+        request.setRequestHeader("content-type", "application/json");
+        request.setRequestHeader("cache-control", "no-cache");
         request.send(data);
     } catch(err){
         call.handleError(err);
