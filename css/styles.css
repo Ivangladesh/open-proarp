@@ -229,7 +229,11 @@ button {
     float: right;
     display: block;
   }
-
+  main {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 1rem;
+  }
   .nav-bar.responsive {position: relative;}
   .nav-bar.responsive .icon {
     position: absolute;
@@ -256,8 +260,18 @@ button {
     padding: 15px;
   }
   .img-login{
-    max-width: 100%;
+    max-width: 50%;
     height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+  .container-notification{
+    position:absolute;
+    bottom:3rem;
+    left:50%;
+    transform:translate(-50%);
+    padding:1rem;
+    width: 90%;
   }
 }
 /* Pantallas pequeñas */
@@ -268,14 +282,26 @@ button {
       padding: 10px;
     }
     .img-login{
-      max-width: 60%;
-      height: auto;
-      margin: auto;
+      max-width: 40%;
       display: block;
+      margin: 0 auto;
+    }
+    main {
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
+      padding: 1rem;
+    }
+    .container-notification{
+      position:absolute;
+      bottom:3rem;
+      left:50%;
+      transform:translate(-50%);
+      padding:1rem;
+      width: 90%;
     }
 }
 /* pantallas medianas */
-@media screen and (min-width: 640px) and (max-width: 899px) {
+@media screen and (min-width: 641px) and (max-width: 899px) {
   .column {
     float: left;
     width: 100%;
@@ -289,6 +315,23 @@ button {
     height: auto;
     margin: auto;
     display: block;
+  }
+  main {
+    margin-left: 2rem;
+    margin-right: 2rem;
+    padding: 1rem;
+  }
+  .container-notification{
+    position:absolute;
+    top:6rem;
+    right: -15%;
+    transform:translate(-50%);
+    background:var(--notif-background);
+    padding:1rem;
+    color:#fff;
+    padding:1rem;
+    opacity: .7;
+    transition: opacity 1s;
   }
 }
 
@@ -339,6 +382,23 @@ button {
     float: right;
     padding-right: 2rem;
   }
+  .card-body {
+    width: 70%;
+    margin: 0 auto;
+  }
+  .container-notification{
+    position:absolute;
+    top:6rem;
+    right: -10%;
+    transform:translate(-50%);
+    background:var(--notif-background);
+    padding:1rem;
+    color:#fff;
+    padding:1rem;
+    opacity: .7;
+    transition: opacity 1s;
+    animation: fadeInAnimation ease 3s;
+  }
 }
 
 a.link{
@@ -362,18 +422,6 @@ a.link{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
-.container-notification{
-  position:absolute;
-  top:6rem;
-  right: -10%;
-  transform:translate(-50%);
-  background:var(--notif-background);
-  padding:1rem;
-  color:#fff;
-  padding:1rem;
-  opacity: .7;
-  transition: opacity 1s;
-}
 .notification-success{
   background:var(--proarp-verde) !important;
   color:#fff !important;
