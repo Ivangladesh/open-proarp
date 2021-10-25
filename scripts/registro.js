@@ -65,29 +65,39 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function handler(e){
         let msg = "";
-        if(e.ok){
-            switch (e.callback) {
-                case "EnviarToken":
-                    sessionStorage.setItem("Session", e.data);
-                    validarSesion(e.data);
-                    break;
-                case "RegistrarUsuario":
-                    msg = `Registro realizado correctamente, use el correo registrado para ingresar.`;
+        switch (e.callback) {
+            case "EnviarToken":
+                sessionStorage.setItem("Session", e.data);
+                validarSesion(e.data);
+                break;
+            case "IniciarSesion":
+                if(!e.ok){
+                    alerta.notif('fail', 'Ha ocurrido un error. Verifique su usuario y contraseña', 3000);
+                }
+                break;
+            case "RegistrarUsuario":
+                msg = `Registro realizado correctamente, use el correo registrado para ingresar.`;
+                if(e.ok){
                     alerta.notif('ok', msg, 2000);
-                    break;
-                case "ValidarSesion":
-                    msg = `Sesión iniciada correctamente, Bienvenido!`;
+                } else{
+                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
+                }
+                break;
+            case "ValidarSesion":
+                msg = `Sesión iniciada correctamente, Bienvenido!`;
+                if(e.ok){
                     alerta.notif('ok', msg, 2000);
                     if(self.location.pathname === "/proarp/views/index.php"){
                         alerta.notif('ok', msg, 2500);
                         setTimeout(function(){location.reload();},2100);
                     }
-                    break;
-                default:
-                    break;
-            }
-        }else{
-            console.log(e);
+                } else{
+                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
+                }
+
+                break;
+            default:
+                break;
         }
     }
 
