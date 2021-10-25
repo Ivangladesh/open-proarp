@@ -1,77 +1,38 @@
 <div id="div-inicio" class="animate-bottom sub-container">
 
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container-fluid">
-        <h1>La Empresa S.A. de S.V.</h1>      
-        </div>
-    </div>
-    <div id="div-carousel" class="carousel slide" data-ride="carousel">
-
-        <!-- Indicators -->
-        <ul class="carousel-indicators">
-            <li data-target="#div-carousel" data-slide-to="0" class="active"></li>
-            <li data-target="#div-carousel" data-slide-to="1"></li>
-            <li data-target="#div-carousel" data-slide-to="2"></li>
-        </ul>
-
-        <!-- The slideshow -->
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="../assets/designecologist-Pmh0UoG1vlE-unsplash.jpg">
-            </div>
-            <div class="carousel-item">
-                <img src="../assets/lorenzo-herrera-p0j-mE6mGo4-unsplash.jpg">
-            </div>
-            <div class="carousel-item">
-                <img src="../assets/designecologist-Pmh0UoG1vlE-unsplash.jpg">
-            </div>
-        </div>
-
-        <!-- Left and right controls -->
-        <a class="carousel-control-prev" href="#div-carousel" data-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </a>
-        <a class="carousel-control-next" href="#div-carousel" data-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </a>
-
-    </div>
-
     <div class="row">
-        <div class="column">
-            <h2>Logo empresa</h2>
-            <img src="../assets/designecologist-Pmh0UoG1vlE-unsplash.jpg">
-            <p>Etiam pharetra turpis ac eros ornare, ac fringilla tortor mattis. Nunc dictum nibh in risus
-                efficitur dapibus. Nulla facilisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan
-                elementum felis, eget cursus lorem efficitur et. Nulla ut rutrum est. Donec non fermentum enim.
-                Vestibulum
-                in lacinia quam, et suscipit magna. Sed viverra, nisi id tristique ultricies, enim felis pretium
-                magna, ac attis diam leo ac orci. Aliquam pellentesque, lectus varius suscipit consectetur, augue nisl
-                laoreet massa, eget hendrerit massa nisi id mauris. Nullam venenatis pretium pellentesque. Aenean
-                feugiat condimentum nibh, ac volutpat leo commodo a. Vestibulum varius aliquam ante et gravida.</p>
-        </div>
-        <div class="column">
-            <h2>Descripción de empresa</h2>
-            <img src="../assets/ash-edmonds-Koxa-GX_5zs-unsplash.jpg">
-            <p>Ut leo metus, vestibulum congue tincidunt vel, fermentum vel tellus. Vestibulum in velit ut urna
-                scelerisque pharetra. Vivamus eget venenatis massa, in lacinia nunc. Duis quis molestie nibh, at
-                suscipit nibh. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-                himenaeos. Vestibulum lacinia nunc ipsum, a scelerisque odio molestie nec. Fusce venenatis felis
-                quis semper fermentum. In hac habitasse platea dictumst. Sed pellentesque aliquam nulla. Praesent
-                egestas dui quis velit volutpat porttitor. Nulla condimentum libero in lorem lacinia blandit. Sed at
-                imperdiet orci, id ornare nibh.</p>
-        </div>
-        <div class="column">
-            <h2>Actividad 1, Unidad 3</h2>
-            <img src="../assets/joshua-reddekopp-GkFQEOubrCo-unsplash.jpg">
-            <p>Aenean lacinia augue ac libero egestas egestas. Vivamus varius ante quis cursus varius. In
-                posuere molestie lectus. Nunc nec mollis tortor. In iaculis ultricies feugiat. Lorem ipsum dolor sit
-                amet, consectetur adipiscing elit. Donec pretium blandit lobortis. Sed sit amet augue commodo, posuere
-                ipsum eget, condimentum justo. Donec euismod, dui sit amet convallis ultrices, magna nunc fringilla
-                sem, tincidunt pretium elit massa et quam. Donec ex ipsum, pulvinar vel semper sed, porta id ligula.
-                Donec lobortis sem ac commodo lacinia. Nulla suscipit tincidunt eros, eu egestas orci aliquet et.
-                Proin leo nisi, finibus in lorem id, venenatis pretium felis. Maecenas fringilla ut dui id rutrum.
-                Maecenas in magna nibh.</p>
-        </div>
+        <h1>Bienvenido</h1>
+        <hr class="divider-base">
     </div>
+    <div class="slideshow-container">
+        <div class="carrousel-slide">
+            <img src="/proarp/assets/carrousel/first.jpg" style="width:100%">
+        </div>
+        <div class="carrousel-slide">
+            <img src="/proarp/assets/carrousel/second.jpg" style="width:100%">
+        </div>
+        <div class="carrousel-slide">
+            <img src="/proarp/assets/carrousel/third.jpg" style="width:100%">
+        </div>
+        <a class="prev" onclick="navegacion(-1, 1)">&#10094;</a>
+        <a class="next" onclick="navegacion(1, 1)">&#10095;</a>
+    </div>
+
+    <script>
+        var slideIndex = [1, 1];
+        showSlides(1, 1);
+
+        function navegacion(n, no) {
+            showSlides(slideIndex[no] += n, no);
+        }
+        function showSlides(n, no) {
+            var slide = document.getElementsByClassName("carrousel-slide");
+            if (n > slide.length) { slideIndex[no] = 1 }
+            if (n < 1) { slideIndex[no] = slide.length }
+            for (let i = 0; i < slide.length; i++) {
+                slide[i].style.display = "none";
+            }
+            slide[slideIndex[no] - 1].style.display = "block";
+        }
+    </script>
 </div>
