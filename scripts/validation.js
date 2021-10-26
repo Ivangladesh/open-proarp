@@ -85,32 +85,55 @@ valid.equal = function (data) {
  * Expresión regular tomada de:
  * https://www.regular-expressions.info/email.html
  * @param {string} data Dato a validar.
- * @param {number} longitud Dato a validar.
  * @returns {boolean}
  **/
- valid.password = function (data, longitud) {
+ valid.password = function (data) {
     const regText = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[#$^+=!*()@%&]).{8,}$/;
     let tipo = regText.test(data.value);
     let equal = (data.getAttribute("for") !== null) ? valid.equal(data) : true;
-    var htmlItem = document.createElement("small");
-    htmlItem.style.color = "red";
-    htmlItem.id = 'errorPassword';
-    if(!tipo) {
-        htmlItem.innerHTML = 'Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres) o no contiene caracteres especiales (#$^+=!*()@%&).';
+    const errorId = 'errorPassword';
+    let msg = `Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres)
+    o no contiene caracteres especiales (#$^+=!*()@%&).`;
+    if(!tipo){
+       data.classList.add('error');
+       valid.addErrorMessageInput(data, msg);
+    } else{
+       data.classList.remove('error');
+       valid.removeErrorMessageInput(errorId);
     }
     if(!equal){
         htmlItem.innerHTML += ' Las contraseñas no coinciden';
     }
-
-    if(!tipo){
-       data.classList.add('error');
-       data.parentNode.insertBefore(htmlItem, data.nextSibling);
-    } else{
-       data.classList.remove('error');
-       htmlItem.remove();
-    }
     let resp = new ValidationResponse(tipo, equal);
     return resp;
+};
+
+/**
+ * Método que añade un mensaje de error a un campo.
+ * @param {object} data Objeto javascript al que se le añadirá el mensaje de error.
+ * @param {string} msg Objeto javascript al que se le añadirá el mensaje de error.
+ * @param {boolean} status Indicará si se añade o elimina el mensaje.
+ **/
+ valid.addErrorMessageInput = function (data, msg) {
+    let equal = (data.getAttribute("for") !== null) ? valid.equal(data) : true;
+    var htmlItem = document.createElement("small");
+    htmlItem.style.color = "red";
+    htmlItem.id = 'errorPassword';
+    if(!tipo){
+        htmlItem.innerHTML = msg;
+       data.parentNode.insertBefore(htmlItem, data.nextSibling);
+    }
+};
+
+/**
+ * Método que elimina el mensaje de error a un campo.
+ * @param {string} id Identificador del elemento html al que se le eliminará el mensaje de error.
+ **/
+ valid.removeErrorMessageInput = function (id) {
+    let elem = document.getElementById(id);
+    if(elem !== undefined){
+        elem.remove();
+    }
 };
 
 /**
@@ -152,20 +175,12 @@ valid.form = function(form) {
                     }
                     break;
                 case 'password':
-                    var htmlItem = document.createElement("small");
-                    htmlItem.style.color = "red";
-                    htmlItem.id = 'errorPassword';
-                    if(valid.password(controls[i]).tipo) { 
+                    let resp = valid.password(controls[i]);
+                    if(resp.tipo) { 
                         controls[i].classList.remove('error');
-                        if(htmlItem !== null){
-                            htmlItem.remove();
-                        }
                         ok = true;
                     } else{
-                        htmlItem.innerHTML = 'Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres) o no contiene caracteres especiales (#$^+=!*()@%&).';
-                        (!valid.password(controls[i]).longitud) ? htmlItem.innerHTML += ' Las contraseñas no coinciden' : "";
                         controls[i].classList.add('error');
-                        controls[i].parentNode.insertBefore(htmlItem, controls[i].nextSibling);
                         ok = false;
                     }
                     break;
