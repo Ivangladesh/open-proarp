@@ -4,7 +4,7 @@ let alerta = {};
 
 /**
  * Crea una notificación.
- * @param {string} type Tipo de notificación.
+ * @param {string} type Tipo de notificación [ok, fail, info].
  * @param {URLSearchParams} data Objeto con los parámetros para el mensaje.
  * @param {int} time Método que se usará para manejar la respuesta.
  **/
@@ -19,9 +19,8 @@ let alerta = {};
     } else if(type === 'info'){
         divNot.classList.add('notification-info') 
     }
-    divNot.innerHTML = `<p>${data}</p>`;
+    divNot.innerHTML = `<p>${data} &nbsp <span id='closeAlert' style="cursor:pointer" onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;'>x</span></p>`;
     document.getElementById('mainContainer').appendChild(divNot);
-    // document.body.appendChild(divNot);
     setTimeout(function(){
         alerta.fadeOut();
     },time);
