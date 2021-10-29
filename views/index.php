@@ -1,6 +1,7 @@
 <?php session_start();
 if (isset($_SESSION['SessionStorage'])) {
     $session = $_SESSION['SessionStorage'];
+    list($tipo, $username, $nombre, $usuarioId, $fecha) = explode('|', base64_decode($session));
 }
 ?>
 <!DOCTYPE html>
@@ -23,12 +24,19 @@ if (isset($_SESSION['SessionStorage'])) {
             <li class="logo"><img class="img-menu" src="../assets/proarp-arrow-low-min.png"></img></li>
             <?php
             if (isset($_SESSION['SessionStorage'])) {
-                $session = $_SESSION['SessionStorage'];
                 echo
-                '<li class="item"><a href="#" class="nav-link" id="inicio" data-id="div-inicio">Inicio</a></li>
-                <li class="item"><a href="#" class="nav-link" id="inventario" data-id="div-inventario">Catálogo</a></li>
-                <li class="item"><a href="#" class="nav-link" id="contacto" data-id="div-contacto">Contacto</a></li>
-                <li class="item button secondary"><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>';
+                '<li class="item"><a href="#" class="nav-link" id="inicio" data-id="div-inicio">Inicio</a></li>';
+                if($tipo == 1){
+                    echo '<li class="item"><a href="#" class="nav-link" id="inventario" data-id="div-inventario">Inventario</a></li>';
+                } else{
+                    echo '<li class="item"><a href="#" class="nav-link" id="inventario" data-id="div-inventario">Catálogo</a></li>';
+                }
+                echo               
+                '<li class="item"><a href="#" class="nav-link" id="contacto" data-id="div-contacto">Contacto</a></li>';
+                if($tipo == 1){
+                    echo '<li class="item"><a href="#" class="nav-link" id="administrador" data-id="div-administrador">Administrador</a></li>';
+                }
+                echo '<li class="item button secondary"><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>';
             } else{
                 echo
                 '<li class="item button"><a href="#" class="nav-link" id="login" data-id="div-inicio-sesion">Iniciar sesión</a></li>
@@ -44,9 +52,11 @@ if (isset($_SESSION['SessionStorage'])) {
             <div class="container-fluid" id="content">
                 <?php
                 if (isset($_SESSION['SessionStorage'])) {
-                    $session = $_SESSION['SessionStorage'];
                     readfile('../views/partials/_main.html');
                     readfile('../views/partials/_contacto.html');
+                    if($tipo == 1){
+                        readfile('../views/partials/_administrador.html');
+                    }
                 } else{
                     readfile('../views/partials/_registro.html');
                     readfile('../views/partials/_login.html');
@@ -55,6 +65,9 @@ if (isset($_SESSION['SessionStorage'])) {
             </div>
         </main>
     </div>
+    <?php
+    readfile('../views/partials/_footer.html');
+    ?>
 </body>
 <script src="../scripts/alert.js?v=1.000"></script>
 <script src="../scripts/ajax.js?v=1.000"></script>
@@ -81,6 +94,9 @@ if (isset($_SESSION['SessionStorage'])) {
     }
     </script>';
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
+    if($tipo == 1){
+        echo '<script src="../scripts/administrador.js?v=1.001"></script>';
+    }
 } else{
     echo '<script src="../scripts/registro.js?v=1.001"></script>';
 }

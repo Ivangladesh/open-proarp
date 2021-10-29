@@ -54,6 +54,36 @@
     border-bottom: 1px #444 solid;
   }
   
+.tab-bar {
+  overflow: hidden;
+  background-color: #f1f1f1;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.tab-bar button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+.tab-bar button:hover {
+  background-color: #ddd;
+}
+
+.tab-bar button.active {
+  background-color: #ccc;
+}
+
+.tab-content {
+  display: none;
+  padding: 6px 12px;
+  border-top: none;
+}
+
   .menu {
     display: flex;
     flex-wrap: wrap;
