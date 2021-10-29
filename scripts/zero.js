@@ -67,6 +67,16 @@ zero.navHandler = function (dataId) {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
+
+    function validarSesion(token) {
+        const _token = token;
+        let datos = {
+            Action: "ValidarSesion",
+            Token: token
+        }
+        call.post("../php/session.php", JSON.stringify(datos), handler, true);
+    }
+
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('toggle')) {
             zero.responsividadNavBar(e);

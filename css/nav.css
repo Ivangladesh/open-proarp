@@ -1,17 +1,24 @@
 :root {
-    --texto-base: #b6b6b6;
-    --texto-over: #ececec;
-    --color-base: #eeeeee;
-    --color-over: #e0e0e0;
-    --color-active: #db6a00;
-    --texto-alert: #e00000;
-    --color-alert: #2e2323;
-    --texto-over-alert: #e73939;
-    --color-over-alert: #351a1a;
-    --transicion: 600ms;
+  font-size: 16px;
+  font-family: 'Roboto';
+  --texto-base: #b6b6b6;
+  --texto-titulo: #757575;
+  --texto-over: #ececec;
+  --color-base: #eeeeee;
+  --color-over: #e0e0e0;
+  --color-active: #db6a00;
+  --texto-alert: #e00000;
+  --color-alert: #2e2323;
+  --texto-over-alert: #e73939;
+  --color-over-alert: #351a1a;
+  --proarp-verde: #48a22c;
+  --proarp-anaranjado: #e66110;
+  --proarp-azul: #0094d6;
+  --notif-background: #1a1a1a;
+  --transicion: 600ms;
   }
 
-/* Basic styling */
+  
 * {
     box-sizing: border-box;
     padding: 0;
@@ -46,7 +53,7 @@
   .button.secondary {
     border-bottom: 1px #444 solid;
   }
-  /* Mobile menu */
+  
   .menu {
     display: flex;
     flex-wrap: wrap;
@@ -68,7 +75,7 @@
   .item.active {
     display: block;
   }
-  /* Tablet menu */
+  
   @media all and (min-width: 600px) {
     .menu {
       justify-content: center;
@@ -121,7 +128,7 @@
       color: #ddd;
     }
   }
-  /* Desktop menu */
+
   @media all and (min-width: 900px) {
     .item {
       display: block;
@@ -184,7 +191,7 @@
     padding: 5%,10%,10%,5%;
   }
   
-  input[type=text], input[type=email], input[type=password], input[type=date], select {
+  input[type=text], input[type=email], input[type=password], input[type=date], select, textarea {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
