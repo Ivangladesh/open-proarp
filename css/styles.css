@@ -434,6 +434,30 @@ a.link{
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
 }
 
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+  overflow-x: auto;
+}
+
+td, th {
+  border: 1px solid var(--color-base);
+  text-align: left;
+  padding: 8px;
+}
+td{
+  cursor: pointer;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+table tr.header, table tr:hover {
+  background-color: var(--texto-base);
+}
+
 .notification-success{
   background:var(--proarp-verde) !important;
   color:#fff !important;
@@ -502,4 +526,20 @@ img {
 .prev:hover, .next:hover {
   background-color: var(--color-over);
   color: var(--notif-background);
+}
+
+.footer{
+  background-color: var(--color-base);
+  padding: 5px 20px;
+  position: fixed;
+  flex: 0 0 50px;
+  margin-top: auto;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: justify;
+  height: 7rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  z-index: 15;
 }

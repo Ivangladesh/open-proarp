@@ -40,11 +40,30 @@ zero.navEventHandler = function (e) {
         for (let i = 0, iLen = controls.length; i < iLen; i++) {
             if (controls[i].nodeName === 'INPUT') {
                 controls[i].classList.remove('error');
-                valid.removeErrorMessageInput(null,'error-password');
+                valid.removeErrorMessageInput(null, 'error-password');
             }
         }
         forms[i].reset();
     }
+    e.preventDefault();
+}
+
+zero.tabEventHandler = function (e) {
+    let i, tabcontent, tablinks;
+    let dataId = e.target.getAttribute("data-id");
+    
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    
+    tablinks = document.getElementsByClassName("tab-nav");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    
+    document.getElementById(dataId).style.display = "block";
+    e.currentTarget.className += " active";
     e.preventDefault();
 }
 
@@ -78,10 +97,17 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.addEventListener('click', function (e) {
+        if (e.target.classList.contains('tab-nav')) {
+            zero.tabEventHandler(e);
+        }
+    });
+
+    document.addEventListener('click', function (e) {
         if (e.target.classList.contains('toggle')) {
             zero.responsividadNavBar(e);
         }
     });
+
     nav.forEach(el => el.addEventListener('click', event => {
         zero.navEventHandler(event);
     }));
