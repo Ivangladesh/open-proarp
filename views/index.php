@@ -80,6 +80,7 @@ if (isset($_SESSION['SessionStorage'])) {
         }
     }
     </script>';
+    echo '<script src="../scripts/contacto.js?v=1.001"></script>';
 } else{
     echo '<script src="../scripts/registro.js?v=1.001"></script>';
 }

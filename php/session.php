@@ -48,9 +48,10 @@
     $pdo = OpenCon();
     $id = $r['UsuarioId'];
     $username = $r['Email'];
+    $nombreCompleto = $r['NombreCompleto'];
     $tipo = $r['TipoUsuarioId'];
     $hoy = date("m.d.y H:i:s");
-    $token = $id.'|'.base64_encode($tipo . $id . $username . $hoy);
+    $token = base64_encode($tipo . '|' . $username . '|' . $nombreCompleto . '|'  . $id . '|' . $hoy);
     $insert = "CALL spActualizarToken('$token', '$id')";
     $response = new stdClass();
     try {
