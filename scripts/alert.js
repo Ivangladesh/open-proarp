@@ -4,7 +4,7 @@ let alerta = {};
 
 /**
  * Crea una notificación.
- * @param {string} type Tipo de notificación.
+ * @param {string} type Tipo de notificación [ok, fail, info].
  * @param {URLSearchParams} data Objeto con los parámetros para el mensaje.
  * @param {int} time Método que se usará para manejar la respuesta.
  **/
@@ -19,17 +19,9 @@ let alerta = {};
     } else if(type === 'info'){
         divNot.classList.add('notification-info') 
     }
-    divNot.innerHTML = `<p>${data}</p>`;
-    document.getElementById('mainContainer').appendChild(divNot);
-    // document.body.appendChild(divNot);
+    divNot.innerHTML = `<p style="display:inline">${data} &nbsp </p><span id='closeAlert' style="cursor:pointer;float: right;" onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;'>x</span>`;
+    document.getElementById('content').appendChild(divNot);
     setTimeout(function(){
-        alerta.fadeOut();
+        divNot.remove()
     },time);
 };
-
-alerta.fadeOut = function() {
-    var notificationDiv =  document.getElementById('containerNotification');
-    notificationDiv.style.opacity = '0'
-    const target = document.getElementById("target");
-    notificationDiv.addEventListener('transitionend', () => notificationDiv.remove());
-}

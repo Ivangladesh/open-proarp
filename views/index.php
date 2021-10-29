@@ -46,6 +46,7 @@ if (isset($_SESSION['SessionStorage'])) {
                 if (isset($_SESSION['SessionStorage'])) {
                     $session = $_SESSION['SessionStorage'];
                     readfile('../views/partials/_main.html');
+                    readfile('../views/partials/_contacto.html');
                 } else{
                     readfile('../views/partials/_registro.html');
                     readfile('../views/partials/_login.html');
@@ -65,8 +66,8 @@ if (isset($_SESSION['SessionStorage'])) {
     const cerrarSesion = () =>{
         if(sessionStorage.getItem("Session") !== null){
             sessionStorage.removeItem("Session");
-            call.post("../php/session.php", JSON.stringify({ Action: "CerrarSesion"}), handler, true);             
         };
+        call.post("../php/session.php", JSON.stringify({ Action: "CerrarSesion"}), handler, true);
     }
     function handler(e){
         if(e.ok){

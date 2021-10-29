@@ -82,6 +82,8 @@ p{
     text-align: justify;
 }
 
+
+
 hr.divider-base {
   border-top: 3px solid var(--texto-titulo);
   margin-bottom: 1.5rem;
@@ -324,7 +326,7 @@ button {
   .container-notification{
     position:absolute;
     top:6rem;
-    right: -15%;
+    right: 0%;
     transform:translate(-50%);
     background:var(--notif-background);
     padding:1rem;
@@ -349,6 +351,16 @@ button {
     padding: 10px;
   }
   .frm-col-3{
+    float: left;
+    width: 30%;
+    padding: 10px;
+  }
+  .frm-col-7{
+    float: left;
+    width: 70%;
+    padding: 10px;
+  }
+  .frm-col-3-3{
     float: left;
     width: 33%;
     padding: 10px;
@@ -383,13 +395,13 @@ button {
     padding-right: 2rem;
   }
   .card-body {
-    width: 70%;
+    width: 100%;
     margin: 0 auto;
   }
   .container-notification{
     position:absolute;
     top:6rem;
-    right: -10%;
+    right: 0%;
     transform:translate(-50%);
     background:var(--notif-background);
     padding:1rem;
@@ -461,14 +473,12 @@ img {
   vertical-align: middle;
 }
 
-/* Slideshow container */
 .slideshow-container {
   max-width: 1000px;
   position: relative;
   margin: auto;
 }
 
-/* Next & previous buttons */
 .prev, .next {
   cursor: pointer;
   position: absolute;
@@ -484,13 +494,11 @@ img {
   user-select: none;
 }
 
-/* Position the "next button" to the right */
 .next {
   right: 0;
   border-radius: 3px 0 0 3px;
 }
 
-/* On hover, add a grey background color */
 .prev:hover, .next:hover {
   background-color: var(--color-over);
   color: var(--notif-background);
