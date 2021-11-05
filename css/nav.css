@@ -275,7 +275,12 @@
   width: 90%;
   transition: var(--transicion);
 }
-.titModal{
-  text-align: center !important;
+
+.modal-confirm-content {
+  background-color: #fefefe;
+  margin: auto;
+  width: 50%;
+  transition: var(--transicion);
 }
+
 /* VENTANA MODAL */

@@ -13,6 +13,8 @@
         break;
         case 'ActualizarEstadoMensaje' : ActualizarEstadoMensaje();
         break;
+        case 'EliminarMensaje' : EliminarMensaje();
+        break;
     }
   }
 
@@ -79,6 +81,33 @@
             echo json_encode($response);
           } else{
             $response-> callback = 'ActualizarEstadoMensaje';
+            $response-> data = null;
+            $response-> ok = false;
+            echo json_encode($response);
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+  }
+
+  function EliminarMensaje (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['MensajeId'];
+    $pdo = OpenCon();
+    $update = "CALL spEliminarMensaje('$id')";
+    $response = new stdClass();
+    try {
+        $statement=$pdo->prepare($update);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $count = $statement->rowCount();
+            $response-> callback = 'EliminarMensaje';
+            $response-> data = $count;
+            $response-> ok = true;
+            echo json_encode($response);
+          } else{
+            $response-> callback = 'EliminarMensaje';
             $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);

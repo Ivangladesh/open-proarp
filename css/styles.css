@@ -147,6 +147,10 @@ button {
   cursor: pointer;
 }
 
+.button-sm {
+  padding: 5px 10px;
+}
+
 .btn-success {
   background-color: var(--proarp-verde) !important;
   color: rgb(255, 255, 255) !important;
@@ -406,11 +410,17 @@ button {
     background:var(--notif-background);
     padding:1rem;
     color:#fff;
-    padding:1rem;
     opacity: .7;
     transition: opacity 1s;
     animation: fadeInAnimation ease 3s;
   }
+}
+
+.container-confirm{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
 }
 
 a.link{

@@ -69,6 +69,7 @@ if (isset($_SESSION['SessionStorage'])) {
     <?php
     readfile('../views/partials/_footer.html');
     readfile('../views/partials/modals/_modal-mensaje.html');
+    readfile('../views/partials/modals/_modal-confirm.html');
     ?>
 </body>
 <script src="../scripts/alert.js?v=1.000"></script>

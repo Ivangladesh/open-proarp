@@ -25,3 +25,22 @@ let alerta = {};
         divNot.remove()
     },time);
 };
+
+/**
+ * Crea una notificación.
+ * @param {string} type Tipo de notificación [ok, fail, info].
+ * @param {URLSearchParams} data Objeto con los parámetros para el mensaje.
+ * @param {int} time Método que se usará para manejar la respuesta.
+ **/
+ alerta.confirm = function (data, callback) {
+    let msg = `<p style="display:inline"> Esta acción <strong>no</strong> se puede deshacer, ¿desea continuar? </p>`;
+    document.getElementById('mdlConfirmMensaje').innerHTML = msg;
+    document.getElementById('btnAceptarConfirmacion').addEventListener('click', function(){
+        callback({callback:'Confirmar', ok:true, data:data});
+    });
+    document.getElementById("btnCancelarConfirmacion").addEventListener('click', function(e){
+        document.getElementById('mdlConfirm').style.display = "none";
+        e.preventDefault();
+    });
+    document.getElementById("mdlConfirm").style.display = "block";
+};

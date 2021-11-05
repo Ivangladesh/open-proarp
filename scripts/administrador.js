@@ -19,8 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
             let mensajeId = parseInt(e.target.parentNode.cells[0].id);
             obtenerDetalleMensaje(mensajeId);
             actualizarEstadoMensaje(mensajeId);
-        } else{
-            console.warn('eliminar registro');
         }
         e.preventDefault();
     });
@@ -30,14 +28,6 @@ document.addEventListener("DOMContentLoaded", function () {
         ObtenerMensajes();
         e.preventDefault();
     });
-
-    let variable = (e,i) =>{
-        if(i === 1){
-            return e.target.parentNode.cells[1].children[0].value === "1" ? true : false;
-        } else{
-            return e.target.parentNode.cells[i].innerText;
-        }
-    }
 
     function ObtenerMensajes() {
         let datos = {Action: "ObtenerMensajes"};
@@ -62,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 '<td>' + datos[i].Asunto + '</td>' +
                 '<td>' + datos[i].EstadoMensaje + '</td>' +
                 '<td>' + fechaFormateada + '</td>' +
-                '<td style="text-align: center;"><button data-id=' + datos[i].MensajeId + '" class="btn btn-cancel btn-eliminar">&#10006;</button></td>'+
+                '<td style="text-align: center;"><button data-id=' + datos[i].MensajeId + ' class="btn btn-cancel btn-eliminar button-sm">&#10006;</button></td>'+
                 '</tr>';
                 let emptyRow = newTbody.insertRow(newTbody.rows.length);
                 emptyRow.innerHTML = newRow; 
@@ -71,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
         };
         table.appendChild(newTbody);
+        eliminarEventListener();
     }
 
     function obtenerDetalleMensaje(mensajeId){
@@ -98,6 +89,23 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('txtMensajeD').value = datos.Mensaje;
         document.getElementById('mdlMensaje').style.display = "block"
     }
+    function eliminarMensaje(id){
+        let datos = {
+            Action: "EliminarMensaje",
+            MensajeId: id
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+
+    function eliminarEventListener (){
+        const eliminarList = document.getElementsByClassName('btn-eliminar');
+        for (let i = 0, iLen = eliminarList.length; i < iLen; i++) {
+            eliminarList[i].addEventListener("click", function () {
+                let rowId = parseInt(this.getAttribute('data-id'));
+                alerta.confirm(rowId, handler);
+            });
+        }
+    }
 
     function handler(e){
         let msg = "";
@@ -121,15 +129,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 if(e.ok){
                     ObtenerMensajes();
                 } else{
-                    msg = 'Ha ocurrido un error al actualizar el estado del mensaje';
+                    msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
                     alerta.notif('ok', e.data, 3000);
+                }
+                break;
+            case "Confirmar":
+                if(e.ok){
+                    eliminarMensaje(e.data);
+                } else{
+                    msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
+                    alerta.notif('ok', e.data, 3000);
+                }
+                break;
+            case "EliminarMensaje":
+                if(e.ok){
+                    alerta.notif('ok', 'Mensaje eliminado correctamente.', 3000);
+                } else{
+                    alerta.notif('fail', 'Ha ocurrido un error al eliminar el mensaje.', 3000);
                 }
                 break;
             default:
                 break;
         }
     }
-
-    //obtenerUsuario();
+    
 
 });
