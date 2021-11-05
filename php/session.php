@@ -14,6 +14,8 @@
         break;
         case 'RegistrarUsuario' : RegistrarUsuario();
         break;
+        case 'ObtenerUsuario' : ObtenerUsuario();
+        break;
         case 'CerrarSesion' : CerrarSesion();
         break;
     }
@@ -192,6 +194,28 @@
   // );
 //     echo json_encode($response);
 // }
+}
+
+function ObtenerUsuario () 
+{ 
+  $session = $_SESSION['SessionStorage'];
+  list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
+  $response = new stdClass();
+  $response-> callback = 'ObtenerUsuario';
+  $response-> data = $username;
+  $response-> ok = false;
+  echo json_encode($response);
+}
+
+function ObtenerUsuarioPorSesion () 
+{ 
+  $session = $_SESSION['SessionStorage'];
+  list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
+  $response = new stdClass();
+  $response-> callback = 'ObtenerUsuario';
+  $response-> data = $username;
+  $response-> ok = false;
+  return $response;
 }
 
 function CerrarSesion (){

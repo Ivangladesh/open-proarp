@@ -6,53 +6,39 @@ document.addEventListener("DOMContentLoaded", function () {
         valid.setupForm(frmContacto);
         document.getElementById("btnRegistrarMensajeContacto").addEventListener('click', function(e){
             if(valid.form(frmContacto)){
-                registrarUsuario();
+                RegistrarMensaje();
             }
             e.preventDefault();
         });
     }
 
-    function registrarUsuario() {
-        let nombre = document.getElementById('txtRegistroNombre').value;
-        let paterno = document.getElementById('txtRegistroPaterno').value;
-        let materno = document.getElementById('txtRegistroMaterno').value;
-        let fecha = document.getElementById('txtRegistroFecha').value;
-        let email = document.getElementById('txtRegistroEmail').value;
-        let password = btoa(document.getElementById('txtRegistroPassword').value);
-
+    function RegistrarMensaje() {
+        let asunto = document.getElementById('txtAsuntoContacto').value;
+        let mensaje = document.getElementById('txtMensajeContacto').value;
         let datos = {
-            Action: "RegistrarUsuario",
-            Nombre: nombre,
-            Paterno : paterno,
-            Materno : materno,
-            FechaNacimiento : fecha,
-            Email : email,
-            Password: password,
+            Action: "RegistrarMensaje",
+            Asunto: asunto,
+            Mensaje : mensaje,
             ReCaptchaToken : "token"
         }
-        call.post("../php/session.php", JSON.stringify(datos), handler, true);
-     }
-
-     function obtenerUsuario() {
-        let datos = {
-            Action: "ObtenerUsuario"
-        }
         call.post("../php/contacto.php", JSON.stringify(datos), handler, true);
-    }
+     }
 
     function handler(e){
         let msg = "";
         switch (e.callback) {
-            case "ObtenerUsuario":
-                if(!e.ok){
-                    alerta.notif('ok', e.data, 3000);
+            case "RegistrarMensaje":
+                if(e.ok){
+                    frmContacto.reset();
+                    msg = 'Mensaje registrado correctamente, en breve nos comunicaremos contigo.';
+                    alerta.notif('ok', msg, 3000);
+                } else{
+                    alerta.notif('fail', 'Ha ocurrido un error con su sesión.', 3000);
                 }
                 break;
             default:
                 break;
         }
     }
-
-    obtenerUsuario();
 
 });

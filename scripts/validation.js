@@ -112,13 +112,39 @@ valid.date = function (data) {
  * @param {number} longitud Dato a validar.
  * @returns {boolean}
  **/
-valid.text = function (data, longitud) {
-    const regText = /^[a-zA-Z]+$/;
+valid.text = function (data) {
+    const regText_ = /^[a-zA-Z]+$/;
+    const regText = /^[A-Za-z0-9][A-Za-z0-9 ]*[A-Za-z0-9]*$/;
     let tipo = regText.test(data.value);
-    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
-    if (!tipo) {
+    let maxlength = parseInt(data.getAttribute('maxlength'));
+    let minlength = parseInt(data.getAttribute('minlength'));
+    let long = true;
+    if(maxlength !== NaN && minlength !== NaN){
+        if(minlength < data.value.length && maxlength > data.value.length){
+            long = true;
+        } else{
+            long = false;
+        }
+    } else if(maxlength !== NaN && minlength === NaN){
+        if(maxlength > data.value.length){
+            long = true
+        } else{
+            long = false;
+        }
+    }
+    else if(minlength !== NaN && maxlength === NaN){
+        if(minlength < data.value.length){
+            long = true
+        } else{
+            long = false;
+        }
+    }
+    if (!tipo || !long) {
         data.classList.add('error');
-    } else {
+    }else if(tipo && long) {
+        data.classList.remove('error');
+    }
+    else {
         data.classList.remove('error');
     }
     let resp = new ValidationResponse(tipo, long);
@@ -309,6 +335,10 @@ valid.setupForm = function (data) {
                         this.classList.remove('error');
                         break;
                 }
+            });
+        } else if(controls[i].nodeName === 'TEXTAREA'){
+            controls[i].addEventListener("change", function () {
+                valid.text(this);
             });
         }
     }

@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
             case "RegistrarUsuario":
                 msg = `Registro realizado correctamente, use el correo registrado para ingresar.`;
                 if(e.ok){
-                    document.getElementById("frmRegistrar").reset();
+                    formRegistrar.reset();
                     alerta.notif('ok', msg, 2000);
                     setTimeout(function(){zero.navHandler("div-inicio-sesion");},2100);
                 } else{

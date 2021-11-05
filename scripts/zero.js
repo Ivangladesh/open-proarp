@@ -45,6 +45,9 @@ zero.navEventHandler = function (e) {
         }
         forms[i].reset();
     }
+    let sesion = atob(sessionStorage["Session"]);
+    let usrName = sesion.split('|')[1];
+    document.getElementById('txtUsuarioContacto').value = usrName
     e.preventDefault();
 }
 
