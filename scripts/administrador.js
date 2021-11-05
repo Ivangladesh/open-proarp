@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         let datos = {
             Action: "ObtenerUsuario"
         }
-        call.post("../php/contacto.php", JSON.stringify(datos), handler, true);
+        call.post("../php/session.php", JSON.stringify(datos), handler, true);
     }
 
     function handler(e){
@@ -53,6 +53,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    obtenerUsuario();
+    //obtenerUsuario();
 
 });
