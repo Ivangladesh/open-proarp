@@ -37,6 +37,7 @@ let alerta = {};
     document.getElementById('mdlConfirmMensaje').innerHTML = msg;
     document.getElementById('btnAceptarConfirmacion').addEventListener('click', function(){
         callback({callback:'Confirmar', ok:true, data:data});
+        document.getElementById('mdlConfirm').style.display = "none";
     });
     document.getElementById("btnCancelarConfirmacion").addEventListener('click', function(e){
         document.getElementById('mdlConfirm').style.display = "none";
