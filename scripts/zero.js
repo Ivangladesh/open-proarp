@@ -4,6 +4,20 @@ let zero = {}
 const forms = document.getElementsByTagName('form');
 const nav = document.querySelectorAll('.nav-link');
 
+zero.hideModal = function(){
+    const btnCloseList = document.getElementsByClassName("btn-close-modal");
+    for (let i = 0, iLen = btnCloseList.length; i < iLen; i++) {
+        btnCloseList[i].addEventListener("click", function () {
+            let mdl = this.getAttribute('data-id');
+            document.getElementById(mdl).style.display = "none";
+        });
+    }
+    document.getElementById("btnCerrarModal").addEventListener('click', function(e){
+        document.getElementById('mdlMensaje').style.display = "none;"
+        e.preventDefault();
+    });
+}
+
 /**
  * Intercambia elementos de la barra de navegación.
  * @param {string} e Evento, no requerido.
@@ -114,5 +128,6 @@ document.addEventListener("DOMContentLoaded", function () {
     nav.forEach(el => el.addEventListener('click', event => {
         zero.navEventHandler(event);
     }));
+    zero.hideModal();
     //FIN DEL DOCUMENT READY
 });

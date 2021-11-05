@@ -442,7 +442,7 @@ table {
 }
 
 td, th {
-  border: 1px solid var(--color-base);
+  
   text-align: left;
   padding: 8px;
 }
@@ -453,6 +453,21 @@ td{
 tr:nth-child(even) {
   background-color: #dddddd;
 }
+
+@-webkit-keyframes new-fade {
+  0% {background-color: rgba(60, 255, 0, 0.308);}
+  100% {background-color: none;}
+}
+@keyframes new-fade {
+  0% {background-color: rgba(60, 255, 0, 0.308);}
+  100% {background-color: none;}
+}
+
+.tr-new {
+  -webkit-animation: new-fade 2s ease-in 1 !important;
+  animation: new-fade 2s ease-in 1 !important;
+}
+
 
 table tr.header, table tr:hover {
   background-color: var(--texto-base);
@@ -542,4 +557,8 @@ img {
   padding-top: 1rem;
   padding-bottom: 1rem;
   z-index: 15;
+}
+
+.canvas{
+  padding-bottom:7rem !important;
 }

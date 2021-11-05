@@ -9,6 +9,10 @@
     switch($action) {
         case 'ObtenerMensajes' : ObtenerMensajes();
         break;
+        case 'ObtenerDetalleMensaje' : ObtenerDetalleMensaje();
+        break;
+        case 'ActualizarEstadoMensaje' : ActualizarEstadoMensaje();
+        break;
     }
   }
 
@@ -19,19 +23,68 @@
     try {
         $statement=$pdo->prepare($sp);
         $statement->execute();
-        if($statement->rowCount() > 0){
-          $insert = $statement->fetch();
+        while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
           $response-> callback = 'ObtenerMensajes';
-          $response-> data = $insert[0];
+          $response-> data = $r;
           $response-> ok = true;
-        } else{
-          $response-> callback = 'ObtenerMensajes';
-          $response-> data = null;
-          $response-> ok = false;
         }
       } catch (PDOException $e) {
           print "¡Error!: " . $e->getMessage() . "<br/>";
           die();
       }
       echo json_encode($response);
+  }
+
+  function ObtenerDetalleMensaje (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['MensajeId'];
+    $pdo = OpenCon();
+    $select = "CALL spObtenerDetalleMensajePorId('$id')";
+    $response = new stdClass();
+    try {
+        $statement=$pdo->prepare($select);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $datos = $statement->fetch();
+            $response-> callback = 'ObtenerDetalleMensaje';
+            $response-> data = $datos;
+            $response-> ok = true;
+            
+        } else{
+            $response-> callback = 'ObtenerDetalleMensaje';
+            $response-> data = null;
+            $response-> ok = false;
+        }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+      echo json_encode($response);
+  }
+
+  function ActualizarEstadoMensaje (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['MensajeId'];
+    $pdo = OpenCon();
+    $update = "CALL spActualizarEstadoMensaje('$id')";
+    $response = new stdClass();
+    try {
+        $statement=$pdo->prepare($update);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $count = $statement->rowCount();
+            $response-> callback = 'ActualizarEstadoMensaje';
+            $response-> data = $count;
+            $response-> ok = true;
+            echo json_encode($response);
+          } else{
+            $response-> callback = 'ActualizarEstadoMensaje';
+            $response-> data = null;
+            $response-> ok = false;
+            echo json_encode($response);
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
   }

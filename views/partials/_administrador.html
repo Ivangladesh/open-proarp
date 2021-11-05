@@ -5,12 +5,33 @@
         <div class="card animate-bottom">
             <hr class="divider-base">
             <div class="tab-bar">
-                <button class="tab-nav" data-id="notificaciones" >Notificaciones</button>
-                <button class="tab-nav" data-id="imagenes" >Imágenes</button>
-                <button class="tab-nav" data-id="usuarios" >Usuarios</button>
-              </div>
+                <button class="tab-nav" data-id="mensajes" id="tabMensajes">Mensajes</button>
+                <button class="tab-nav" data-id="notificaciones">Notificaciones</button>
+                <button class="tab-nav" data-id="imagenes">Imágenes</button>
+                <button class="tab-nav" data-id="usuarios">Usuarios</button>
+            </div>
             <div class="row">
                 <div class="card-body">
+                    <!-- TAB NOTIFICAIONES -->
+                    <div id="mensajes" class="tab-content">
+                        <h3>Mensajes de contacto</h3>
+                        <hr class="divider-base">
+                        <div>
+                            <table style="width:100%" id="tblMensajes" class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Usuario</th>
+                                        <th>Asunto</th>
+                                        <th>Estado</th>
+                                        <th>Fecha del mensaje</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- TAB NOTIFICAIONES -->
                     <!-- TAB NOTIFICAIONES -->
                     <div id="notificaciones" class="tab-content">
                         <h3>Notificaciones</h3>
@@ -29,10 +50,10 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                      </div>
-                      <!-- TAB NOTIFICAIONES -->
-                      <!-- TAB IMÁGENES -->
-                      <div id="imagenes" class="tab-content">
+                    </div>
+                    <!-- TAB NOTIFICAIONES -->
+                    <!-- TAB IMÁGENES -->
+                    <div id="imagenes" class="tab-content">
                         <h3>Imágenes</h3>
                         <hr class="divider-base">
                         <div>
@@ -49,10 +70,10 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                      </div>
-                      <!-- TAB IMÁGENES -->
-                      <!-- TAB USUARIOS -->
-                      <div id="usuarios" class="tab-content">
+                    </div>
+                    <!-- TAB IMÁGENES -->
+                    <!-- TAB USUARIOS -->
+                    <div id="usuarios" class="tab-content">
                         <h3>Usuarios</h3>
                         <hr class="divider-base">
                         <div>
@@ -72,8 +93,8 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                      </div>
-                      <!-- TAB USUARIOS -->
+                    </div>
+                    <!-- TAB USUARIOS -->
                 </div>
             </div>
         </div>
