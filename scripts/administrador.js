@@ -144,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
             case "EliminarMensaje":
                 if(e.ok){
                     alerta.notif('ok', 'Mensaje eliminado correctamente.', 3000);
+                    ObtenerMensajes();
                 } else{
                     alerta.notif('fail', 'Ha ocurrido un error al eliminar el mensaje.', 3000);
                 }
