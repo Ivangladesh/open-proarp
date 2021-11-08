@@ -181,19 +181,6 @@ button {
   }
 }
 
-/* img {
-  width: 70%;
-  max-width: 500px;
-  height: auto;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 2%;
-} */
-
-
-
-
 /* NAVBAR */
 
 .nav-bar {
@@ -268,7 +255,7 @@ button {
   .img-login{
     max-width: 50%;
     height: auto;
-    display: block;
+    display: flex;
     margin: 0 auto;
   }
   .container-notification{
@@ -401,6 +388,9 @@ button {
   .card-body {
     width: 100%;
     margin: 0 auto;
+  }
+  .login {
+    width: 50%;
   }
   .container-notification{
     position:absolute;
