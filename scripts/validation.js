@@ -113,39 +113,50 @@ valid.date = function (data) {
  * @returns {boolean}
  **/
 valid.text = function (data) {
-    const regText_ = /^[a-zA-Z]+$/;
-    const regText = /^[A-Za-z0-9][A-Za-z0-9 ]*[A-Za-z0-9]*$/;
+    const regText = /^(?!\s*$).+/;
     let tipo = regText.test(data.value);
+    const errorId = data.id + 'errorPassword';
     let maxlength = parseInt(data.getAttribute('maxlength'));
     let minlength = parseInt(data.getAttribute('minlength'));
     let long = true;
-    if(maxlength !== NaN && minlength !== NaN){
-        if(minlength < data.value.length && maxlength > data.value.length){
+    let msg = "";
+    let caracteres = data.value.length;
+    if(!isNaN(maxlength) && !isNaN(minlength)){
+        if(minlength < caracteres && maxlength > caracteres){
             long = true;
         } else{
             long = false;
+            if(minlength < caracteres){
+                msg = `Tiene demasiados caracteres. Caracteres ${caracteres}`;
+            } else if(maxlength > caracteres){
+                msg = `Tiene muy pocos caracteres. Caracteres ${caracteres}`;
+            }
+            valid.addErrorMessageInput(data, msg);
         }
-    } else if(maxlength !== NaN && minlength === NaN){
-        if(maxlength > data.value.length){
+    } else if(!isNaN(maxlength) && isNaN(minlength)){
+        if(maxlength > caracteres){
             long = true
         } else{
             long = false;
+            msg = `Tiene muy pocos caracteres. Caracteres ${caracteres}`;
+            valid.addErrorMessageInput(data, msg);
         }
     }
-    else if(minlength !== NaN && maxlength === NaN){
-        if(minlength < data.value.length){
+    else if(!isNaN(minlength) && isNaN(maxlength)){
+        if(minlength < caracteres){
             long = true
         } else{
             long = false;
+            msg = `Tiene demasiados caracteres. Caracteres ${caracteres}`;
+            valid.addErrorMessageInput(data, msg);
         }
     }
-    if (!tipo || !long) {
+    if (!long) {
         data.classList.add('error');
-    }else if(tipo && long) {
-        data.classList.remove('error');
     }
     else {
         data.classList.remove('error');
+        valid.removeErrorMessageInput(errorId, null);
     }
     let resp = new ValidationResponse(tipo, long);
     return resp;
@@ -182,7 +193,6 @@ valid.password = function (data) {
  * @param {boolean} status Indicará si se añade o elimina el mensaje.
  **/
 valid.addErrorMessageInput = function (data, msg) {
-    let equal = (data.getAttribute("for") !== null) ? valid.equal(data) : true;
     var htmlItem = document.createElement("small");
     htmlItem.style.color = "red";
     htmlItem.id = data.id + 'errorPassword';
@@ -194,6 +204,7 @@ valid.addErrorMessageInput = function (data, msg) {
 /**
  * Método que elimina el mensaje de error a un campo.
  * @param {string} id Identificador del elemento html al que se le eliminará el mensaje de error.
+ * @param {string} class Clase del elemento html al que se le eliminará el mensaje de error.
  **/
 valid.removeErrorMessageInput = function (id, errorClass) {
     if(id !== undefined){
@@ -214,14 +225,6 @@ valid.removeErrorMessageInput = function (id, errorClass) {
 };
 
 /**
- * Método que elimina el mensaje de error a un campo.
- * @param {string} id Identificador del elemento html al que se le eliminará el mensaje de error.
- **/
- valid.removeErrorMessageInputByClass = function (cls) {
-
-};
-
-/**
  * Validación si es un dato de tipo numérico.
  * @param {string} data Dato a validar.
  * @param {number} longitud Dato a validar.
@@ -238,6 +241,7 @@ valid.decimal = function (data, longitud) {
 valid.form = function (form) {
     let countOk = 0;
     var controls = form.elements;
+    valid.removeErrorMessageInput(null,'error-password');
     for (var i = 0, iLen = controls.length; i < iLen; i++) {
         if (controls[i].nodeName === 'INPUT') {
             switch (controls[i].getAttribute('data-id')) {
@@ -293,6 +297,13 @@ valid.form = function (form) {
                 default:
                     controls[i].classList.remove('error');
                     break;
+            }
+        } else if(controls[i].nodeName === 'TEXTAREA'){
+            if (valid.text(controls[i]).tipo) {
+                controls[i].classList.remove('error');
+            } else {
+                countOk += 1;
+                controls[i].classList.add('error');
             }
         }
     }

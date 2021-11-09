@@ -16,6 +16,8 @@
         break;
         case 'ObtenerUsuario' : ObtenerUsuario();
         break;
+        case 'ObtenerSesion' : ObtenerSesion();
+        break;
         case 'CerrarSesion' : CerrarSesion();
         break;
     }
@@ -216,6 +218,27 @@ function ObtenerUsuarioPorSesion ()
   $response-> data = $username;
   $response-> ok = false;
   return $response;
+}
+
+function ObtenerSesion(){
+  $response = new stdClass();
+  try {
+    if (isset($_SESSION['SessionStorage'])) {
+      $session = $_SESSION['SessionStorage'];
+      $response-> callback = 'EnviarToken';
+          $response-> data = $session;
+          $response-> ok = true;
+          
+      } else{
+          $response-> callback = 'EnviarToken';
+          $response-> data = null;
+          $response-> ok = false;
+      }
+    } catch (PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    echo json_encode($response);
 }
 
 function CerrarSesion (){
