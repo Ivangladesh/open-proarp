@@ -3,6 +3,7 @@
 let zero = {}
 const forms = document.getElementsByTagName('form');
 const nav = document.querySelectorAll('.nav-link');
+let sesion = "";
 
 zero.hideModal = function(){
     const btnCloseList = document.getElementsByClassName("btn-close-modal");
@@ -59,9 +60,15 @@ zero.navEventHandler = function (e) {
         }
         forms[i].reset();
     }
-    let sesion = atob(sessionStorage["Session"]);
-    let usrName = sesion.split('|')[1];
-    document.getElementById('txtUsuarioContacto').value = usrName
+    if(dataId !== 'div-inicio-sesion' && dataId !== 'div-registro-usuario'){
+        if(sessionStorage["Session"] !== undefined){
+            sesion = atob(sessionStorage["Session"]);
+        }else{
+            call.post("../php/session.php", JSON.stringify({Action: "ObtenerSesion"}), zero.sesionHandler, true);
+        } 
+        let usrName = sesion.split('|')[1];
+        document.getElementById('txtUsuarioContacto').value = usrName
+    }
     e.preventDefault();
 }
 
@@ -99,6 +106,26 @@ zero.navHandler = function (dataId) {
                 controls[i].classList.remove('error');
             }
         }
+    }
+}
+
+zero.sesionHandler = function(e){
+    if(e.ok){
+        sesion = e.data;
+        sessionStorage.setItem("Session", e.data);
+    } else{
+        call.post("../php/session.php", JSON.stringify({ Action: "CerrarSesion"}), handler, true);
+    }
+}
+
+function handler(e){
+    if(e.ok){
+        alerta.notif("info", e.data, 2000);
+        setTimeout(function(){
+            location.reload();
+        },2100);
+    }else{
+        console.log(e);
     }
 }
 
