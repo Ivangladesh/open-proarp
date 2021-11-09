@@ -28,17 +28,13 @@ body {
   animation-fill-mode: forwards;
   font-family: 'Roboto', sans-serif;
 }
-/* Modifica la barra lateral de desplazamiento */
-body::-webkit-scrollbar {
-  width: 0.75rem;
+
+p{
+  text-align: justify;
 }
 
-body::-webkit-scrollbar-track {
-  background: #585858;
-}
-
-body::-webkit-scrollbar-thumb {
-  background: var(--color-base);
+img {
+  vertical-align: middle;
 }
 
 main {
@@ -50,43 +46,6 @@ main {
 label{
   color: var(--texto-titulo);
   display:inline-block;
-}
-.tooltip {
-  position: relative;
-  display: inline-block;
-  border-bottom: 1px dotted black;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 250px;
-  background-color: black;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 5px 5px 5px;
-  
-  /* Position the tooltip */
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -60px;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
-
-p{
-    text-align: justify;
-}
-
-
-
-hr.divider-base {
-  border-top: 3px solid var(--texto-titulo);
-  margin-bottom: 1.5rem;
 }
 
 h1 {
@@ -147,6 +106,36 @@ button {
   cursor: pointer;
 }
 
+hr.divider-base {
+  border-top: 3px solid var(--texto-titulo);
+  margin-bottom: 1.5rem;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 250px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 5px 5px 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 .button-sm {
   padding: 5px 10px;
 }
@@ -172,17 +161,7 @@ button {
   color: rgb(255, 255, 255) !important;
 }
 
-@keyframes fadeInAnimation {
-  0% {
-      opacity: 0;
-  }
-  100% {
-      opacity: 1;
-  }
-}
-
 /* NAVBAR */
-
 .nav-bar {
   overflow: hidden;
   background-color: var(--color-base);
@@ -215,7 +194,9 @@ button {
   float: right !important;
 }
 
-/* 575 */
+/* TODO: pantallas móviles en horizontal */
+
+/* Pantallas más pequeñas */
 @media only screen and (max-width: 575px) {
   .nav-bar a:not(:first-child) {display: none;}
   .nav-bar a.icon {
@@ -267,6 +248,7 @@ button {
     width: 90%;
   }
 }
+
 /* Pantallas pequeñas */
 @media only screen and (min-width: 576px) and (max-width: 640px) {
   .column {
@@ -294,7 +276,7 @@ button {
     }
 }
 /* pantallas medianas */
-@media screen and (min-width: 641px) and (max-width: 899px) {
+@media only screen and (min-width: 641px) and (max-width: 899px) {
   .column {
     float: left;
     width: 100%;
@@ -329,7 +311,7 @@ button {
 }
 
 /* Pantallas grandes */
-@media screen and (min-width: 900px) {
+@media only screen and (min-width: 900px) {
   .column-login-img {
     float: left;
     width: 30%;
@@ -454,20 +436,10 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 
-@-webkit-keyframes new-fade {
-  0% {background-color: rgba(60, 255, 0, 0.308);}
-  100% {background-color: none;}
-}
-@keyframes new-fade {
-  0% {background-color: rgba(60, 255, 0, 0.308);}
-  100% {background-color: none;}
-}
-
 .tr-new {
-  -webkit-animation: new-fade 2s ease-in 1 !important;
-  animation: new-fade 2s ease-in 1 !important;
+  -webkit-animation: newRowfade 2s ease-in 1 !important;
+  animation: newRowfade 2s ease-in 1 !important;
 }
-
 
 table tr.header, table tr:hover {
   background-color: var(--texto-base);
@@ -495,7 +467,6 @@ table tr.header, table tr:hover {
   opacity: 90%s;
 }
 
-
 .warning{
   border: 1px solid var(--texto-alert) !important;
   -webkit-box-shadow: 1px 5px 7px 0 rgba(216, 0, 0, 0.3) !important;
@@ -503,13 +474,8 @@ table tr.header, table tr:hover {
   opacity: 90%s;
 }
 
-/*Carrousel STARTS*/
-
 .carrousel-slide {
   display: none
-}
-img {
-  vertical-align: middle;
 }
 
 .slideshow-container {
@@ -561,4 +527,24 @@ img {
 
 .canvas{
   padding-bottom:7rem !important;
+}
+
+
+/* EFECTOS Y TRANSICIONES */
+
+@-webkit-keyframes newRowfade {
+  0% {background-color: rgba(60, 255, 0, 0.308);}
+  100% {background-color: none;}
+}
+@keyframes newRowfade {
+  0% {background-color: rgba(60, 255, 0, 0.308);}
+  100% {background-color: none;}
+}
+@keyframes fadeInAnimation {
+  0% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
 }
