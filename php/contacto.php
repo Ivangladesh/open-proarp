@@ -13,30 +13,37 @@
   }
 
   function RegistrarMensaje (){
-    $pdo = OpenCon();
+    $response = new stdClass();
     $data = json_decode(file_get_contents('php://input'), true);
     $session = ObtenerUsuarioPorSesion();
     $email = $session->data;
     $asunto = $data['Asunto'];
     $mensaje = $data['Mensaje'];
-    $sp = "CALL spRegistrarMensajeContacto('$asunto','$mensaje', '$email')";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($sp);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-          $insert = $statement->fetch();
-          $response-> callback = 'RegistrarMensaje';
-          $response-> data = $insert[0];
-          $response-> ok = true;
-        } else{
-          $response-> callback = 'RegistrarMensaje';
-          $response-> data = null;
-          $response-> ok = false;
+    if (!empty($email) && !empty($asunto) && !empty($mensaje)) {
+      $pdo = OpenCon();
+      $sp = "CALL spRegistrarMensajeContacto('$asunto','$mensaje', '$email')";
+      try {
+          $statement=$pdo->prepare($sp);
+          $statement->execute();
+          if($statement->rowCount() > 0){
+            $insert = $statement->fetch();
+            $response-> callback = 'RegistrarMensaje';
+            $response-> data = $insert[0];
+            $response-> ok = true;
+          } else{
+            $response-> callback = 'RegistrarMensaje';
+            $response-> data = null;
+            $response-> ok = false;
+          }
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
         }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-      echo json_encode($response);
+    } else{
+      $response-> callback = 'RegistrarMensaje';
+      $response-> data = null;
+      $response-> ok = false;
+    }
+
+    echo json_encode($response);
   }

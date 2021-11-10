@@ -1,7 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     const formRegistrar = document.getElementById('frmRegistrar');
     const frmLogin = document.getElementById('frmLogin');
+    const maxYear = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
+    const maxDateFormatted = new Date(maxYear).toISOString().split("T")[0];
+
+    document.getElementById("txtRegistroFecha").setAttribute("max", maxDateFormatted);
 
     if(frmLogin !== null || formRegistrar !== null){
         valid.setupForm(frmLogin);
@@ -28,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
         let fecha = document.getElementById('txtRegistroFecha').value;
         let email = document.getElementById('txtRegistroEmail').value;
         let password = btoa(document.getElementById('txtRegistroPassword').value);
-
         let datos = {
             Action: "RegistrarUsuario",
             Nombre: nombre,
@@ -82,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     alerta.notif('ok', msg, 2000);
                     setTimeout(function(){zero.navHandler("div-inicio-sesion");},2100);
                 } else{
-                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
+                    alerta.notif('fail', e.data, 3000);
                 }
                 break;
             case "ValidarSesion":
