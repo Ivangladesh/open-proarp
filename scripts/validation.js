@@ -192,7 +192,7 @@ valid.password = function (data) {
   let tipo = regText.test(data.value);
   const errorId = data.id + "errorValid";
   valid.removeErrorMessageInput(errorId, null);
-  let msg = `Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres)o no contiene caracteres especiales (#$^+=!*()@%&).`;
+  let msg = `La contraseña debe tener una longitud mínima de 8 caracteres y máxima de 15 o no contiene caracteres especiales (#$^+=!*()@%&).`;
   if (!tipo) {
     data.classList.add("error");
     valid.addErrorMessageInput(data, msg);

@@ -170,7 +170,7 @@
     // if($jsonResponse['success'] == 1 && $jsonResponse['score'] >= 0.5){
       $data = json_decode(file_get_contents('php://input'), true);
       $pdo = OpenCon();
-      $caracteres = "(#|$|-|_|&|%)";
+      $caracteres = "(#|$|^|+|=|!|*|(|)|@|%|&)";
       $nombre = $data['Nombre'];
       $paterno = $data['Paterno'];
       $materno = $data['Materno'];
@@ -185,7 +185,7 @@
         echo json_encode($response);
       } else if(!preg_match($caracteres, $password)){
         $response-> callback = 'RegistrarUsuario';
-        $response-> data = "La contraseña debe tener por lo menos un caracter especial: #1$,-,_,&,%";
+        $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
         $response-> ok = false;
         echo json_encode($response);
       } else{
