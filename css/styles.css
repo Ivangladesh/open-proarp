@@ -234,10 +234,10 @@ hr.divider-base {
     padding: 15px;
   }
   .img-login{
-    max-width: 70%;
+    max-width: 50%;
     height: auto;
     display: flex;
-    margin: auto;
+    margin: 0 auto;
   }
   .container-notification{
     position:absolute;
