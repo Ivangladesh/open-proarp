@@ -1,4 +1,4 @@
-<!-- INICIO SESION -->
+<!-- ADMINISTRAROR -->
 <div class="animate-bottom sub-container" id="div-administrador" style="display: none;">
     <div class="container">
         <h1>Administración</h1>
@@ -6,9 +6,9 @@
             <hr class="divider-base">
             <div class="tab-bar">
                 <button class="tab-nav" data-id="mensajes" id="tabMensajes">Mensajes</button>
-                <button class="tab-nav" data-id="notificaciones">Notificaciones</button>
-                <button class="tab-nav" data-id="imagenes">Imágenes</button>
-                <button class="tab-nav" data-id="usuarios">Usuarios</button>
+                <button class="tab-nav" data-id="notificaciones" id="tabNotificaciones">Notificaciones</button>
+                <button class="tab-nav" data-id="imagenes" id="tabImagenes">Imágenes</button>
+                <button class="tab-nav" data-id="usuarios" id="tabUsuarios">Usuarios</button>
             </div>
             <div class="row">
                 <div class="card-body">
@@ -77,14 +77,11 @@
                         <h3>Usuarios</h3>
                         <hr class="divider-base">
                         <div>
-                            <table style="width:100%" id="tblNotificaciones" class="table table-dark">
+                            <table style="width:100%" id="tblUsuarios" class="table table-dark">
                                 <thead>
                                     <tr>
-                                        <th>UsuarioId</th>
                                         <th>Nombre</th>
                                         <th>Email</th>
-                                        <th>Apellido paterno</th>
-                                        <th>Apellido materno</th>
                                         <th>Fecha nacimiento</th>
                                         <th>Tipo de usuario</th>
                                         <th>Estado de usuario</th>
@@ -100,4 +97,4 @@
         </div>
     </div>
 </div>
-<!-- INICIO SESION FIN-->
+<!-- ADMINISTRAROR FIN-->

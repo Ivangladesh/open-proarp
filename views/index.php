@@ -58,6 +58,9 @@ if (isset($_SESSION['SessionStorage'])) {
                     if($tipo == 1){
                         readfile('../views/partials/_administrador.html');
                     }
+                    if($tipo == 1 || $tipo == 2){
+                        readfile('../views/partials/_inventario.html');
+                    }
                 } else{
                     readfile('../views/partials/_registro.html');
                     readfile('../views/partials/_login.html');
@@ -98,7 +101,10 @@ if (isset($_SESSION['SessionStorage'])) {
     </script>';
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
     if($tipo == 1){
-        echo '<script src="../scripts/administrador.js?v=1.001"></script>';
+        echo '<script src="../scripts/administrador.js?v=1.002"></script>';
+    }
+    if($tipo == 1 || $tipo == 2){
+        echo '<script src="../scripts/inventario.js?v=1.001"></script>';
     }
 } else{
     echo '<script src="../scripts/registro.js?v=1.001"></script>';

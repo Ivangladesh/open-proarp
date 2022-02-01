@@ -8,7 +8,7 @@
     $action = $data['Action'];
     switch($action) {
       #region OBTENER GENERAL
-      case 'ObtenerMensajes' : ObtenerMensajes();
+      case 'ObtenerProductos' : ObtenerProductos();
       break;
       case 'ObtenerUsuarios' : ObtenerUsuarios();
       break;
@@ -41,15 +41,15 @@
     }
   }
   #region OBTENER GENERAL
-  function ObtenerMensajes (){
+  function ObtenerProductos (){
     $pdo = OpenCon();
-    $sp = "CALL spObtenerMensajesContacto()";
+    $sp = "CALL spObtenerProductos()";
     $response = new stdClass();
     try {
         $statement=$pdo->prepare($sp);
         $statement->execute();
         while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
-          $response-> callback = 'ObtenerMensajes';
+          $response-> callback = 'ObtenerProductos';
           $response-> data = $r;
           $response-> ok = true;
         }

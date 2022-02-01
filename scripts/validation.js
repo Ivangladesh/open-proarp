@@ -299,7 +299,7 @@ valid.form = function (form) {
     if(countOk <= 0){
         return true;
     } else {
-        alerta.notif('fail', `Corrija los ${countOk} campos marcados`, 1000);
+        alerta.notif('fail', `Corrija los ${countOk} campos marcados`, 3000);
         return false;
     }
 }

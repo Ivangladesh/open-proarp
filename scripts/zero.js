@@ -48,6 +48,10 @@ zero.navEventHandler = function (e) {
         var a = subs[i];
         a.style.display = 'none';
     }
+    let tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
     document.getElementById(dataId).style.display = 'block';
     for (let i = 0; i < forms.length; i++) {
         let controls = forms[i].elements;
