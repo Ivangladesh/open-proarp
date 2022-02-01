@@ -106,7 +106,7 @@
     display: block;
   }
   
-  @media all and (min-width: 600px) {
+  @media all and (min-width: 641px) {
     .menu {
       justify-content: center;
     }
@@ -192,17 +192,7 @@
     animation-duration: 1s
   }
   
-  @-webkit-keyframes animatebottom {
-    from { bottom:-100px; opacity:0 } 
-    to { bottom:0px; opacity:1 }
-  }
-  
-  @keyframes animatebottom { 
-    from{ bottom:-100px; opacity:0 } 
-    to{ bottom:0; opacity:1 }
-  }
-  
-  #div-registro-usuario, #div-inventario {
+  #div-registro-usuario, #div-inventario, #div-administrador, #div-contacto {
     display: none;
   }
 
@@ -254,21 +244,6 @@
   transition: var(--transicion);
 }
 
-.close {
-  padding: 18px;
-  color: #fff;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 .modal-content {
   background-color: #fefefe;
   margin: auto;
@@ -284,3 +259,16 @@
 }
 
 /* VENTANA MODAL */
+
+
+/* EFECTOS Y TRANSICIONES */
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}

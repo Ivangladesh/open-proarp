@@ -15,7 +15,7 @@ function ValidationResponse(tipo, longitud) {
 valid.equal = function (data) {
     let secondId = data.getAttribute("for");
     let second = document.getElementById(secondId);
-    let resp = (data.value === second.value) ? true : false;
+    let resp = data.value === second.value ? true : false;
     return resp;
 };
 
@@ -24,25 +24,25 @@ valid.equal = function (data) {
  * @param {string} data Dato a validar.
  * @returns {boolean}
  */
- valid.equalPassword = function (first) {
+valid.equalPassword = function (first) {
     let resp = false;
-    if(first.getAttribute("for") !== null){
+    if (first.getAttribute("for") !== null) {
         let secondId = first.getAttribute("for");
         let second = document.getElementById(secondId);
-        const msg = 'Las contraseñas no coinciden';
-        const errorClass = "error-password"
-        resp = (first.value === second.value) ? true : false;
+        const msg = "Las contraseñas no coinciden";
+        const errorClass = "error-password";
+        resp = first.value === second.value ? true : false;
         valid.removeErrorMessageInput(null, errorClass);
-        if(!resp){
+        if (!resp) {
             valid.addErrorMessageInput(first, msg);
             valid.addErrorMessageInput(second, msg);
-            first.classList.add('error');
-            second.classList.add('error');
-        } else{
-            first.classList.remove('error');
-            second.classList.remove('error');
+            first.classList.add("error");
+            second.classList.add("error");
+        } else {
+            first.classList.remove("error");
+            second.classList.remove("error");
         }
-    };
+    }
     return resp;
 };
 
@@ -55,11 +55,11 @@ valid.equal = function (data) {
 valid.number = function (data, longitud) {
     const regNumeros = /^[0-9]+$/;
     let tipo = regNumeros.test(data.value);
-    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
+    let long = longitud !== undefined ? valid.longitud(data, longitud) : true;
     if (!tipo) {
-        data.classList.add('error');
+        data.classList.add("error");
     } else {
-        data.classList.remove('error');
+        data.classList.remove("error");
     }
     let resp = new ValidationResponse(tipo, long);
     return resp;
@@ -73,13 +73,14 @@ valid.number = function (data, longitud) {
  * @returns {boolean}
  **/
 valid.email = function (data, longitud) {
-    const regEmail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const regEmail =
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     let tipo = regEmail.test(data.value);
-    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
+    let long = longitud !== undefined ? valid.longitud(data, longitud) : true;
     if (!tipo) {
-        data.classList.add('error');
+        data.classList.add("error");
     } else {
-        data.classList.remove('error');
+        data.classList.remove("error");
     }
     let resp = new ValidationResponse(tipo, long);
     return resp;
@@ -95,10 +96,18 @@ valid.email = function (data, longitud) {
 valid.date = function (data) {
     const regFecha = /^\d{4}-\d{2}-\d{2}$/;
     let tipo = regFecha.test(data.value);
+    let dateYear = new Date(data.value).getFullYear();
+    let todaysYear = new Date().getFullYear();
+    let msg = "";
+    if (todaysYear - dateYear < 18) {
+        msg = `Fecha inválida, no puedes ser menor de 18 años.`;
+        valid.addErrorMessageInput(data, msg);
+        tipo = false;
+    }
     if (!tipo) {
-        data.classList.add('error');
+        data.classList.add("error");
     } else {
-        data.classList.remove('error');
+        data.classList.remove("error");
     }
     let resp = new ValidationResponse(tipo, tipo);
     return resp;
@@ -113,40 +122,59 @@ valid.date = function (data) {
  * @returns {boolean}
  **/
 valid.text = function (data) {
-    const regText_ = /^[a-zA-Z]+$/;
-    const regText = /^[A-Za-z0-9][A-Za-z0-9 ]*[A-Za-z0-9]*$/;
+    const regText = /^(?!\s*$)(?!(.)\1\1){3}.+/;
     let tipo = regText.test(data.value);
-    let maxlength = parseInt(data.getAttribute('maxlength'));
-    let minlength = parseInt(data.getAttribute('minlength'));
+    const errorId = data.id + "errorValid";
+    let maxlength = parseInt(data.getAttribute("maxlength"));
+    let minlength = parseInt(data.getAttribute("minlength"));
     let long = true;
-    if(maxlength !== NaN && minlength !== NaN){
-        if(minlength < data.value.length && maxlength > data.value.length){
+    let msg = "";
+    let caracteres = data.value.length;
+    if (!isNaN(maxlength) && !isNaN(minlength)) {
+        if (minlength < caracteres && maxlength > caracteres) {
             long = true;
-        } else{
+        } else {
             long = false;
+            if (minlength < caracteres) {
+                msg = `Tiene demasiados caracteres. Caracteres ${caracteres}`;
+            } else if (maxlength > caracteres) {
+                msg = `Tiene muy pocos caracteres. Caracteres ${caracteres}`;
+            }
+            valid.addErrorMessageInput(data, msg);
         }
-    } else if(maxlength !== NaN && minlength === NaN){
-        if(maxlength > data.value.length){
-            long = true
-        } else{
+    } else if (!isNaN(maxlength) && isNaN(minlength)) {
+        if (maxlength > caracteres) {
+            long = true;
+        } else {
             long = false;
+            msg = `Tiene muy pocos caracteres. Caracteres ${caracteres}`;
+            valid.addErrorMessageInput(data, msg);
         }
-    }
-    else if(minlength !== NaN && maxlength === NaN){
-        if(minlength < data.value.length){
-            long = true
-        } else{
+    } else if (!isNaN(minlength) && isNaN(maxlength)) {
+        if (minlength < caracteres) {
+            long = true;
+        } else {
             long = false;
+            msg = `Tiene demasiados caracteres. Caracteres ${caracteres}`;
+            valid.addErrorMessageInput(data, msg);
         }
     }
-    if (!tipo || !long) {
-        data.classList.add('error');
-    }else if(tipo && long) {
-        data.classList.remove('error');
+    if (!long) {
+        data.classList.add("error");
+    } else {
+        data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
     }
-    else {
-        data.classList.remove('error');
+
+    if (!tipo) {
+        data.classList.add("error");
+        msg = `El texto contiene demasiados caracteres iguales seguidos.`;
+        valid.addErrorMessageInput(data, msg);
+    } else {
+        data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
     }
+
     let resp = new ValidationResponse(tipo, long);
     return resp;
 };
@@ -159,16 +187,17 @@ valid.text = function (data) {
  * @returns {boolean}
  **/
 valid.password = function (data) {
-    const regText = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[#$^+=!*()@%&]).{8,15}$/;
+    const regText =
+        /^(?=.*\d)(?!.*\s)(?=.*[a-zA-Z])(?=.*[#$^+=!*()@%&]).{8,15}(?!(.)\1\1){3}$/;
     let tipo = regText.test(data.value);
-    const errorId = data.id + 'errorPassword';
+    const errorId = data.id + "errorValid";
     valid.removeErrorMessageInput(errorId, null);
-    let msg = `Su contraseña no cumple con los requerimientos mínimos de longitud (8 caracteres)o no contiene caracteres especiales (#$^+=!*()@%&).`;
+    let msg = `La contraseña debe tener una longitud mínima de 8 caracteres y máxima de 15 o no contiene caracteres especiales (#$^+=!*()@%&).`;
     if (!tipo) {
-        data.classList.add('error');
+        data.classList.add("error");
         valid.addErrorMessageInput(data, msg);
     } else {
-        data.classList.remove('error');
+        data.classList.remove("error");
     }
 
     let resp = new ValidationResponse(tipo, tipo);
@@ -182,10 +211,9 @@ valid.password = function (data) {
  * @param {boolean} status Indicará si se añade o elimina el mensaje.
  **/
 valid.addErrorMessageInput = function (data, msg) {
-    let equal = (data.getAttribute("for") !== null) ? valid.equal(data) : true;
     var htmlItem = document.createElement("small");
     htmlItem.style.color = "red";
-    htmlItem.id = data.id + 'errorPassword';
+    htmlItem.id = data.id + "errorValid";
     htmlItem.classList.add("error-password");
     htmlItem.innerHTML = msg;
     data.parentNode.insertBefore(htmlItem, data.nextSibling);
@@ -194,31 +222,23 @@ valid.addErrorMessageInput = function (data, msg) {
 /**
  * Método que elimina el mensaje de error a un campo.
  * @param {string} id Identificador del elemento html al que se le eliminará el mensaje de error.
+ * @param {string} class Clase del elemento html al que se le eliminará el mensaje de error.
  **/
 valid.removeErrorMessageInput = function (id, errorClass) {
-    if(id !== undefined){
+    if (id !== undefined) {
         let elem = document.getElementById(id);
         if (elem !== null) {
             elem.remove();
         }
     }
-    if(errorClass !== undefined){
+    if (errorClass !== undefined) {
         let elem = document.getElementsByClassName(errorClass);
-        
-        while(elem.length > 0){
-            elem[0].classList.remove('error');
+
+        while (elem.length > 0) {
+            elem[0].classList.remove("error");
             elem[0].parentNode.removeChild(elem[0]);
         }
     }
-
-};
-
-/**
- * Método que elimina el mensaje de error a un campo.
- * @param {string} id Identificador del elemento html al que se le eliminará el mensaje de error.
- **/
- valid.removeErrorMessageInputByClass = function (cls) {
-
 };
 
 /**
@@ -230,119 +250,135 @@ valid.removeErrorMessageInput = function (id, errorClass) {
 valid.decimal = function (data, longitud) {
     const regDecimal = /^\d+(\.\d{1,2})?$/;
     let tipo = regDecimal.test(data.value);
-    let long = (longitud !== undefined) ? valid.longitud(data, longitud) : true;
+    let long = longitud !== undefined ? valid.longitud(data, longitud) : true;
     let resp = new ValidationResponse(tipo, long);
     return resp;
 };
 
+/**
+ * Método que establece de manera dinámica validaciones para cada elemento input y textarea.
+ * @param {form} form Elemento form a validar.
+ * @returns {boolean}
+ */
 valid.form = function (form) {
     let countOk = 0;
     var controls = form.elements;
+    valid.removeErrorMessageInput(null, "error-password");
     for (var i = 0, iLen = controls.length; i < iLen; i++) {
-        if (controls[i].nodeName === 'INPUT') {
-            switch (controls[i].getAttribute('data-id')) {
-                case 'email':
+        if (controls[i].nodeName === "INPUT") {
+            switch (controls[i].getAttribute("data-id")) {
+                case "email":
                     if (valid.email(controls[i]).tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
-                case 'text':
+                case "text":
                     if (valid.text(controls[i]).tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
-                case 'password':
+                case "password":
                     let resp = valid.password(controls[i]);
                     if (resp.tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
-                case 'decimal':
+                case "decimal":
                     if (valid.decimal(controls[i]).tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
-                case 'number':
+                case "number":
                     if (valid.number(controls[i]).tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
-                case 'date':
+                case "date":
                     if (valid.date(controls[i]).tipo) {
-                        controls[i].classList.remove('error');
+                        controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
-                        controls[i].classList.add('error');
+                        controls[i].classList.add("error");
                     }
                     break;
                 default:
-                    controls[i].classList.remove('error');
+                    controls[i].classList.remove("error");
                     break;
+            }
+        } else if (controls[i].nodeName === "TEXTAREA") {
+            if (valid.text(controls[i]).tipo) {
+                controls[i].classList.remove("error");
+            } else {
+                countOk += 1;
+                controls[i].classList.add("error");
             }
         }
     }
-    if(countOk <= 0){
+    if (countOk <= 0) {
         return true;
     } else {
-        alerta.notif('fail', `Corrija los ${countOk} campos marcados`, 3000);
+        alerta.notif("fail", `Corrija los ${countOk} campos marcados`, 3000);
         return false;
     }
-}
-
+};
 
 /**
- * Establece validaciones en un form.
- * @param {string} data Dato a validar.
- * @param {number} longitud Dato a validar.
+ * Método que establece event listeners de manera dinámica para cada elemento input y textarea.
+ * Cada evento detona en una validación para el tipo de input.
+ * @param {form} form Elemento form a validar.
+ * @returns {boolean}
  */
 valid.setupForm = function (data) {
     let controls = data.elements;
     for (let i = 0, iLen = controls.length; i < iLen; i++) {
-        if (controls[i].nodeName === 'INPUT') {
+        if (controls[i].nodeName === "INPUT") {
             controls[i].addEventListener("change", function () {
-                switch (this.getAttribute('data-id')) {
-                    case 'email':
+                switch (this.getAttribute("data-id")) {
+                    case "email":
                         valid.email(this);
                         break;
-                    case 'date':
+                    case "date":
                         valid.date(this);
                         break;
-                    case 'decimal':
+                    case "decimal":
                         valid.decimal(this);
                         break;
-                    case 'number':
+                    case "number":
                         valid.number(this);
                         break;
-                    case 'password':
+                    case "text":
+                        valid.text(this);
+                        break;
+                    case "password":
                         valid.equalPassword(this);
                         break;
                     default:
-                        this.classList.remove('error');
+                        this.classList.remove("error");
                         break;
                 }
             });
-        } else if(controls[i].nodeName === 'TEXTAREA'){
+        } else if (controls[i].nodeName === "TEXTAREA") {
             controls[i].addEventListener("change", function () {
                 valid.text(this);
             });
         }
     }
-}
+};
 
 /**
  * Validación de longitud.
