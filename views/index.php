@@ -73,6 +73,9 @@ if (isset($_SESSION['SessionStorage'])) {
     readfile('../views/partials/_footer.html');
     readfile('../views/partials/modals/_modal-mensaje.html');
     readfile('../views/partials/modals/_modal-confirm.html');
+    if($tipo == 1){
+        readfile('../views/partials/modals/_modal-upload-imagen.html');
+    }
     ?>
 </body>
 <script src="../scripts/alert.js?v=1.000"></script>

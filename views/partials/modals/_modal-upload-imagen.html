@@ -1,0 +1,43 @@
+<div class="modal fade animate-bottom" id="mdlUploadImagen" style="display: none;">
+    <div class="modal-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form id="frmContacto">
+                        <div class="row">
+                            <h3>Detalle</h3>
+                            <hr class="divider-base">
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtNombreD" style="display:block">Adjuntar imagen</label>
+                                    <!-- <input type="file" class="form-control input-form" id="imgUpload" name="img" accept="image/*"> -->
+                                    <label for="file-upload" class="upload-button">
+                                        <i class="fa fa-cloud-upload"></i> Seleccionar
+                                    </label>
+                                    <label for="txtEmailD" id="txtArchivoNombre"></label>
+                                    <input id="file-upload" type="file" id="imgUpload" name="img" accept="image/*"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <div class="form-group">
+                                    <label for="txtDescripcion" style="display:block">Descripción:</label>
+                                    <textarea rows="5" class="form-control input-form" id="txtDescripcion"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <button class="btn btn-success" id="btnAceptarConfirmacion" >Guardar</button>
+                                <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlUploadImagen">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

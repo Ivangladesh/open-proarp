@@ -12,17 +12,17 @@ let sesion = "";
 zero.hideModal = function () {
     const btnCloseList = document.getElementsByClassName("btn-close-modal");
     for (let i = 0, iLen = btnCloseList.length; i < iLen; i++) {
-        btnCloseList[i].addEventListener("click", function () {
+        btnCloseList[i].addEventListener("click", function (e) {
             let mdl = this.getAttribute("data-id");
             document.getElementById(mdl).style.display = "none";
-        });
-    }
-    document
-        .getElementById("btnCerrarModal")
-        .addEventListener("click", function (e) {
-            document.getElementById("mdlMensaje").style.display = "none;";
             e.preventDefault();
         });
+    }
+    // document.getElementById("btnCerrarModal").addEventListener("click", function (e) {
+    //     let dataId = e.target.getAttribute("data-id");
+    //     document.getElementById(dataId).style.display = "none;";
+    //     e.preventDefault();
+    // });
 };
 
 /**

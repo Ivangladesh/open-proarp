@@ -106,6 +106,24 @@ button {
   cursor: pointer;
 }
 
+.upload-button {
+  background-color: #e6e6e6;
+  border: none;
+  color: black;
+  padding: 12px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 5px;
+  border-color: #414141;
+  cursor: pointer;
+}
+
+input[type="file"] {
+  display: none;
+}
+
 hr.divider-base {
   border-top: 3px solid var(--texto-titulo);
   margin-bottom: 1.5rem;
