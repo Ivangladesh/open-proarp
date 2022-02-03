@@ -140,10 +140,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const mostrarModalUploadImagen = () => {
-        document.getElementById("file-upload").value = null;
+        document.getElementById("imgUpload").value = null;
         document.getElementById('txtArchivoNombre').innerHTML = "";
         document.getElementById('mdlUploadImagen').style.display = "block"
-        document.getElementById("file-upload").addEventListener('change', function (e) {
+        document.getElementById("imgUpload").addEventListener('change', function (e) {
             var fileName = e.target.files[0].name;
             document.getElementById('txtArchivoNombre').innerHTML = fileName;
             e.preventDefault();

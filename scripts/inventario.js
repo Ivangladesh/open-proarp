@@ -4,7 +4,14 @@ document.addEventListener("DOMContentLoaded", function () {
         ObtenerProductos();
         e.preventDefault();
     });
+    document.getElementById("agregarProducto").addEventListener('click', function (e) {
+        mostrarModalNuevoProducto();
+        e.preventDefault();
+    });
 
+    const mostrarModalNuevoProducto = () => {
+        document.getElementById('mdlNuevoProducto').style.display = "block"
+    }
     // document.getElementById("tblMensajes").addEventListener('click', function(e){
     //     if(e.target.cellIndex < 5){
     //         let mensajeId = parseInt(e.target.parentNode.cells[0].id);

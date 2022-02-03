@@ -76,6 +76,9 @@ if (isset($_SESSION['SessionStorage'])) {
     if($tipo == 1){
         readfile('../views/partials/modals/_modal-upload-imagen.html');
     }
+    if($tipo == 1 || $tipo == 2){
+        readfile('../views/partials/modals/_modal-nuevo-producto.html');
+    }
     ?>
 </body>
 <script src="../scripts/alert.js?v=1.000"></script>
@@ -105,6 +108,7 @@ if (isset($_SESSION['SessionStorage'])) {
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
     if($tipo == 1){
         echo '<script src="../scripts/administrador.js?v=1.002"></script>';
+        echo '<script src="../scripts/imagen.js?v=1.001"></script>';
     }
     if($tipo == 1 || $tipo == 2){
         echo '<script src="../scripts/inventario.js?v=1.001"></script>';
