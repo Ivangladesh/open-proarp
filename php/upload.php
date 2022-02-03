@@ -89,4 +89,4 @@ function makeThumbnails($updir, $img, $id)
     }
 }
 
-?>
+?>git add
