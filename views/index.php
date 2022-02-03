@@ -108,7 +108,7 @@ if (isset($_SESSION['SessionStorage'])) {
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
     if($tipo == 1){
         echo '<script src="../scripts/administrador.js?v=1.002"></script>';
-        echo '<script src="../scripts/imagen.js?v=1.001"></script>';
+        echo '<script src="../scripts/imagen.js?v=1.002"></script>';
     }
     if($tipo == 1 || $tipo == 2){
         echo '<script src="../scripts/inventario.js?v=1.001"></script>';

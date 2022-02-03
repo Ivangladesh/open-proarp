@@ -264,6 +264,7 @@ hr.divider-base {
     transform:translate(-50%);
     padding:1rem;
     width: 90%;
+    z-index: 16;
   }
 }
 
@@ -291,6 +292,7 @@ hr.divider-base {
       transform:translate(-50%);
       padding:1rem;
       width: 90%;
+      z-index: 16;
     }
 }
 /* pantallas medianas */
@@ -325,6 +327,7 @@ hr.divider-base {
     padding:1rem;
     opacity: .7;
     transition: opacity 1s;
+    z-index: 16;
   }
 }
 
@@ -403,6 +406,7 @@ hr.divider-base {
     opacity: .7;
     transition: opacity 1s;
     animation: fadeInAnimation ease 3s;
+    z-index: 16;
   }
 }
 
