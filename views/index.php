@@ -27,18 +27,18 @@ if (isset($_SESSION['SessionStorage'])) {
             if (isset($_SESSION['SessionStorage'])) {
                 echo
                 '<li class="item"><a href="#" class="nav-link" id="inicio" data-id="div-inicio">Inicio</a></li>';
-                if($tipo == 1){
+                if ($tipo == 1) {
                     echo '<li class="item"><a href="#" class="nav-link" id="inventario" data-id="div-inventario">Inventario</a></li>';
-                } else{
+                } else {
                     echo '<li class="item"><a href="#" class="nav-link" id="inventario" data-id="div-inventario">Catálogo</a></li>';
                 }
-                echo               
+                echo
                 '<li class="item"><a href="#" class="nav-link" id="contacto" data-id="div-contacto">Contacto</a></li>';
-                if($tipo == 1){
+                if ($tipo == 1) {
                     echo '<li class="item"><a href="#" class="nav-link" id="administrador" data-id="div-administrador">Administrador</a></li>';
                 }
                 echo '<li class="item button secondary"><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>';
-            } else{
+            } else {
                 echo
                 '<li class="item button"><a href="#" class="nav-link" id="login" data-id="div-inicio-sesion">Iniciar sesión</a></li>
                 <li class="item button"><a href="#" class="nav-link" id="login" data-id="div-registro-usuario">Registro</a></li>';
@@ -55,13 +55,13 @@ if (isset($_SESSION['SessionStorage'])) {
                 if (isset($_SESSION['SessionStorage'])) {
                     readfile('../views/partials/_main.html');
                     readfile('../views/partials/_contacto.html');
-                    if($tipo == 1){
+                    if ($tipo == 1) {
                         readfile('../views/partials/_administrador.html');
                     }
-                    if($tipo == 1 || $tipo == 2){
+                    if ($tipo == 1 || $tipo == 2) {
                         readfile('../views/partials/_inventario.html');
                     }
-                } else{
+                } else {
                     readfile('../views/partials/_registro.html');
                     readfile('../views/partials/_login.html');
                 }
@@ -73,10 +73,10 @@ if (isset($_SESSION['SessionStorage'])) {
     readfile('../views/partials/_footer.html');
     readfile('../views/partials/modals/_modal-mensaje.html');
     readfile('../views/partials/modals/_modal-confirm.html');
-    if($tipo == 1){
+    if ($tipo == 1) {
         readfile('../views/partials/modals/_modal-upload-imagen.html');
     }
-    if($tipo == 1 || $tipo == 2){
+    if ($tipo == 1 || $tipo == 2) {
         readfile('../views/partials/modals/_modal-nuevo-producto.html');
     }
     ?>
@@ -95,28 +95,43 @@ if (isset($_SESSION['SessionStorage'])) {
         call.post("../php/session.php", JSON.stringify({ Action: "CerrarSesion"}), handler, true);
     }
     function handler(e){
-        if(e.ok){
-            alerta.notif("info", e.data, 2000);
-            setTimeout(function(){
-                location.reload();
-            },2100);
-        }else{
-            console.log(e);
+        if(e.callback === "EstadoSesion"){
+            console.info(e.ok);
+        } else{
+            if(e.ok){
+                alerta.notif("info", e.data, 2000);
+                setTimeout(function(){
+                    location.reload();
+                },2100);
+            }else{
+                console.log(e);
+            }
         }
+
+    }
+    setTimeout(function(){
+        if (sessionStorage.getItem("Session") !== null) {
+            setInterval(sessionStatus, 10000);
+        };
+    },5000);
+
+    function sessionStatus() {
+        console.log("Check session");
+        call.post("../php/session.php", JSON.stringify({
+            Action: "EstadoSesion"
+        }), handler, true);
     }
     </script>';
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
-    if($tipo == 1){
+    if ($tipo == 1) {
         echo '<script src="../scripts/administrador.js?v=1.002"></script>';
         echo '<script src="../scripts/imagen.js?v=1.002"></script>';
     }
-    if($tipo == 1 || $tipo == 2){
+    if ($tipo == 1 || $tipo == 2) {
         echo '<script src="../scripts/inventario.js?v=1.001"></script>';
     }
-} else{
+} else {
     echo '<script src="../scripts/registro.js?v=1.001"></script>';
 }
 ?>
-
-
 </html>
