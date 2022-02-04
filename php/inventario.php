@@ -5,6 +5,7 @@
 
   $data = json_decode(file_get_contents('php://input'), true);
   if(isset($data['Action']) && !empty($data['Action'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
     $action = $data['Action'];
     switch($action) {
       #region OBTENER GENERAL

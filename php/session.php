@@ -18,12 +18,14 @@
         break;
         case 'ObtenerSesion' : ObtenerSesion();
         break;
+        case 'EstadoSesion' : EstadoSesion();
+        break;
         case 'CerrarSesion' : CerrarSesion();
         break;
     }
   }
 
-  function IniciarSesion () { 
+  function IniciarSesion () {
     $response = new stdClass();
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['Email'];
@@ -104,6 +106,7 @@
               $response-> callback = 'EnviarToken';
               $response-> data = $token[0];
               $response-> ok = true;
+              $_SESSION['LAST_ACTIVITY'] = time();
           } else{
               $response-> callback = 'EnviarToken';
               $response-> data = null;
@@ -293,7 +296,18 @@ function ObtenerSesion(){
     echo json_encode($response);
 }
 
-function CerrarSesion (){
+function EstadoSesion (){
+  $response = new stdClass();
+  if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+    CerrarSesion();
+  } else{
+    $response-> callback = 'EstadoSesion';
+    $response-> ok = true;
+    echo json_encode($response);
+  }
+}
+
+function CerrarSesion(){
   session_unset();
   session_destroy();
   $response = new stdClass();
