@@ -303,6 +303,7 @@ function EstadoSesion (){
   } else{
     $response-> callback = 'EstadoSesion';
     $response-> ok = true;
+    $response-> data = time() - $_SESSION['LAST_ACTIVITY'];
     echo json_encode($response);
   }
 }
@@ -316,3 +317,5 @@ function CerrarSesion(){
   $response-> ok = true;
   echo json_encode($response);
 }
+
+?>

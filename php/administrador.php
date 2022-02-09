@@ -395,3 +395,5 @@ function EliminarMensaje()
 
   echo json_encode($response);
 }
+
+?>

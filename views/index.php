@@ -96,7 +96,7 @@ if (isset($_SESSION['SessionStorage'])) {
     }
     function handler(e){
         if(e.callback === "EstadoSesion"){
-            console.info(e.ok);
+            console.info(e.ok + " " + e.data);
         } else{
             if(e.ok){
                 alerta.notif("info", e.data, 2000);
@@ -125,7 +125,7 @@ if (isset($_SESSION['SessionStorage'])) {
     echo '<script src="../scripts/contacto.js?v=1.001"></script>';
     if ($tipo == 1) {
         echo '<script src="../scripts/administrador.js?v=1.002"></script>';
-        echo '<script src="../scripts/imagen.js?v=1.002"></script>';
+        echo '<script src="../scripts/imagen.js?v=1.003"></script>';
     }
     if ($tipo == 1 || $tipo == 2) {
         echo '<script src="../scripts/inventario.js?v=1.001"></script>';

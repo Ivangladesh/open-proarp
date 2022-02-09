@@ -1,34 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*     const frmContacto = document.getElementById('frmContacto');
-    
-        if(frmContacto !== null){
-            valid.setupForm(frmContacto);
-            document.getElementById("btnRegistrarMensajeContacto").addEventListener('click', function(e){
-                if(valid.form(frmContacto)){
-                    registrarUsuario();
-                }
-                e.preventDefault();
-            });btnCerrarModal
-        } */
-
-
-
     document.getElementById("agregarImagen").addEventListener('click', function (e) {
         mostrarModalUploadImagen();
         e.preventDefault();
     });
-
-
-
-    // function processSelectedFiles(fileInput) {
-    //     var files = fileInput.files;
-
-    //     for (var i = 0; i < files.length; i++) {
-    //       alert("Filename " + files[i].name);
-    //     }
-    //   }
-
 
     document.getElementById("tblMensajes").addEventListener('click', function (e) {
         if (e.target.cellIndex < 5) {
