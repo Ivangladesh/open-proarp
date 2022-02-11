@@ -64,14 +64,6 @@ zero.navEventHandler = function (e) {
         a.style.display = "none";
     }
     document.getElementById(dataId).style.display = "block";
-    for (let i = 0; i < forms.length; i++) {
-        let controls = forms[i].elements;
-        for (let i = 0, iLen = controls.length; i < iLen; i++) {
-            if (controls[i].nodeName === "INPUT") {
-                controls[i].classList.remove("error");
-                valid.removeErrorMessageInput(null, "error-password");
-            }
-        }
         let tabcontent = document.getElementsByClassName("tab-content");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
@@ -86,9 +78,8 @@ zero.navEventHandler = function (e) {
                 }
             }
             forms[i].reset();
-            forms[i].reset();
         }
-        if (dataId !== "div-inicio-sesion" && dataId !== "div-registro-usuario") {
+        if (dataId !== "div-inicio-sesion" && dataId !== "div-registro-usuario" && dataId !== "div-reset-password") {
             if (sessionStorage["Session"] !== undefined) {
                 sesion = atob(sessionStorage["Session"]);
             } else {
@@ -103,7 +94,7 @@ zero.navEventHandler = function (e) {
             document.getElementById("txtUsuarioContacto").value = usrName;
         }
         e.preventDefault();
-    }
+    
 };
 
 /**

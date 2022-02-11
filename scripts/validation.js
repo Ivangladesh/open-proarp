@@ -98,6 +98,7 @@ valid.date = function (data) {
     let tipo = regFecha.test(data.value);
     let dateYear = new Date(data.value).getFullYear();
     let todaysYear = new Date().getFullYear();
+    const errorId = data.id + "errorValid";
     let msg = "";
     if (todaysYear - dateYear < 18) {
         msg = `Fecha inválida, no puedes ser menor de 18 años.`;
@@ -108,6 +109,7 @@ valid.date = function (data) {
         data.classList.add("error");
     } else {
         data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
     }
     let resp = new ValidationResponse(tipo, tipo);
     return resp;
@@ -168,7 +170,7 @@ valid.text = function (data) {
 
     if (!tipo) {
         data.classList.add("error");
-        msg = `El texto contiene demasiados caracteres iguales seguidos.`;
+        msg = `El texto contiene demasiados caracteres iguales seguidos o está vacío.`;
         valid.addErrorMessageInput(data, msg);
     } else {
         data.classList.remove("error");

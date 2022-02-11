@@ -253,8 +253,13 @@
   function ActualizarUsuario (){
     $data = json_decode(file_get_contents('php://input'), true);
     $id = $data['UsuarioId'];
+    $nombre = $data['Nombre'];
+    $email = $data['Email'];
+    $fecha = $data['FechaNacimiento'];
+    $tipo = $data['Tipo'];
+    $estado = $data['Estado'];
     $pdo = OpenCon();
-    $update = "CALL spActualizarUsuario('$id')";
+    $update = "CALL spActualizarUsuario('$id','$nombre','$email','$fecha','$tipo','$estado')";
     $response = new stdClass();
     try {
         $statement=$pdo->prepare($update);

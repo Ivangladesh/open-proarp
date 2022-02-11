@@ -1,18 +1,32 @@
 <?php
     session_start();
     include('dbconn.php');
+    include('recaptcha.php');
     date_default_timezone_set('America/Mexico_City');
-  // define ("CaptchaPrivateKey", "6Le9QyUcAAAAAA6W1xX4saMhewADCLHXZKfxhI7C");
 
   $data = json_decode(file_get_contents('php://input'), true);
   if(isset($data['Action']) && !empty($data['Action'])) {
     $action = $data['Action'];
+
+    // if($action = 'IniciarSesion' || $action = 'RegistrarUsuario'){
+    //   if(isset($_POST['ReCaptchaToken'])){
+    //     $reCaptchaToken = $_POST['ReCaptchaToken'];
+    //     if(Recaptcha($reCaptchaToken)){
+    //       if($action = 'IniciarSesion'){
+    //         IniciarSesion();
+    //       } else{
+    //         RegistrarUsuario();
+    //       }
+    //     }
+    //   }
+    // }
+    
     switch($action) {
         case 'IniciarSesion' : IniciarSesion();
         break;
-        case 'ValidarSesion' : ValidarSesion();
-        break;
         case 'RegistrarUsuario' : RegistrarUsuario();
+        break;
+        case 'ValidarSesion' : ValidarSesion();
         break;
         case 'ObtenerUsuario' : ObtenerUsuario();
         break;
@@ -25,33 +39,44 @@
     }
   }
 
+
+
+
   function IniciarSesion () {
     $response = new stdClass();
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['Email'];
     $contrasena = $data['Password'];
-    if (!empty($email) && !empty($contrasena)) {
-      $pdo = OpenCon();
-      $procedure = "CALL spObtenerCredenciales('$email', '$contrasena')";
-      try {
-        $statement=$pdo->prepare($procedure);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-          $user = $statement->fetch();
-          GenerarToken($user);
-        } else{
-          $response-> callback = 'IniciarSesion';
-          $response-> data = null;
-          $response-> ok = false;
-          echo json_encode($response);
+    $reCaptchaToken = $data['ReCaptchaToken'];
+    if(Recaptcha($reCaptchaToken)){
+      if (!empty($email) && !empty($contrasena)) {
+        $pdo = OpenCon();
+        $procedure = "CALL spObtenerCredenciales('$email', '$contrasena')";
+        try {
+          $statement=$pdo->prepare($procedure);
+          $statement->execute();
+          if($statement->rowCount() > 0){
+            $user = $statement->fetch();
+            GenerarToken($user);
+          } else{
+            $response-> callback = 'IniciarSesion';
+            $response-> data = null;
+            $response-> ok = false;
+            echo json_encode($response);
+          }
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
         }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
+      } else{
+        $response-> callback = 'IniciarSesion';
+        $response-> data = null;
+        $response-> ok = false;
+        echo json_encode($response);
       }
     } else{
       $response-> callback = 'IniciarSesion';
-      $response-> data = null;
+      $response-> data = "Validación recaptcha fallida";
       $response-> ok = false;
       echo json_encode($response);
     }
@@ -159,18 +184,7 @@
   }
 
   function RegistrarUsuario(){
-    // Habilitar cuando se habilite el reCaptcha
 
-    // $reCaptchaToken = $_POST['ReCaptchaToken'];
-    // $cu = curl_init();
-    // curl_setopt($cu, CURLOPT_URL, "https://www.google.com/recaptcha/api/siteverify");
-    // curl_setopt($cu, CURLOPT_POST, 1);
-    // curl_setopt($cu, CURLOPT_POSTFIELDS, http_build_query(array('secret' => CaptchaPrivateKey, 'response' => $reCaptchaToken)));
-    // curl_setopt($cu, CURLOPT_RETURNTRANSFER, true);
-    // $response = curl_exec($cu);
-    // curl_close($cu);
-    // $jsonResponse = json_decode($response,true);
-    // if($jsonResponse['success'] == 1 && $jsonResponse['score'] >= 0.5){
       $data = json_decode(file_get_contents('php://input'), true);
       $pdo = OpenCon();
       $caracteres = "(#|$|^|+|=|!|*|(|)|@|%|&)";
@@ -226,15 +240,6 @@
 
       }
         echo json_encode($response);
-      //}
-  // } else{
-  //   $jsondata = array(
-  //   'status' => 200,
-  //   'data' => null,
-  //   'captcha' => 'Eres un robot'
-  // );
-//     echo json_encode($response);
-// }
 }
 
 function ExisteEmail ($email){
@@ -317,5 +322,3 @@ function CerrarSesion(){
   $response-> ok = true;
   echo json_encode($response);
 }
-
-?>

@@ -1,0 +1,72 @@
+<div class="modal fade animate-bottom" id="mdlDetallePersona" style="display: none;">
+    <div class="modal-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form id="frmDetalleUsuario">
+                        <div class="row">
+                            <h3>Detalle</h3>
+                            <hr class="divider-base">
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtNombreUsr" style="display:block">Nombres</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtNombreUsr" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtPaternoUsr" style="display:block">Paterno</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtPaternoUsr" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtMaternoUsr" style="display:block">Materno</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtMaternoUsr" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <div class="form-group">
+                                    <label for="txtEmailUsr" style="display:block">Email</label>
+                                    <input type="email" data-id="email" class="form-control input-form" id="txtEmailUsr" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtFechaNacimientoUsr" style="display:block">Fecha de nacimiento</label>
+                                    <input type="date" data-id="date" class="form-control input-form" id="txtFechaNacimientoUsr" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="cmbTipoUsuario" style="display:block">Tipo de usuario</label>
+                                    <select class="form-control input-form" id="cmbTipoUsuario"></select>
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="cmbEstadoUsuario" style="display:block">Estado del usuario</label>
+                                    <select class="form-control input-form" id="cmbEstadoUsuario"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <button class="btn btn-success" id="btnActualizarUsuario">Guardar cambios</button>
+                                <button class="btn btn-cancel" id="btnEliminarUsuario">Eliminar usuario</button>
+                                <button class="btn btn-info btn-close-modal" id="btnCerrarModal"
+                                    data-id="mdlDetallePersona">Cerrar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
