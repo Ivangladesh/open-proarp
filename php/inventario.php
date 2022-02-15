@@ -11,32 +11,37 @@
       #region OBTENER GENERAL
       case 'ObtenerProductos' : ObtenerProductos();
       break;
-      case 'ObtenerUsuarios' : ObtenerUsuarios();
+      case 'ObtenerProveedores' : ObtenerProveedores();
       break;
-      case 'ObtenerImagenes' : ObtenerImagenes();
-      break;
-      case 'ObtenerNotificaciones' : ObtenerNotificaciones();
+      case 'ObtenerEstadoInventario' : ObtenerEstadoInventario();
       break;
       #endregion
 
       #region OBTENER DETALLE
-      case 'ObtenerDetalleMensaje' : ObtenerDetalleMensaje();
+      case 'ObtenerDetalleProducto' : ObtenerDetalleProducto();
       break;
-      case 'ObtenerDetalleUsuario' : ObtenerDetalleUsuario();
-      break;
-      case 'ObtenerDetalleImagen' : ObtenerDetalleImagen();
-      break;
-      case 'ObtenerDetalleNotificacion' : ObtenerDetalleNotificacion();
+      case 'ObtenerDetalleProveedor' : ObtenerDetalleProveedor();
       break;
       #endregion
 
       #region ACTUALIZAR
-      case 'ActualizarEstadoMensaje' : ActualizarEstadoMensaje();
+      case 'ActualizarProducto' : ActualizarProducto();
+      break;
+      case 'ActualizarProducto' : ActualizarProducto();
       break;
       #endregion
 
       #region ELIMINAR
       case 'EliminarMensaje' : EliminarMensaje();
+      break;
+      case 'EliminarProveedor' : EliminarProveedor();
+      break;
+      #endregion
+
+      #region INSERTAR
+      case 'InsertarProducto' : InsertarProducto();
+      break;
+      case 'InsertarProveedor' : InsertarProveedor();
       break;
       #endregion
     }
@@ -60,15 +65,15 @@
       }
       echo json_encode($response);
   }
-  function ObtenerUsuarios (){
+  function ObtenerProveedores (){
     $pdo = OpenCon();
-    $sp = "CALL spObtenerUsuarios()";
+    $sp = "CALL spObtenerProveedores()";
     $response = new stdClass();
     try {
         $statement=$pdo->prepare($sp);
         $statement->execute();
         while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
-          $response-> callback = 'ObtenerUsuarios';
+          $response-> callback = 'ObtenerProveedores';
           $response-> data = $r;
           $response-> ok = true;
         }
@@ -78,33 +83,15 @@
       }
       echo json_encode($response);
   }
-  function ObtenerImagenes (){
+  function ObtenerEstadoInventario (){
     $pdo = OpenCon();
-    $sp = "CALL spObtenerImagenes()";
+    $sp = "CALL spObtenerEstadoInventario()";
     $response = new stdClass();
     try {
         $statement=$pdo->prepare($sp);
         $statement->execute();
         while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
-          $response-> callback = 'ObtenerImagenes';
-          $response-> data = $r;
-          $response-> ok = true;
-        }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-      echo json_encode($response);
-  }
-  function ObtenerNotificaciones (){
-    $pdo = OpenCon();
-    $sp = "CALL spObtenerNotificaciones()";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($sp);
-        $statement->execute();
-        while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
-          $response-> callback = 'ObtenerNotificaciones';
+          $response-> callback = 'ObtenerEstadoInventario';
           $response-> data = $r;
           $response-> ok = true;
         }
@@ -117,23 +104,21 @@
   #endregion
 
   #region OBTENER DETALLE
-  function ObtenerDetalleMensaje (){
+  function ObtenerDetalleProducto (){
     $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['MensajeId'];
+    $id = $data['ProductoId'];
     $pdo = OpenCon();
-    $select = "CALL spObtenerDetalleMensajePorId('$id')";
+    $select = "CALL spObtenerDetalleProductoPorId('$id')";
     $response = new stdClass();
+    $response-> callback = 'ObtenerDetalleProducto';
     try {
         $statement=$pdo->prepare($select);
         $statement->execute();
         if($statement->rowCount() > 0){
             $datos = $statement->fetch();
-            $response-> callback = 'ObtenerDetalleMensaje';
             $response-> data = $datos;
             $response-> ok = true;
-            
         } else{
-            $response-> callback = 'ObtenerDetalleMensaje';
             $response-> data = null;
             $response-> ok = false;
         }
@@ -143,75 +128,21 @@
       }
       echo json_encode($response);
   }
-  function ObtenerDetalleUsuario (){
+  function ObtenerDetalleProveedor (){
     $data = json_decode(file_get_contents('php://input'), true);
     $id = $data['UsuarioId'];
     $pdo = OpenCon();
-    $select = "CALL spObtenerDetalleUsuarioPorId('$id')";
+    $select = "CALL spObtenerDetalleProveedorPorId('$id')";
     $response = new stdClass();
+    $response-> callback = 'ObtenerDetalleProveedor';
     try {
         $statement=$pdo->prepare($select);
         $statement->execute();
         if($statement->rowCount() > 0){
             $datos = $statement->fetch();
-            $response-> callback = 'ObtenerDetalleMensaje';
             $response-> data = $datos;
             $response-> ok = true;
-            
         } else{
-            $response-> callback = 'ObtenerDetalleMensaje';
-            $response-> data = null;
-            $response-> ok = false;
-        }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-      echo json_encode($response);
-  }
-  function ObtenerDetalleImagen (){
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['ImagenId'];
-    $pdo = OpenCon();
-    $select = "CALL spObtenerDetalleImagenPorId('$id')";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($select);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-            $datos = $statement->fetch();
-            $response-> callback = 'ObtenerDetalleImagen';
-            $response-> data = $datos;
-            $response-> ok = true;
-            
-        } else{
-            $response-> callback = 'ObtenerDetalleMensaje';
-            $response-> data = null;
-            $response-> ok = false;
-        }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-      echo json_encode($response);
-  }
-  function ObtenerDetalleNotificacion (){
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['NotificacionId'];
-    $pdo = OpenCon();
-    $select = "CALL spObtenerDetalleNotificacionPorId('$id')";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($select);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-            $datos = $statement->fetch();
-            $response-> callback = 'ObtenerDetalleNotificacion';
-            $response-> data = $datos;
-            $response-> ok = true;
-            
-        } else{
-            $response-> callback = 'ObtenerDetalleMensaje';
             $response-> data = null;
             $response-> ok = false;
         }
@@ -224,54 +155,28 @@
   #endregion
   
   #region ACTUALIZAR
-  function ActualizarEstadoMensaje (){
+  function ActualizarProducto (){
     $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['MensajeId'];
-    $pdo = OpenCon();
-    $update = "CALL spActualizarEstadoMensaje('$id')";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($update);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-            $count = $statement->rowCount();
-            $response-> callback = 'ActualizarEstadoMensaje';
-            $response-> data = $count;
-            $response-> ok = true;
-            echo json_encode($response);
-          } else{
-            $response-> callback = 'ActualizarEstadoMensaje';
-            $response-> data = null;
-            $response-> ok = false;
-            echo json_encode($response);
-          }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-  }
-  function ActualizarUsuario (){
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['UsuarioId'];
+    $id = $data['InventarioId'];
     $nombre = $data['Nombre'];
-    $email = $data['Email'];
-    $fecha = $data['FechaNacimiento'];
-    $tipo = $data['Tipo'];
+    $descripcion = $data['Descripcion'];
     $estado = $data['Estado'];
+    $precioVenta = $data['PrecioVenta'];
+    $fechaCompra = $data['FechaCompra'];
+    $existencias = $data['Existencias'];
     $pdo = OpenCon();
-    $update = "CALL spActualizarUsuario('$id','$nombre','$email','$fecha','$tipo','$estado')";
+    $update = "CALL spActualizarProducto('$id','$nombre','$descripcion','$estado','$precioVenta','$fechaCompra','$existencias')";
     $response = new stdClass();
+    $response-> callback = 'ActualizarProducto';
     try {
         $statement=$pdo->prepare($update);
         $statement->execute();
         if($statement->rowCount() > 0){
             $count = $statement->rowCount();
-            $response-> callback = 'ActualizarUsuario';
             $response-> data = $count;
             $response-> ok = true;
             echo json_encode($response);
           } else{
-            $response-> callback = 'ActualizarUsuario';
             $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);
@@ -281,49 +186,41 @@
           die();
       }
   }
-  function ActualizarImagen (){
+  function ActualizarProveedor (){
     $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['ImagenId'];
+    $id = $data['ProveedorId'];
+    $razonSocial = $data['RazonSocial'];
+    $marcaComercial = $data['MarcaComercial'];
+    $RFC = $data['RFC'];
+    $direccion = $data['Direccion'];
+    $telefono = $data['Telefono'];
+    $telefonoAlternativo = $data['TelefonoAlternativo'];
+    $nombreContacto = $data['NombreContacto'];
+    $descripcion = $data['Descripcion'];
+    $notas = $data['Notas'];
     $pdo = OpenCon();
-    $update = "CALL spActualizarImagen('$id')";
+    $update = "CALL spActualizarProveedor('$id',
+    '$razonSocial',
+    '$marcaComercial',
+    '$RFC',
+    '$direccion',
+    '$telefono',
+    '$telefonoAlternativo',
+    '$nombreContacto',
+    '$descripcion',
+    '$notas',
+    )";
     $response = new stdClass();
+    $response-> callback = 'ActualizarProveedor';
     try {
         $statement=$pdo->prepare($update);
         $statement->execute();
         if($statement->rowCount() > 0){
             $count = $statement->rowCount();
-            $response-> callback = 'ActualizarImagen';
             $response-> data = $count;
             $response-> ok = true;
             echo json_encode($response);
           } else{
-            $response-> callback = 'ActualizarImagen';
-            $response-> data = null;
-            $response-> ok = false;
-            echo json_encode($response);
-          }
-      } catch (PDOException $e) {
-          print "¡Error!: " . $e->getMessage() . "<br/>";
-          die();
-      }
-  }
-  function ActualizarNotificacion (){
-    $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['NotificacionId'];
-    $pdo = OpenCon();
-    $update = "CALL spActualizarNotificacion('$id')";
-    $response = new stdClass();
-    try {
-        $statement=$pdo->prepare($update);
-        $statement->execute();
-        if($statement->rowCount() > 0){
-            $count = $statement->rowCount();
-            $response-> callback = 'ActualizarNotificacion';
-            $response-> data = $count;
-            $response-> ok = true;
-            echo json_encode($response);
-          } else{
-            $response-> callback = 'ActualizarNotificacion';
             $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);
@@ -335,24 +232,73 @@
   }
   #endregion
   
-  #region ELIMINAR
-  function EliminarMensaje (){
+  
+  #region INSERTAR
+  function InsertarProducto (){
     $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['MensajeId'];
+    $nombre = $data['Nombre'];
+    $descripcion = $data['Descripcion'];
+    $estado = $data['Estado'];
+    $precioVenta = $data['PrecioVenta'];
+    $fechaCompra = $data['FechaCompra'];
+    $existencias = $data['Existencias'];
     $pdo = OpenCon();
-    $update = "CALL spEliminarMensaje('$id')";
+    $update = "CALL spInsertarProducto('$nombre','$descripcion','$estado','$precioVenta','$fechaCompra','$existencias')";
     $response = new stdClass();
+    $response-> callback = 'InsertarProducto';
     try {
         $statement=$pdo->prepare($update);
         $statement->execute();
         if($statement->rowCount() > 0){
             $count = $statement->rowCount();
-            $response-> callback = 'EliminarMensaje';
             $response-> data = $count;
             $response-> ok = true;
             echo json_encode($response);
           } else{
-            $response-> callback = 'EliminarMensaje';
+            $response-> data = null;
+            $response-> ok = false;
+            echo json_encode($response);
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+  }
+
+  function InsertarProveedor (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $razonSocial = $data['RazonSocial'];
+    $marcaComercial = $data['MarcaComercial'];
+    $RFC = $data['RFC'];
+    $direccion = $data['Direccion'];
+    $telefono = $data['Telefono'];
+    $telefonoAlternativo = $data['TelefonoAlternativo'];
+    $nombreContacto = $data['NombreContacto'];
+    $descripcion = $data['Descripcion'];
+    $notas = $data['Notas'];
+    $pdo = OpenCon();
+    $update = "CALL spInsertarProveedor(
+    '$razonSocial',
+    '$marcaComercial',
+    '$RFC',
+    '$direccion',
+    '$telefono',
+    '$telefonoAlternativo',
+    '$nombreContacto',
+    '$descripcion',
+    '$notas',
+    )";
+    $response = new stdClass();
+    $response-> callback = 'InsertarProveedor';
+    try {
+        $statement=$pdo->prepare($update);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $count = $statement->rowCount();
+            $response-> data = $count;
+            $response-> ok = true;
+            echo json_encode($response);
+          } else{
             $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);
@@ -364,7 +310,57 @@
   }
   #endregion
 
+  #region ELIMINAR
+  function EliminarProducto (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['ProductoId'];
+    $pdo = OpenCon();
+    $update = "CALL spEliminarProducto('$id')";
+    $response = new stdClass();
+    $response-> callback = 'EliminarProducto';
+    try {
+        $statement=$pdo->prepare($update);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $count = $statement->rowCount();
+            $response-> data = $count;
+            $response-> ok = true;
+          } else{
+            $response-> data = null;
+            $response-> ok = false;
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+      
+      echo json_encode($response);
+  }
 
-
+  function EliminarProveedor (){
+    $data = json_decode(file_get_contents('php://input'), true);
+    $id = $data['ProveedorId'];
+    $pdo = OpenCon();
+    $update = "CALL spEliminarProveedor('$id')";
+    $response = new stdClass();
+    $response-> callback = 'EliminarProveedor';
+    try {
+        $statement=$pdo->prepare($update);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $count = $statement->rowCount();
+            $response-> data = $count;
+            $response-> ok = true;
+          } else{
+            $response-> data = null;
+            $response-> ok = false;
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+      echo json_encode($response);
+  }
+  #endregion
 
   ?>

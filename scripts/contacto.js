@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     msg = 'Mensaje registrado correctamente, en breve nos comunicaremos contigo.';
                     alerta.notif('ok', msg, 3000);
                 } else{
-                    alerta.notif('fail', 'Ha ocurrido un error con su sesión.', 3000);
+                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
                 }
                 break;
             default:
