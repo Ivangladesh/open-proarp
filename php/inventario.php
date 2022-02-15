@@ -27,7 +27,7 @@
       #region ACTUALIZAR
       case 'ActualizarProducto' : ActualizarProducto();
       break;
-      case 'ActualizarProducto' : ActualizarProducto();
+      case 'ActualizarProveedor' : ActualizarProveedor();
       break;
       #endregion
 

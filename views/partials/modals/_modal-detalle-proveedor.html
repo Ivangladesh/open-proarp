@@ -1,0 +1,61 @@
+<div class="modal fade animate-bottom" id="mdlNuevoProveedor" style="display: none;">
+    <div class="modal-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form id="frmNuevoProducto">
+                        <div class="row">
+                            <h3>Detalle</h3>
+                            <hr class="divider-base">
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtNombreD" style="display:block">Nombre completo</label>
+                                    <input type="text" class="form-control input-form" id="txtNombreD" readonly
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtEmailD" style="display:block">Email / usuario</label>
+                                    <input type="text" class="form-control input-form" id="txtEmailD" readonly disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-7">
+                                <div class="form-group">
+                                    <label for="txtAsuntoD" style="display:block">Asunto</label>
+                                    <input type="text" class="form-control input-form" id="txtAsuntoD" readonly
+                                        disabled>
+                                </div>
+                            </div>
+                            <div class="frm-col-3">
+                                <div class="form-group">
+                                    <label for="txtFechaD" style="display:block">Fecha</label>
+                                    <input type="text" class="form-control input-form" id="txtFechaD" readonly disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <div class="form-group">
+                                    <label for="txtMensajeD" style="display:block">Mensaje:</label>
+                                    <textarea rows="5" class="form-control input-form" id="txtMensajeD" readonly
+                                        disabled></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <button class="btn btn-success" id="btnAceptarNuevoProducto" >Guardar</button>
+                                <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlNuevoProveedor">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

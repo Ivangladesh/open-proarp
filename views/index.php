@@ -82,6 +82,8 @@ if (isset($_SESSION['SessionStorage'])) {
         }
         if ($tipo == 1 || $tipo == 2) {
             readfile('../views/partials/modals/_modal-nuevo-producto.html');
+            readfile('../views/partials/modals/_modal-detalle-producto.html');
+            readfile('../views/partials/modals/_modal-detalle-proveedor.html');
         }
     }
     ?>
