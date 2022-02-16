@@ -66,7 +66,11 @@ zero.navEventHandler = function (e) {
     document.getElementById(dataId).style.display = "block";
         let tabcontent = document.getElementsByClassName("tab-content");
         for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            if(tabcontent[i].getAttribute("data-visible") === "false"){
+                tabcontent[i].style.display = "none";
+            } else{
+                tabcontent[i].style.display = "block";
+            }
         }
         document.getElementById(dataId).style.display = 'block';
         for (let i = 0; i < forms.length; i++) {

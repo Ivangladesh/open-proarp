@@ -34,28 +34,35 @@
                             <div class="frm-col-2">
                                 <div class="form-group">
                                     <label for="txtFechaInv" style="display:block">Fecha de compra</label>
-                                    <input type="date" data-id="date" class="form-control input-form" id="txtFechaInv" >
+                                    <input type="date" data-id="text" class="form-control input-form" id="txtFechaInv" >
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="frm-col-2">
+                            <div class="frm-col-3-3">
                                 <div class="form-group">
                                     <label for="txtPrecioVentaInv" style="display:block">Precio de venta:</label>
-                                    <input type="number" class="form-control input-form" id="txtPrecioVentaInv" >
+                                    <input type="number" data-id="decimal" class="form-control input-form" id="txtPrecioVentaInv" >
                                 </div>
                             </div>
-                            <div class="frm-col-2">
+                            <div class="frm-col-3-3">
                                 <div class="form-group">
                                     <label for="txtExistenciasInv" style="display:block">Existencias:</label>
                                     <input type="number" class="form-control input-form" id="txtExistenciasInv" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="cmbProveedorDetalleProd" style="display:block">Proveedor</label>
+                                    <select class="form-control input-form" id="cmbProveedorDetalleProd"></select>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
                             <div class="frm-col-1">
-                                <button class="btn btn-success" id="btnAceptarNuevoProducto" >Guardar</button>
+                                <button class="btn btn-success" id="btnAceptarProducto" >Guardar</button>
+                                <button class="btn btn-cancel" id="btnEliminarProducto">Eliminar</button>
                                 <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlDetalleProducto">Cancelar</button>
                             </div>
                         </div>

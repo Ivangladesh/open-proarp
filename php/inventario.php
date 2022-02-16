@@ -31,7 +31,7 @@
       break;
       #endregion
 
-      #region ELIMINAR
+      #region ELIMINAR XAXX010101000
       case 'EliminarMensaje' : EliminarMensaje();
       break;
       case 'EliminarProveedor' : EliminarProveedor();
@@ -130,7 +130,7 @@
   }
   function ObtenerDetalleProveedor (){
     $data = json_decode(file_get_contents('php://input'), true);
-    $id = $data['UsuarioId'];
+    $id = $data['ProveedorId'];
     $pdo = OpenCon();
     $select = "CALL spObtenerDetalleProveedorPorId('$id')";
     $response = new stdClass();
@@ -208,7 +208,7 @@
     '$telefonoAlternativo',
     '$nombreContacto',
     '$descripcion',
-    '$notas',
+    '$notas'
     )";
     $response = new stdClass();
     $response-> callback = 'ActualizarProveedor';
