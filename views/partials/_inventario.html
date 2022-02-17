@@ -2,18 +2,45 @@
 <div class="animate-bottom sub-container" id="div-inventario" style="display: none;">
     <div class="container">
         <h1 id="h1Inventario">Inventario & Catálogo</h1>
+        <hr class="divider-base">
         <div class="card animate-bottom">
-            <hr class="divider-base">
-            <div>
-                <button id="agregarProducto">Nuevo producto</button>
+            <div class="tab-bar">
+                <button class="tab-nav" data-id="proveedores" id="tabProveedores">Proveedores</button>
+                <button class="tab-nav" data-id="inventarioDiv" id="tabInventario">Inventario</button>
             </div>
-            <br>
-            <hr class="divider-base">
             <div class="row">
                 <div class="card-body">
+                    <!-- TAB NOTIFICAIONES -->
+                    <div id="proveedores" class="tab-content" data-visible="true">
+                        <h3>Proveedores</h3>
+                        <hr class="divider-base">
+                        <div>
+                            <button id="agregarProveedor">Nuevo proveedor</button>
+                        </div>
+                        <br>
+                        <hr class="divider-base">
+                        <div>
+                            <table style="width:100%" id="tblProveedores" class="table table-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>RFC</th>
+                                        <th>Telefono</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- TAB NOTIFICAIONES -->
                     <!-- TAB INVENTARIO -->
-                    <div id="inventario" >
+                    <div id="inventarioDiv" class="tab-content" data-visible="false">
                         <h3>Inventario</h3>
+                        <hr class="divider-base">
+                        <div>
+                            <button id="agregarProducto">Nuevo producto</button>
+                        </div>
+                        <br>
                         <hr class="divider-base">
                         <div>
                             <table style="width:100%" id="tblInventario" class="table table-dark">

@@ -8,19 +8,6 @@
   if(isset($data['Action']) && !empty($data['Action'])) {
     $action = $data['Action'];
 
-    // if($action = 'IniciarSesion' || $action = 'RegistrarUsuario'){
-    //   if(isset($_POST['ReCaptchaToken'])){
-    //     $reCaptchaToken = $_POST['ReCaptchaToken'];
-    //     if(Recaptcha($reCaptchaToken)){
-    //       if($action = 'IniciarSesion'){
-    //         IniciarSesion();
-    //       } else{
-    //         RegistrarUsuario();
-    //       }
-    //     }
-    //   }
-    // }
-    
     switch($action) {
         case 'IniciarSesion' : IniciarSesion();
         break;
@@ -39,15 +26,13 @@
     }
   }
 
-
-
-
   function IniciarSesion () {
     $response = new stdClass();
     $data = json_decode(file_get_contents('php://input'), true);
     $email = $data['Email'];
     $contrasena = $data['Password'];
     $reCaptchaToken = $data['ReCaptchaToken'];
+    $response-> callback = 'IniciarSesion';
     if(Recaptcha($reCaptchaToken)){
       if (!empty($email) && !empty($contrasena)) {
         $pdo = OpenCon();
@@ -59,7 +44,6 @@
             $user = $statement->fetch();
             GenerarToken($user);
           } else{
-            $response-> callback = 'IniciarSesion';
             $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);
@@ -69,13 +53,11 @@
             die();
         }
       } else{
-        $response-> callback = 'IniciarSesion';
         $response-> data = null;
         $response-> ok = false;
         echo json_encode($response);
       }
     } else{
-      $response-> callback = 'IniciarSesion';
       $response-> data = "Validación recaptcha fallida";
       $response-> ok = false;
       echo json_encode($response);
@@ -88,6 +70,7 @@
     $username = $r['Email'];
     $nombreCompleto = $r['NombreCompleto'];
     $tipo = $r['TipoUsuarioId'];
+    $response-> callback = 'GenerarToken';
     if (!empty($id) && !empty($username) && !empty($nombreCompleto) && !empty($tipo)) {
       $pdo = OpenCon();
       $hoy = date("m.d.y H:i:s");
@@ -100,7 +83,6 @@
               $count = $statement->rowCount();
               EnviarToken($id);
             } else{
-              $response-> callback = 'GenerarToken';
               $response-> data = null;
               $response-> ok = false;
               echo json_encode($response);
@@ -110,7 +92,6 @@
             die();
         }
     } else{
-      $response-> callback = 'GenerarToken';
       $response-> data = null;
       $response-> ok = false;
       echo json_encode($response);
@@ -122,18 +103,17 @@
     if (!empty($id)) {
       $pdo = OpenCon();
       $select = "CALL spObtenerToken('$id')";
+      $response-> callback = 'EnviarToken';
       try {
           $statement=$pdo->prepare($select);
           $statement->execute();
           if($statement->rowCount() > 0){
               $token = $statement->fetch();
               $_SESSION['SessionStorage'] = strval($token[0]);
-              $response-> callback = 'EnviarToken';
               $response-> data = $token[0];
               $response-> ok = true;
               $_SESSION['LAST_ACTIVITY'] = time();
           } else{
-              $response-> callback = 'EnviarToken';
               $response-> data = null;
               $response-> ok = false;
           }
@@ -142,7 +122,6 @@
             die();
         }
     } else{
-      $response-> callback = 'EnviarToken';
       $response-> data = null;
       $response-> ok = false;
     }
@@ -153,6 +132,7 @@
     $response = new stdClass();
     $data = json_decode(file_get_contents('php://input'), true);
     $token = $data['Token'];
+    $response-> callback = 'ValidarSesion';
     if (!empty($token)) {
       $pdo = OpenCon();
       $select = "CALL spValidarSesion('$token')";
@@ -161,13 +141,11 @@
           $statement->execute();
           if($statement->rowCount() > 0){
               while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
-                $response-> callback = 'ValidarSesion';
                 $response-> data = $r;
                 $response-> ok = true;
                 }
               
           } else{
-            $response-> callback = 'ValidarSesion';
             $response-> data = null;
             $response-> ok = false;
           }
@@ -176,149 +154,144 @@
             die();
         }
     } else{
-      $response-> callback = 'ValidarSesion';
       $response-> data = null;
       $response-> ok = false;
     }
     echo json_encode($response);
   }
 
-  function RegistrarUsuario(){
+    function RegistrarUsuario(){
 
-      $data = json_decode(file_get_contents('php://input'), true);
-      $pdo = OpenCon();
-      $caracteres = "(#|$|^|+|=|!|*|(|)|@|%|&)";
-      $nombre = $data['Nombre'];
-      $paterno = $data['Paterno'];
-      $materno = $data['Materno'];
-      $fechaNacimiento = $data['FechaNacimiento'];
-      $email = $data['Email'];
-      $password = $data['Password'];
-      $response = new stdClass();
-      if(strlen($password) < 8){
+        $data = json_decode(file_get_contents('php://input'), true);
+        $pdo = OpenCon();
+        $caracteres = "(#|$|^|+|=|!|*|(|)|@|%|&)";
+        $nombre = $data['Nombre'];
+        $paterno = $data['Paterno'];
+        $materno = $data['Materno'];
+        $fechaNacimiento = $data['FechaNacimiento'];
+        $email = $data['Email'];
+        $password = $data['Password'];
+        $response = new stdClass();
         $response-> callback = 'RegistrarUsuario';
-        $response-> data = "La contraseña debe tener una longitud mínima de 8 caracteres.";
-        $response-> ok = false;
-        echo json_encode($response);
-      } else if(!preg_match($caracteres, $password)){
-        $response-> callback = 'RegistrarUsuario';
-        $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
-        $response-> ok = false;
-        echo json_encode($response);
-      } else{
-        $existeEmail = ExisteEmail($email);
-        if(!$existeEmail){
-          if (!empty($nombre) && !empty($paterno) && !empty($materno) && !empty($fechaNacimiento) && !empty($email)) {
-            $procedure = "CALL spRegistrarUsuario('$nombre', '$paterno', '$materno', '$fechaNacimiento', '$email', '$password')";
-            try {
-                $statement=$pdo->prepare($procedure);
-                $statement->execute();
-                if($statement->rowCount() > 0){
-                    $user = $statement->fetch();
-                    $response-> callback = 'RegistrarUsuario';
-                    $response-> data = $user[0];
-                    $response-> ok = true;
-                  } else{
-                    $response-> callback = 'RegistrarUsuario';
-                    $response-> data = "Ha ocurrido un error, consulte al administrador.";
-                    $response-> ok = false;
-                  }
-              } catch (PDOException $e) {
-                  print "¡Error!: " . $e->getMessage() . "<br/>";
-                  die();
-              }
+        if(strlen($password) < 8){
+          $response-> callback = 'RegistrarUsuario';
+          $response-> data = "La contraseña debe tener una longitud mínima de 8 caracteres.";
+          $response-> ok = false;
+          echo json_encode($response);
+        } else if(!preg_match($caracteres, $password)){
+          $response-> callback = 'RegistrarUsuario';
+          $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
+          $response-> ok = false;
+          echo json_encode($response);
+        } else{
+          $existeEmail = ExisteEmail($email);
+          if(!$existeEmail){
+            if (!empty($nombre) && !empty($paterno) && !empty($materno) && !empty($fechaNacimiento) && !empty($email)) {
+              $procedure = "CALL spRegistrarUsuario('$nombre', '$paterno', '$materno', '$fechaNacimiento', '$email', '$password')";
+              try {
+                  $statement=$pdo->prepare($procedure);
+                  $statement->execute();
+                  if($statement->rowCount() > 0){
+                      $user = $statement->fetch();
+                      $response-> data = $user[0];
+                      $response-> ok = true;
+                    } else{
+                      $response-> data = "Ha ocurrido un error, consulte al administrador.";
+                      $response-> ok = false;
+                    }
+                } catch (PDOException $e) {
+                    print "¡Error!: " . $e->getMessage() . "<br/>";
+                    die();
+                }
+            } else{
+              $response-> data = "Alguno de los valores está vacío o incompleto";
+              $response-> ok = false;
+            }
           } else{
-            $response-> callback = 'RegistrarUsuario';
-            $response-> data = "Alguno de los valores está vacío o incompleto";
+            $response-> data = "El email ya ha sido registrado.";
             $response-> ok = false;
           }
-        } else{
-          $response-> callback = 'RegistrarUsuario';
-          $response-> data = "El email ya ha sido registrado.";
-          $response-> ok = false;
+
         }
+          echo json_encode($response);
+  }
 
+  function ExisteEmail ($email){
+    $response = true;
+    $pdo = OpenCon();
+    $select = "CALL spValidarEmail('$email')";
+    try {
+        $statement=$pdo->prepare($select);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+            $response = true;
+          } else{
+            $response = false;
+          }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
       }
-        echo json_encode($response);
-}
+    return $response;
+  }
 
-function ExisteEmail ($email){
-  $response = true;
-  $pdo = OpenCon();
-  $select = "CALL spValidarEmail('$email')";
-  try {
-      $statement=$pdo->prepare($select);
-      $statement->execute();
-      if($statement->rowCount() > 0){
-          $response = true;
-        } else{
-          $response = false;
-        }
-    } catch (PDOException $e) {
-        print "¡Error!: " . $e->getMessage() . "<br/>";
-        die();
-    }
-  return $response;
-}
-
-function ObtenerUsuario () { 
-  $session = $_SESSION['SessionStorage'];
-  list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
-  $response = new stdClass();
-  $response-> callback = 'ObtenerUsuario';
-  $response-> data = $username;
-  $response-> ok = false;
-  echo json_encode($response);
-}
-
-function ObtenerUsuarioPorSesion () { 
-  $session = $_SESSION['SessionStorage'];
-  list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
-  $response = new stdClass();
-  $response-> callback = 'ObtenerUsuario';
-  $response-> data = $username;
-  $response-> ok = false;
-  return $response;
-}
-
-function ObtenerSesion(){
-  $response = new stdClass();
-  try {
-    if (isset($_SESSION['SessionStorage'])) {
-      $session = $_SESSION['SessionStorage'];
-          $response-> callback = 'EnviarToken';
-          $response-> data = $session;
-          $response-> ok = true;
-      } else{
-          $response-> callback = 'EnviarToken';
-          $response-> data = null;
-          $response-> ok = false;
-      }
-    } catch (PDOException $e) {
-        print "¡Error!: " . $e->getMessage() . "<br/>";
-        die();
-    }
-    echo json_encode($response);
-}
-
-function EstadoSesion (){
-  $response = new stdClass();
-  if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
-    CerrarSesion();
-  } else{
-    $response-> callback = 'EstadoSesion';
-    $response-> ok = true;
-    $response-> data = time() - $_SESSION['LAST_ACTIVITY'];
+  function ObtenerUsuario () { 
+    $session = $_SESSION['SessionStorage'];
+    list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
+    $response = new stdClass();
+    $response-> callback = 'ObtenerUsuario';
+    $response-> data = $username;
+    $response-> ok = false;
     echo json_encode($response);
   }
-}
 
-function CerrarSesion(){
-  session_unset();
-  session_destroy();
-  $response = new stdClass();
-  $response-> callback = 'CerrarSesion';
-  $response-> data = 'Sesión cerrada exitosamente';
-  $response-> ok = true;
-  echo json_encode($response);
-}
+  function ObtenerUsuarioPorSesion () { 
+    $session = $_SESSION['SessionStorage'];
+    list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($session));
+    $response = new stdClass();
+    $response-> callback = 'ObtenerUsuario';
+    $response-> data = $username;
+    $response-> ok = false;
+    return $response;
+  }
+
+  function ObtenerSesion(){
+    $response = new stdClass();
+    $response-> callback = 'EnviarToken';
+    try {
+      if (isset($_SESSION['SessionStorage'])) {
+        $session = $_SESSION['SessionStorage'];
+            $response-> data = $session;
+            $response-> ok = true;
+        } else{
+            $response-> data = null;
+            $response-> ok = false;
+        }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+      echo json_encode($response);
+  }
+
+  function EstadoSesion (){
+    $response = new stdClass();
+    if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 1800)) {
+      CerrarSesion();
+    } else{
+      $response-> callback = 'EstadoSesion';
+      $response-> ok = true;
+      $response-> data = time() - $_SESSION['LAST_ACTIVITY'];
+      echo json_encode($response);
+    }
+  }
+
+  function CerrarSesion(){
+    session_unset();
+    session_destroy();
+    $response = new stdClass();
+    $response-> callback = 'CerrarSesion';
+    $response-> data = 'Sesión cerrada exitosamente';
+    $response-> ok = true;
+    echo json_encode($response);
+  }

@@ -1,0 +1,74 @@
+<div class="modal fade animate-bottom" id="mdlDetalleProducto" style="display: none;">
+    <div class="modal-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form id="frmDetalleProducto">
+                        <div class="row">
+                            <h3>Detalle</h3>
+                            <hr class="divider-base">
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <div class="form-group">
+                                    <label for="txtNombreInv" style="display:block">Nombre</label>
+                                    <input type="text" class="form-control input-form" id="txtNombreInv" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <div class="form-group">
+                                    <label for="txtDescripcionInv" style="display:block">Descripcion:</label>
+                                    <textarea rows="5" class="form-control input-form" id="txtDescripcionInv" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="cmbEstadoInv" style="display:block">Estado del producto:</label>
+                                    <select class="form-control input-form" id="cmbEstadoInv"></select>
+                                </div>
+                            </div>
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtFechaInv" style="display:block">Fecha de compra</label>
+                                    <input type="date" data-id="text" class="form-control input-form" id="txtFechaInv" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtPrecioVentaInv" style="display:block">Precio de venta:</label>
+                                    <input type="number" data-id="decimal" class="form-control input-form" id="txtPrecioVentaInv" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtExistenciasInv" style="display:block">Existencias:</label>
+                                    <input type="number" class="form-control input-form" id="txtExistenciasInv" >
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="cmbProveedorDetalleProd" style="display:block">Proveedor</label>
+                                    <select class="form-control input-form" id="cmbProveedorDetalleProd"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <button class="btn btn-success" id="btnAceptarProducto" >Guardar</button>
+                                <button class="btn btn-cancel" id="btnEliminarProducto">Eliminar</button>
+                                <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlDetalleProducto">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -374,5 +374,5 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
+    ObtenerMensajes();
 });
