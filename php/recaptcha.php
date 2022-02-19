@@ -1,4 +1,6 @@
 <?php
+$configs = include('config.php');
+
 define("CaptchaPrivateKey", "6LfB2CQcAAAAAH9PdqYOwiX1vGmQ_rPK7W7rBMgL");
 
 function Recaptcha($reCaptchaToken)

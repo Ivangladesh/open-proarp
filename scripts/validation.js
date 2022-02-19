@@ -64,6 +64,7 @@ valid.number = function (data, longitud) {
     let resp = new ValidationResponse(tipo, long);
     return resp;
 };
+
 /**
  * Validación si es un dato corresponde a un email.
  * Expresión regular tomada de:
