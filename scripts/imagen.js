@@ -5,15 +5,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if(frmUploadImagen !== null){
         valid.setupForm(frmUploadImagen);
-        // document.getElementById("btnRegistrarMensajeContacto").addEventListener('click', function(e){
-        //     if(valid.form(frmContacto)){
-        //         RegistrarMensaje();
-        //     }
-        //     e.preventDefault();
-        // });
     }
 
+    document.getElementById("tblImagenes").addEventListener('click', function (e) {
+        if (e.target.cellIndex < 5) {
+            let dataId = parseInt(e.target.parentNode.cells[0].id);
+            ObtenerDetalleImagen(dataId);
+        }
+        e.preventDefault();
+    });
+
+    document.getElementById("btnEliminarImagen").addEventListener('click', function (e) {
+        let dataId = e.target.getAttribute("data-id");
+        let data = {callback : "EliminarImagen", id : dataId}
+        alerta.confirm(data, handler);
+        e.preventDefault();
+    });
+
+    document.getElementById("btnActualizarImagen").addEventListener('click', function (e) {
+        let dataId = e.target.getAttribute("data-id");
+        
+        if(valid.form(frmUploadImagen)){
+            actualizarImagen(dataId);
+        }
+        e.preventDefault();
+    });
+
     document.getElementById("agregarImagen").addEventListener('click', function(e){
+        document.getElementById('btnGuardarImagen').removeAttribute("data-id");
+        document.getElementById('btnActualizarImagen').removeAttribute("data-id");
+        document.getElementById('btnEliminarImagen').removeAttribute("data-id");
+        document.getElementById('btnEliminarImagen').style.display = "none";
+        document.getElementById('divAdjuntarImegen').style.display = "inline-flex";
+        document.getElementById('btnActualizarImagen').style.display = "none";
+        document.getElementById('btnGuardarImagen').style.display = "inline-flex"
+        frmUploadImagen.reset();
         ObtenerProductos();
         e.preventDefault();
     });
@@ -58,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
 				let datos = {
 					Action: "InsertarImagen",
 					InventarioId : document.getElementById("cmbProductos").value,
-					Descripcion : document.getElementById("txtDescripcion").value,
+					Descripcion : document.getElementById("txtDescripcionImagen").value,
 					Archivo : archivo
 				};
         		call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
@@ -79,6 +105,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	function ObtenerImagenes() {
         let datos = { Action: "ObtenerImagenes" };
+        call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ObtenerDetalleImagen(id) {
+        let datos = { Action: "ObtenerDetalleImagen", ImagenId:id };
         call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
     }
 
@@ -115,16 +146,61 @@ document.addEventListener("DOMContentLoaded", function () {
         let longitud = datos.length - 1;
         for (let i = 0; i <= longitud; i++) {
             let newRow =
-                '<tr>' +
-                '<td style="display: none;" id=' + datos[i].ImagenId + '></td>' +
+                '<tr> <td style="display: none;" id=' + datos[i].ImagenId + '></td>' +
                 '<td><img src="' + datos[i].RutaThumb +'"></td>' +
                 '<td>' + datos[i].Descripcion + '</td>' +
-                '<td>' + datos[i].Nombre + '</td>' +
-                '</tr>';
+                '<td>' + datos[i].Nombre + '</td> </tr>';
             let emptyRow = newTbody.insertRow(newTbody.rows.length);
             emptyRow.innerHTML = newRow;
         };
         table.appendChild(newTbody);
+    }
+
+    const mostrarModalImagen = (datos) => {
+        ObtenerProductos();
+        document.getElementById('imgId').value = datos.ImagenId;
+        document.getElementById('txtDescripcionImagen').value = datos.Descripcion;
+        document.getElementById('btnGuardarImagen').setAttribute("data-id", datos.ImagenId);
+        document.getElementById('btnActualizarImagen').setAttribute("data-id", datos.ImagenId);
+        document.getElementById('btnEliminarImagen').setAttribute("data-id", datos.ImagenId);
+        document.getElementById('btnEliminarImagen').style.display = "inline-flex"
+        document.getElementById('divAdjuntarImegen').style.display = "none"
+        document.getElementById('btnActualizarImagen').style.display = "inline-flex"
+        document.getElementById('btnGuardarImagen').style.display = "none"
+        document.getElementById('mdlUploadImagen').style.display = "block"
+
+    }
+
+    function selectElement(id, valueToSelect) {    
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
+
+	function removeOptions(selectElement) {
+		var i, L = selectElement.options.length - 1;
+		for(i = L; i >= 0; i--) {
+		   selectElement.remove(i);
+		}
+	 }
+
+     function eliminarImagen(id) {
+        let datos = {
+            Action: "EliminarImagen",
+            ImagenId: id
+        }
+        call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
+    }
+
+    function actualizarImagen(id) {
+        let inventarioId = document.getElementById('cmbProductos').value;
+        let descripcion = document.getElementById('txtDescripcionImagen').value;
+        let datos = {
+            Action: "ActualizarImagen",
+            ImagenId: id,
+            InventarioId : inventarioId,
+            Descripcion : descripcion
+        }
+        call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
     }
 
 	function handler(e){
@@ -152,20 +228,38 @@ document.addEventListener("DOMContentLoaded", function () {
 					poblarImagenes(e.data);
 				}
 				break;
+            case "ObtenerDetalleImagen":
+                if (e.ok) {
+                    mostrarModalImagen(e.data);
+                    selectElement('cmbProductos', e.data.InventarioId);
+                }
+                break;
             case "Confirmar":
-                if(e.ok){
-                    eliminarMensaje(e.data);
-                } else{
+                if (e.ok) {
+                    if(e.data.callback === "EliminarImagen"){
+                        eliminarImagen(e.data.id);
+                    } 
+                    document.getElementById("mdlUploadImagen").style.display = "none";
+                } else {
                     msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
                     alerta.notif('ok', e.data, 3000);
                 }
                 break;
-            case "EliminarMensaje":
-                if(e.ok){
-                    alerta.notif('ok', 'Mensaje eliminado correctamente.', 3000);
-                    ObtenerProductos();
-                } else{
-                    alerta.notif('fail', 'Ha ocurrido un error al eliminar el mensaje.', 3000);
+            case "EliminarImagen":
+                if (e.ok) {
+                    alerta.notif('ok', 'Imagen eliminada correctamente.', 3000);
+                    ObtenerImagenes();
+                } else {
+                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
+                }
+                break;
+            case "ActualizarImagen":
+                if (e.ok) {
+                    alerta.notif('ok', 'Imagen actualizada correctamente.', 3000);
+                    document.getElementById('mdlUploadImagen').style.display = "none";
+                    ObtenerImagenes();
+                } else {
+                    alerta.notif('fail', 'Ha ocurrido un error, consulte a su administrador.', 3000);
                 }
                 break;
             default:

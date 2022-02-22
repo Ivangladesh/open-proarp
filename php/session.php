@@ -44,7 +44,7 @@
             $user = $statement->fetch();
             GenerarToken($user);
           } else{
-            $response-> data = $statement;
+            $response-> data = null;
             $response-> ok = false;
             echo json_encode($response);
           }

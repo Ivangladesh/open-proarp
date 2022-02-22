@@ -1,7 +1,6 @@
 <?php
 include('session.php');
 date_default_timezone_set('America/Mexico_City');
-// define ("CaptchaPrivateKey", "6Le9QyUcAAAAAA6W1xX4saMhewADCLHXZKfxhI7C");
 
 $data = json_decode(file_get_contents('php://input'), true);
 if (isset($data['Action']) && !empty($data['Action'])) {
