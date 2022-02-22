@@ -121,6 +121,7 @@ valid.date = function (data) {
     let todaysYear = new Date().getFullYear();
     const errorId = data.id + "errorValid";
     let msg = "";
+    valid.removeErrorMessageInput(errorId, null);
     if (todaysYear - dateYear < 18) {
         msg = `Fecha inválida, no puedes ser menor de 18 años.`;
         valid.addErrorMessageInput(data, msg);
@@ -146,11 +147,12 @@ valid.date = function (data) {
  valid.dateNoAge = function (data) {
     const regFecha = /^\d{4}-\d{2}-\d{2}$/;
     let tipo = regFecha.test(data.value);
-    let dateYear = new Date(data.value).getFullYear();
-    let todaysYear = new Date().getFullYear();
+    let dateYear = new Date(data.value);
+    let todaysYear = new Date();
     const errorId = data.id + "errorValid";
+    valid.removeErrorMessageInput(errorId, null);
     let msg = "";
-    if (todaysYear - dateYear > 0) {
+    if (todaysYear < dateYear) {
         msg = `Fecha inválida, no puedes ser mayor a la actual.`;
         valid.addErrorMessageInput(data, msg);
         tipo = false;
