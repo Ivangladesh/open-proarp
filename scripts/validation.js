@@ -20,6 +20,26 @@ valid.equal = function (data) {
 };
 
 /**
+ * Validación de igualdad.
+ * @param {string} data Dato a validar.
+ * @returns {boolean}
+ */
+ valid.select = function (data) {
+    let resp = data.value !== ""? true : false;
+    const errorId = data.id + "errorValid";
+    valid.removeErrorMessageInput(errorId, null);
+    let msg = `Es necesario seleccionar un valor.`;
+    if (!resp) {
+        data.classList.add("error");
+        valid.addErrorMessageInput(data, msg);
+    } else {
+        data.classList.remove("error");
+    }
+    return resp;
+};
+
+
+/**
  * Validación de igualdad para contraseñas.
  * @param {string} data Dato a validar.
  * @returns {boolean}
@@ -64,6 +84,7 @@ valid.number = function (data, longitud) {
     let resp = new ValidationResponse(tipo, long);
     return resp;
 };
+
 /**
  * Validación si es un dato corresponde a un email.
  * Expresión regular tomada de:
@@ -100,8 +121,39 @@ valid.date = function (data) {
     let todaysYear = new Date().getFullYear();
     const errorId = data.id + "errorValid";
     let msg = "";
+    valid.removeErrorMessageInput(errorId, null);
     if (todaysYear - dateYear < 18) {
         msg = `Fecha inválida, no puedes ser menor de 18 años.`;
+        valid.addErrorMessageInput(data, msg);
+        tipo = false;
+    }
+    if (!tipo) {
+        data.classList.add("error");
+    } else {
+        data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
+    }
+    let resp = new ValidationResponse(tipo, tipo);
+    return resp;
+};
+
+/**
+ * Validación si es un dato corresponde al formato aceptado para las fechas.
+ * Expresión regular tomada de:
+ * https://www.regular-expressions.info/email.html
+ * @param {string} data Dato a validar.
+ * @returns {boolean}
+ **/
+ valid.dateNoAge = function (data) {
+    const regFecha = /^\d{4}-\d{2}-\d{2}$/;
+    let tipo = regFecha.test(data.value);
+    let dateYear = new Date(data.value);
+    let todaysYear = new Date();
+    const errorId = data.id + "errorValid";
+    valid.removeErrorMessageInput(errorId, null);
+    let msg = "";
+    if (todaysYear < dateYear) {
+        msg = `Fecha inválida, no puedes ser mayor a la actual.`;
         valid.addErrorMessageInput(data, msg);
         tipo = false;
     }
@@ -318,12 +370,27 @@ valid.form = function (form) {
                         controls[i].classList.add("error");
                     }
                     break;
+                case "dateNoAge":
+                    if (valid.dateNoAge(controls[i]).tipo) {
+                        controls[i].classList.remove("error");
+                    } else {
+                        countOk += 1;
+                        controls[i].classList.add("error");
+                    }
+                    break;
                 default:
                     controls[i].classList.remove("error");
                     break;
             }
         } else if (controls[i].nodeName === "TEXTAREA") {
             if (valid.text(controls[i]).tipo) {
+                controls[i].classList.remove("error");
+            } else {
+                countOk += 1;
+                controls[i].classList.add("error");
+            }
+        } else if (controls[i].nodeName === "SELECT") {
+            if(valid.select(controls[i])){
                 controls[i].classList.remove("error");
             } else {
                 countOk += 1;
@@ -357,6 +424,9 @@ valid.setupForm = function (data) {
                     case "date":
                         valid.date(this);
                         break;
+                    case "dateNoAge":
+                        valid.dateNoAge(this);
+                        break;
                     case "decimal":
                         valid.decimal(this);
                         break;
@@ -377,6 +447,10 @@ valid.setupForm = function (data) {
         } else if (controls[i].nodeName === "TEXTAREA") {
             controls[i].addEventListener("change", function () {
                 valid.text(this);
+            });
+        } else if (controls[i].nodeName === "SELECT") {
+            controls[i].addEventListener("change", function () {
+                valid.select(this);
             });
         }
     }

@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const frmLogin = document.getElementById('frmLogin');
     const maxYear = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
     const maxDateFormatted = new Date(maxYear).toISOString().split("T")[0];
+    const path = self.location.host === 'localhost' ? "/proarp/views/index.php" : "/views/index.php";
 
     document.getElementById("txtRegistroFecha").setAttribute("max", maxDateFormatted);
 
@@ -92,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 msg = `Sesión iniciada correctamente, Bienvenido!`;
                 if(e.ok){
                     alerta.notif('ok', msg, 2000);
-                    if(self.location.pathname === "/proarp/views/index.php"){
+                    if(self.location.pathname === path){
                         alerta.notif('ok', msg, 2500);
                         setTimeout(function(){location.reload();},2100);
                     }
