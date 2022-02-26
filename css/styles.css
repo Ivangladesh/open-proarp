@@ -354,6 +354,21 @@ hr.divider-base {
     width: 70%;
     padding: 10px;
   }
+  .frm-col-6{
+    float: left;
+    width: 60%;
+    padding: 10px;
+  }
+  .frm-col-5{
+    float: left;
+    width: 50%;
+    padding: 10px;
+  }
+  .frm-col-4{
+    float: left;
+    width: 40%;
+    padding: 10px;
+  }
   .frm-col-3-3{
     float: left;
     width: 33%;
@@ -549,6 +564,14 @@ table tr.header, table tr:hover {
 
 .canvas{
   padding-bottom:7rem !important;
+}
+
+.grecaptcha-badge{
+  z-index: 15;
+  opacity: 0.6;
+}
+#mdlConfirm{
+  z-index: 15;
 }
 
 

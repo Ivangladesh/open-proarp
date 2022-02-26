@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const frmLogin = document.getElementById('frmLogin');
     const maxYear = new Date(new Date().setFullYear(new Date().getFullYear() - 18));
     const maxDateFormatted = new Date(maxYear).toISOString().split("T")[0];
+    const path = self.location.host === 'localhost' ? "/proarp/views/index.php" : "/views/index.php";
 
     document.getElementById("txtRegistroFecha").setAttribute("max", maxDateFormatted);
 
@@ -12,20 +13,20 @@ document.addEventListener("DOMContentLoaded", function () {
         valid.setupForm(formRegistrar);
         document.getElementById("btnLogin").addEventListener('click', function(e){
             if(valid.form(frmLogin)){
-                iniciarSesion();
+                reCaptcha(true);
             }
             e.preventDefault();
         });
     
         document.getElementById("btnRegistrar").addEventListener('click', function(e){
             if(valid.form(formRegistrar)){
-                registrarUsuario();
+                reCaptcha(false);
             }
             e.preventDefault();
         });
     }
 
-    function registrarUsuario() {
+    function registrarUsuario(token) {
         let nombre = document.getElementById('txtRegistroNombre').value;
         let paterno = document.getElementById('txtRegistroPaterno').value;
         let materno = document.getElementById('txtRegistroMaterno').value;
@@ -40,19 +41,19 @@ document.addEventListener("DOMContentLoaded", function () {
             FechaNacimiento : fecha,
             Email : email,
             Password: password,
-            ReCaptchaToken : "token"
+            ReCaptchaToken : token
         }
         call.post("../php/session.php", JSON.stringify(datos), handler, true);
      }
 
-     function iniciarSesion() {
+     function iniciarSesion(token) {
         let email = document.getElementById('txtUsername').value;
         let password = btoa(document.getElementById('txtPassword').value);
         let datos = {
             Action: "IniciarSesion",
             Email : email,
             Password: password,
-            ReCaptchaToken : "token"
+            ReCaptchaToken : token
         }
         call.post("../php/session.php", JSON.stringify(datos), handler, true);
     }
@@ -92,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 msg = `Sesión iniciada correctamente, Bienvenido!`;
                 if(e.ok){
                     alerta.notif('ok', msg, 2000);
-                    if(self.location.pathname === "/proarp/views/index.php"){
+                    if(self.location.pathname === path){
                         alerta.notif('ok', msg, 2500);
                         setTimeout(function(){location.reload();},2100);
                     }
@@ -105,5 +106,18 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
         }
     }
+
+    function reCaptcha(is) {
+        grecaptcha.ready(function() {
+          grecaptcha.execute('6LfB2CQcAAAAAHBesFhEH8KFjd3Cn14Kt-cexHCm',
+          {action: 'validarInicioSesion'}).then(function(token) {
+            if(is){
+                iniciarSesion(token);
+              } else{
+                registrarUsuario(token);
+              }
+          });
+        });
+      }
 
 });

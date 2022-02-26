@@ -1,10 +1,10 @@
 <?php
 include('session.php');
 date_default_timezone_set('America/Mexico_City');
-// define ("CaptchaPrivateKey", "6Le9QyUcAAAAAA6W1xX4saMhewADCLHXZKfxhI7C");
 
 $data = json_decode(file_get_contents('php://input'), true);
 if (isset($data['Action']) && !empty($data['Action'])) {
+  $_SESSION['LAST_ACTIVITY'] = time();
   $action = $data['Action'];
   switch ($action) {
       #region OBTENER GENERAL
@@ -19,6 +19,12 @@ if (isset($data['Action']) && !empty($data['Action'])) {
       break;
     case 'ObtenerNotificaciones':
       ObtenerNotificaciones();
+      break;
+    case 'ObtenerTipoUsuario':
+      ObtenerTipoUsuario();
+      break;
+    case 'ObtenerEstadoUsuario':
+      ObtenerEstadoUsuario();
       break;
       #endregion
 
@@ -41,11 +47,18 @@ if (isset($data['Action']) && !empty($data['Action'])) {
     case 'ActualizarEstadoMensaje':
       ActualizarEstadoMensaje();
       break;
+    case 'ActualizarUsuario':
+      ActualizarUsuario();
+      break;
       #endregion
 
       #region ELIMINAR
     case 'EliminarMensaje':
       EliminarMensaje();
+      break;
+
+    case 'EliminarUsuario':
+      EliminarUsuario();
       break;
       #endregion
   }
@@ -175,11 +188,11 @@ function ObtenerDetalleUsuario()
     $statement->execute();
     if ($statement->rowCount() > 0) {
       $datos = $statement->fetch();
-      $response->callback = 'ObtenerDetalleMensaje';
+      $response->callback = 'ObtenerDetalleUsuario';
       $response->data = $datos;
       $response->ok = true;
     } else {
-      $response->callback = 'ObtenerDetalleMensaje';
+      $response->callback = 'ObtenerDetalleUsuario';
       $response->data = null;
       $response->ok = false;
     }
@@ -277,33 +290,40 @@ function ActualizarEstadoMensaje()
 
   echo json_encode($response);
 }
-function ActualizarUsuario()
-{
+function ActualizarUsuario (){
   $data = json_decode(file_get_contents('php://input'), true);
   $id = $data['UsuarioId'];
+  $nombres = $data['Nombre'];
+  $paterno = $data['Paterno'];
+  $materno = $data['Materno'];
+  $email = $data['Email'];
+  $fecha = $data['FechaNacimiento'];
+  $tipo = $data['Tipo'];
+  $estado = $data['Estado'];
   $pdo = OpenCon();
-  $update = "CALL spActualizarUsuario('$id')";
+  $update = "CALL spActualizarUsuario('$id','$nombres','$paterno','$materno','$email','$fecha','$tipo','$estado')";
   $response = new stdClass();
   try {
-    $statement = $pdo->prepare($update);
-    $statement->execute();
-    if ($statement->rowCount() > 0) {
-      $count = $statement->rowCount();
-      $response->callback = 'ActualizarUsuario';
-      $response->data = $count;
-      $response->ok = true;
-      echo json_encode($response);
-    } else {
-      $response->callback = 'ActualizarUsuario';
-      $response->data = null;
-      $response->ok = false;
-      echo json_encode($response);
+      $statement=$pdo->prepare($update);
+      $statement->execute();
+      if($statement->rowCount() > 0){
+          $count = $statement->rowCount();
+          $response-> callback = 'ActualizarUsuario';
+          $response-> data = $count;
+          $response-> ok = true;
+          echo json_encode($response);
+        } else{
+          $response-> callback = 'ActualizarUsuario';
+          $response-> data = null;
+          $response-> ok = false;
+          echo json_encode($response);
+        }
+    } catch (PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
     }
-  } catch (PDOException $e) {
-    print "¡Error!: " . $e->getMessage() . "<br/>";
-    die();
-  }
 }
+
 function ActualizarImagen()
 {
   $data = json_decode(file_get_contents('php://input'), true);
@@ -366,6 +386,7 @@ function EliminarMensaje()
   $response = new stdClass();
   $data = json_decode(file_get_contents('php://input'), true);
   $id = $data['MensajeId'];
+  $response->callback = 'EliminarMensaje';
   if (!empty($id)) {
     $pdo = OpenCon();
     $update = "CALL spEliminarMensaje('$id')";
@@ -374,11 +395,9 @@ function EliminarMensaje()
       $statement->execute();
       if ($statement->rowCount() > 0) {
         $count = $statement->rowCount();
-        $response->callback = 'EliminarMensaje';
         $response->data = $count;
         $response->ok = true;
       } else {
-        $response->callback = 'EliminarMensaje';
         $response->data = null;
         $response->ok = false;
       }
@@ -387,10 +406,81 @@ function EliminarMensaje()
       die();
     }
   } else {
-    $response->callback = 'EliminarMensaje';
     $response->data = null;
     $response->ok = false;
   }
 
   echo json_encode($response);
 }
+
+function EliminarUsuario()
+{
+  $response = new stdClass();
+  $data = json_decode(file_get_contents('php://input'), true);
+  $id = $data['UsuarioId'];
+  $response->callback = 'EliminarUsuario';
+  if (!empty($id)) {
+    $pdo = OpenCon();
+    $update = "CALL spEliminarUsuario('$id')";
+    try {
+      $statement = $pdo->prepare($update);
+      $statement->execute();
+      if ($statement->rowCount() > 0) {
+        $count = $statement->rowCount();
+        $response->data = $count;
+        $response->ok = true;
+      } else {
+        $response->data = null;
+        $response->ok = false;
+      }
+    } catch (PDOException $e) {
+      print "¡Error!: " . $e->getMessage() . "<br/>";
+      die();
+    }
+  } else {
+    $response->data = null;
+    $response->ok = false;
+  }
+
+  echo json_encode($response);
+}
+
+function ObtenerTipoUsuario (){
+  $pdo = OpenCon();
+  $sp = "CALL spObtenerTipoUsuario()";
+  $response = new stdClass();
+  try {
+      $statement=$pdo->prepare($sp);
+      $statement->execute();
+      while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
+        $response-> callback = 'ObtenerTipoUsuario';
+        $response-> data = $r;
+        $response-> ok = true;
+      }
+    } catch (PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    echo json_encode($response);
+}
+
+function ObtenerEstadoUsuario (){
+  $pdo = OpenCon();
+  $sp = "CALL spObtenerEstadoUsuario()";
+  $response = new stdClass();
+  try {
+      $statement=$pdo->prepare($sp);
+      $statement->execute();
+      while($r = $statement->fetchAll(PDO::FETCH_ASSOC)){
+        $response-> callback = 'ObtenerEstadoUsuario';
+        $response-> data = $r;
+        $response-> ok = true;
+      }
+    } catch (PDOException $e) {
+        print "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    echo json_encode($response);
+}
+
+?>

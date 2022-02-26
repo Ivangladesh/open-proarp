@@ -3,35 +3,43 @@
         <div class="container">
             <div class="card">
                 <div class="card-body">
-                    <form id="frmContacto">
+                    <input id="imgId" style="display: none;"/>
+                    <form id="frmUploadImagen">
                         <div class="row">
                             <h3>Detalle</h3>
                             <hr class="divider-base">
                         </div>
                         <div class="row">
-                            <div class="frm-col-1">
+                            <div class="frm-col-2" id="divAdjuntarImegen">
                                 <div class="form-group">
                                     <label for="txtNombreD" style="display:block">Adjuntar imagen</label>
-                                    <!-- <input type="file" class="form-control input-form" id="imgUpload" name="img" accept="image/*"> -->
                                     <label for="imgUpload" class="upload-button">
                                         <i class="fa fa-cloud-upload"></i> Seleccionar
                                     </label>
-                                    <label for="txtEmailD" id="txtArchivoNombre"></label>
+                                    <label for="imgUpload" id="txtArchivoNombre"></label>
                                     <input type="file" id="imgUpload" name="img" accept="image/*"/>
+                                </div>
+                            </div>
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="cmbProductos" style="display:block">Producto asociado:</label>
+                                    <select class="form-control input-form" type="select" id="cmbProductos"></select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="frm-col-1">
                                 <div class="form-group">
-                                    <label for="txtDescripcion" style="display:block">Descripción:</label>
-                                    <textarea rows="5" class="form-control input-form" id="txtDescripcion"></textarea>
+                                    <label for="txtDescripcionImagen" style="display:block">Descripción:</label>
+                                    <textarea rows="5" class="form-control input-form" id="txtDescripcionImagen"></textarea>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="frm-col-1">
                                 <button class="btn btn-success" id="btnGuardarImagen" >Guardar</button>
+                                <button class="btn btn-success" id="btnActualizarImagen" style="display: none;">Actualizar</button>
+                                <button class="btn btn-cancel" id="btnEliminarImagen" style="display: none;">Eliminar imagen</button>
                                 <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlUploadImagen">Cancelar</button>
                             </div>
                         </div>

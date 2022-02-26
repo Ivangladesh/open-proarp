@@ -11,39 +11,42 @@
                         <div class="row">
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtNombreD" style="display:block">Nombre completo</label>
-                                    <input type="text" class="form-control input-form" id="txtNombreD" readonly
-                                        disabled>
+                                    <label for="txtNombreNuevoProd" style="display:block">Nombre</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtNombreNuevoProd">
                                 </div>
                             </div>
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtEmailD" style="display:block">Email / usuario</label>
-                                    <input type="text" class="form-control input-form" id="txtEmailD" readonly disabled>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="frm-col-7">
-                                <div class="form-group">
-                                    <label for="txtAsuntoD" style="display:block">Asunto</label>
-                                    <input type="text" class="form-control input-form" id="txtAsuntoD" readonly
-                                        disabled>
-                                </div>
-                            </div>
-                            <div class="frm-col-3">
-                                <div class="form-group">
-                                    <label for="txtFechaD" style="display:block">Fecha</label>
-                                    <input type="text" class="form-control input-form" id="txtFechaD" readonly disabled>
+                                    <label for="txtFechaNuevoProd" style="display:block">Fecha de compra</label>
+                                    <input type="date" data-id="dateNoAge" class="form-control input-form" id="txtFechaNuevoProd">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="frm-col-1">
                                 <div class="form-group">
-                                    <label for="txtMensajeD" style="display:block">Mensaje:</label>
-                                    <textarea rows="5" class="form-control input-form" id="txtMensajeD" readonly
-                                        disabled></textarea>
+                                    <label for="txtDescripcionNuevoProd" style="display:block">Descripción:</label>
+                                    <textarea rows="5" data-id="text" class="form-control input-form" id="txtDescripcionNuevoProd" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtPrecioVentaNuevoProd" style="display:block">Precio de venta</label>
+                                    <input type="number" data-id="decimal" class="form-control input-form" id="txtPrecioVentaNuevoProd">
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="txtExistencicasNuevoProd" style="display:block">Existencias</label>
+                                    <input type="number" data-id="number" class="form-control input-form" id="txtExistencicasNuevoProd">
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for="cmbProveedorNuevoProd" style="display:block">Proveedor</label>
+                                    <select class="form-control input-form" id="cmbProveedorNuevoProd"></select>
                                 </div>
                             </div>
                         </div>

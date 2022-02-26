@@ -1,37 +1,158 @@
 document.addEventListener("DOMContentLoaded", function () {
     
+    let estadoInventario, estadoInventarioId, proveedorId;
+
+    const frmNuevoProducto = document.getElementById('frmNuevoProducto');
+    const frmNuevoProveedor = document.getElementById('frmNuevoProveedor');
+    const frmDetalleProducto = document.getElementById('frmDetalleProducto');
+    const frmDetalleProveedor = document.getElementById('frmDetalleProveedor');
+
+    if(frmNuevoProducto !== null){
+        valid.setupForm(frmNuevoProducto);
+        document.getElementById("btnAceptarNuevoProducto").addEventListener('click', function(e){
+            if(valid.form(frmNuevoProducto)){
+                //RegistrarMensaje();
+            }
+            e.preventDefault();
+        });
+    }
+
+    if(frmNuevoProveedor !== null){
+        valid.setupForm(frmNuevoProducto);
+        document.getElementById("btnAceptarNuevoProveedor").addEventListener('click', function(e){
+            if(valid.form(frmNuevoProveedor)){
+                //RegistrarMensaje();
+            }
+            e.preventDefault();
+        });
+    }
+
+    
+    if(frmDetalleProducto !== null){
+        valid.setupForm(frmDetalleProducto);
+        document.getElementById("btnAceptarProducto").addEventListener('click', function(e){
+            if(valid.form(frmDetalleProducto)){
+                let dataId = e.target.getAttribute("data-id");
+                ActualizarProducto(dataId);
+            }
+            e.preventDefault();
+        });
+    }
+
+    if(frmDetalleProveedor !== null){
+        valid.setupForm(frmDetalleProveedor);
+        document.getElementById("btnAceptarProveedor").addEventListener('click', function(e){
+            if(valid.form(frmDetalleProveedor)){
+                let dataId = e.target.getAttribute("data-id");
+                ActualizarProveedor(dataId);
+            }
+            e.preventDefault();
+        });
+    }
+
+
     document.getElementById("inventario").addEventListener('click', function(e){
         ObtenerProductos();
+        ObtenerProveedores();
         e.preventDefault();
     });
     document.getElementById("agregarProducto").addEventListener('click', function (e) {
         mostrarModalNuevoProducto();
         e.preventDefault();
     });
+    document.getElementById("agregarProveedor").addEventListener('click', function (e) {
+        mostrarModalNuevoProveedor();
+        e.preventDefault();
+    });
 
     const mostrarModalNuevoProducto = () => {
         document.getElementById('mdlNuevoProducto').style.display = "block"
     }
-    // document.getElementById("tblMensajes").addEventListener('click', function(e){
-    //     if(e.target.cellIndex < 5){
-    //         let mensajeId = parseInt(e.target.parentNode.cells[0].id);
-    //         obtenerDetalleMensaje(mensajeId);
-    //         actualizarEstadoMensaje(mensajeId);
-    //     }
-    //     e.preventDefault();
-    // });
-
-    // document.getElementById("tabMensajes").addEventListener('click', function(e){
-    //     ObtenerProductos();
-    //     e.preventDefault();
-    // });
+    const mostrarModalNuevoProveedor = () => {
+        document.getElementById('mdlNuevoProveedor').style.display = "block"
+    }
 
     function ObtenerProductos() {
         let datos = {Action: "ObtenerProductos"};
         call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
     }
 
-    let poblarMensajes = (datos) =>{
+    function ObtenerProveedores() {
+        let datos = {Action: "ObtenerProveedores"};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ObtenerEstadoInventario() {
+        let datos = {Action: "ObtenerEstadoInventario"};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ObtenerDetalleProducto(id) {
+        let datos = {Action: "ObtenerDetalleProducto", ProductoId: id};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ObtenerDetalleProveedor(id) {
+        let datos = {Action: "ObtenerDetalleProveedor", ProveedorId: id};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ActualizarProducto(id) {
+        let nombre = document.getElementById('txtNombreInv').value;
+        let descripcion = document.getElementById('txtDescripcionInv').value;
+        let fechaCompra = document.getElementById('txtFechaInv').value;
+        let precioVenta = document.getElementById('txtPrecioVentaInv').value;
+        let existencias = document.getElementById('txtExistenciasInv').value;
+        let datos = {
+            Action: "ActualizarProducto",
+            InventarioId : id,
+            Nombre :nombre,
+            Descripcion : descripcion,
+            Estado: estadoInventarioId,
+            PrecioVenta:precioVenta,
+            FechaCompra:fechaCompra,
+            Existencias :existencias
+        };
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ActualizarProveedor(id) {
+        let razonSocial = document.getElementById('txtRazonDetalleProv').value;
+        let marcaComercial = document.getElementById('txtMarcaDetalleProv').value;
+        let RFC = document.getElementById('txtRFCDetalleProv').value;
+        let direccion = document.getElementById('txtDireccionDetalleProv').value;
+        let telefono = document.getElementById('txtTelefonoDetalleProv').value;
+        let telefonoAlternativo = document.getElementById('txtTelefonoAltDetalleProv').value;
+        let nombreContacto = document.getElementById('txtContactoDetalleProv').value;
+        let descripcion = document.getElementById('txtDescripcionDetalleProv').value;
+        let notas = document.getElementById('txtNotasDetalleProv').value;
+        let datos = {
+            Action: "ActualizarProveedor",
+            ProveedorId : id,
+            RazonSocial : razonSocial,
+            MarcaComercial : marcaComercial,
+            RFC : RFC,
+            Direccion : direccion,
+            Telefono : telefono,
+            TelefonoAlternativo : telefonoAlternativo,
+            NombreContacto : nombreContacto,
+            Descripcion : descripcion,
+            Notas : notas
+        };
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function InsertarProducto() {
+        let datos = {Action: "InsertarProducto"};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function InsertarProveedor() {
+        let datos = {Action: "InsertarProveedor"};
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    let poblarInventario = (datos) =>{
         let table = document.getElementById('tblInventario');
         var oldTbody = table.children[1];
         var newTbody = document.createElement('tbody');
@@ -57,38 +178,162 @@ document.addEventListener("DOMContentLoaded", function () {
         eliminarEventListener();
     }
 
-    function obtenerDetalleMensaje(mensajeId){
-        let datos = {
-            Action: "ObtenerDetalleMensaje",
-            MensajeId: mensajeId
-        }
-        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    let poblarProveedores = (datos) =>{
+        let table = document.getElementById('tblProveedores');
+        var oldTbody = table.children[1];
+        var newTbody = document.createElement('tbody');
+        table.removeChild(oldTbody);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+            var fechaFormateada = new Date(datos[i].FechaRecepcion).toLocaleDateString("es-MX");
+            let newRow =
+                '<tr>' +
+                '<td style="display: none;" id=' + datos[i].ProveedorId + '></td>' +
+                '<td>' + datos[i].RazonSocial + '</td>' +
+                '<td>' + datos[i].RFC + '</td>' +
+                '<td>' + datos[i].Telefono + '</td>' +
+                '</tr>';
+                let emptyRow = newTbody.insertRow(newTbody.rows.length);
+                emptyRow.innerHTML = newRow; 
+                if(datos[i].EstadoMensaje === "Nuevo"){
+                    emptyRow.classList.add('tr-new')
+                }
+        };
+        table.appendChild(newTbody);
+        eliminarEventListener();
     }
 
-    function actualizarEstadoMensaje(mensajeId){
-        let datos = {
-            Action: "ActualizarEstadoMensaje",
-            MensajeId: mensajeId
-        }
-        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    let poblarComboEstadoInventario = (datos) =>{
+		let select = document.getElementById("cmbEstadoInv");
+		removeOptions(select);
+		let placeHolder = document.createElement("option");
+		placeHolder.text = "Seleccione...";
+		placeHolder.value = "";
+		placeHolder.disabled = true;
+		placeHolder.selected = true;
+		select.appendChild(placeHolder);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+			var option = document.createElement("option");
+			option.text = datos[i].EstadoInventario;
+			option.value = datos[i].EstadoInventarioId;
+			select.appendChild(option);
+        };
     }
 
-    const mostrarModal = (datos) => {
+    
+    let poblarComboProveedores = (datos) =>{
+		let select = document.getElementById("cmbProveedorNuevoProd");
+		removeOptions(select);
+		let placeHolder = document.createElement("option");
+		placeHolder.text = "Seleccione...";
+		placeHolder.value = "";
+		placeHolder.disabled = true;
+		placeHolder.selected = true;
+		select.appendChild(placeHolder);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+			var option = document.createElement("option");
+			option.text = datos[i].RazonSocial;
+			option.value = datos[i].ProveedorId;
+			select.appendChild(option);
+        };
+    }
+
+    let poblarComboProveedoresDetalle = (datos) =>{
+		let select = document.getElementById("cmbProveedorDetalleProd");
+		removeOptions(select);
+		let placeHolder = document.createElement("option");
+		placeHolder.text = "Seleccione...";
+		placeHolder.value = "";
+		placeHolder.disabled = true;
+		placeHolder.selected = true;
+		select.appendChild(placeHolder);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+			var option = document.createElement("option");
+			option.text = datos[i].RazonSocial;
+			option.value = datos[i].ProveedorId;
+			select.appendChild(option);
+        };
+    }
+
+    document.getElementById("tblInventario").addEventListener('click', function (e) {
+        if (e.target.cellIndex < 5) {
+            let id = parseInt(e.target.parentNode.cells[0].id);
+            ObtenerDetalleProducto(id);
+        }
+        e.preventDefault();
+    });
+
+    document.getElementById("tblProveedores").addEventListener('click', function (e) {
+        if (e.target.cellIndex < 5) {
+            let id = parseInt(e.target.parentNode.cells[0].id);
+            ObtenerDetalleProveedor(id);
+        }
+        e.preventDefault();
+    });
+
+    document.getElementById("btnEliminarProducto").addEventListener('click', function (e) {
+        let dataId = e.target.getAttribute("data-id");
+        let data = {callback : "EliminarProducto", id : dataId}
+        alerta.confirm(data, handler);
+        e.preventDefault();
+    });
+
+    document.getElementById("btnEliminarProveedor").addEventListener('click', function (e) {
+        let dataId = e.target.getAttribute("data-id");
+        let data = {callback : "EliminarProducto", id : dataId}
+        alerta.confirm(data, handler);
+        e.preventDefault();
+    });
+
+    function eliminarProducto(id) {
+        let datos = {
+            Action: "EliminarProducto",
+            ProductoId: id
+        }
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function eliminarProveedor(id) {
+        let datos = {
+            Action: "EliminarProveedor",
+            ProveedorId: id
+        }
+        call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    const mostrarModalInventario = (datos) => {
+        ObtenerEstadoInventario();
+        var fechaFormateada = new Date(datos.FechaCompra).toISOString().slice(0, 10);
+        document.getElementById('txtNombreInv').value = datos.Nombre;
+        document.getElementById('txtDescripcionInv').value = datos.Descripcion;
+        estadoInventario = datos.EstadoInventario;
+        estadoInventarioId = datos.Estado;
+        proveedorId = datos.Proveedor;
+        document.getElementById('txtFechaInv').value = fechaFormateada;
+        document.getElementById('txtPrecioVentaInv').value = datos.PrecioVenta;
+        document.getElementById('txtExistenciasInv').value = datos.Existencias;
+        document.getElementById('btnAceptarProducto').setAttribute("data-id", datos.InventarioId);
+        document.getElementById('btnEliminarProducto').setAttribute("data-id", datos.InventarioId);
+        document.getElementById('mdlDetalleProducto').style.display = "block"
+    }
+
+    const mostrarModalProveedores = (datos) => {
         var fechaFormateada = new Date(datos.FechaRecepcion).toLocaleDateString("es-MX");
-        document.getElementById('txtNombreD').value = datos.NombreCompleto;
-        document.getElementById('txtEmailD').value = datos.UsuarioEmail;
-        document.getElementById('txtAsuntoD').value = datos.Asunto;
-        document.getElementById('txtFechaD').value = fechaFormateada;
-        document.getElementById('txtMensajeD').value = datos.Mensaje;
-        document.getElementById('mdlMensaje').style.display = "block"
-    }
-
-    function eliminarMensaje(id){
-        let datos = {
-            Action: "EliminarMensaje",
-            MensajeId: id
-        }
-        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+        document.getElementById('txtRazonDetalleProv').value = datos.RazonSocial;
+        document.getElementById('txtMarcaDetalleProv').value = datos.MarcaComercial;
+        document.getElementById('txtRFCDetalleProv').value = datos.RFC;
+        document.getElementById('txtDireccionDetalleProv').value = datos.Direccion;
+        document.getElementById('txtTelefonoDetalleProv').value = datos.Telefono;
+        document.getElementById('txtTelefonoAltDetalleProv').value = datos.TelefonoAlternativo;
+        document.getElementById('txtContactoDetalleProv').value = datos.NombreContacto;
+        document.getElementById('txtDescripcionDetalleProv').value = datos.Descripcion;
+        document.getElementById('txtNotasDetalleProv').value = datos.Notas;
+        document.getElementById('btnAceptarProveedor').setAttribute("data-id", datos.ProveedorId);
+        document.getElementById('btnEliminarProveedor').setAttribute("data-id", datos.ProveedorId);
+        document.getElementById('mdlDetalleProveedor').style.display = "block"
     }
 
     function eliminarEventListener (){
@@ -101,51 +346,107 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    function selectElement(id, value, text) {    
+        let element = document.getElementById(id);
+        element.value = value;
+        // element.text = text;
+    }
+
+	function removeOptions(selectElement) {
+		var i, L = selectElement.options.length - 1;
+		for(i = L; i >= 0; i--) {
+		   selectElement.remove(i);
+		}
+	 }
+
     function handler(e){
         let msg = "";
+        let msgFail = 'Ha ocurrido un error consulte al administrador.';
         switch (e.callback) {
-            case "ObtenerUsuario":
-                if(!e.ok){
-                    alerta.notif('ok', e.data, 3000);
-                }
-                break;
             case "ObtenerProductos":
                 if(e.ok){
-                    poblarMensajes(e.data);
+                    poblarInventario(e.data);
                 }
                 break;
-            case "ObtenerUsuarios":
+            case "ObtenerProveedores":
                 if(e.ok){
-                    poblarUsuarios(e.data);
+                    poblarProveedores(e.data);
+                    poblarComboProveedores(e.data);
+                    poblarComboProveedoresDetalle(e.data);
                 }
                 break;
-            case "ObtenerDetalleMensaje":
-                if(e.ok){
-                    mostrarModal(e.data);
+            case "ObtenerDetalleProducto":
+                if (e.ok) {
+                    mostrarModalInventario(e.data);
+                } else {
+                    alerta.notif('fail', msgFail, 3000);
                 }
                 break;
-            case "ActualizarEstadoMensaje":
+            case "ObtenerDetalleProveedor":
+                if (e.ok) {
+                    mostrarModalProveedores(e.data)
+                } else {
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "ObtenerEstadoInventario":
+                if (e.ok) {
+                    poblarComboEstadoInventario(e.data);
+                    selectElement('cmbEstadoInv', estadoInventarioId,);
+                    selectElement('cmbProveedorDetalleProd', proveedorId);
+                } else {
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "ActualizarProveedor":
                 if(e.ok){
-                    ObtenerProductos();
+                    alerta.notif('ok', 'Registro actualizado correctamente.', 3000);
+                    ObtenerProveedores();
+                    document.getElementById("mdlDetalleProveedor").style.display = "none";
                 } else{
-                    msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
-                    alerta.notif('ok', e.data, 3000);
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "ActualizarProducto":
+                if(e.ok){
+                    alerta.notif('ok', 'Registro actualizado correctamente.', 3000);
+                    ObtenerProductos();
+                    document.getElementById("mdlDetalleProducto").style.display = "none";
+                } else{
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "EliminarProveedor":
+                if(e.ok){
+                    alerta.notif('ok', 'Registro eliminado correctamente.', 3000);
+                    ObtenerProveedores();
+                    document.getElementById("mdlDetalleProveedor").style.display = "none";
+                } else{
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "EliminarProducto":
+                if(e.ok){
+                    alerta.notif('ok', 'Registro eliminado correctamente.', 3000);
+                    ObtenerProductos();
+                    document.getElementById("mdlDetalleProducto").style.display = "none";
+                } else{
+                    alerta.notif('fail', msgFail, 3000);
                 }
                 break;
             case "Confirmar":
-                if(e.ok){
-                    eliminarMensaje(e.data);
-                } else{
-                    msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
+                if (e.ok) {
+                    if(e.data.callback === "EliminarProducto"){
+                        document.getElementById("mdlDetalleProducto").style.display = "none";
+                        eliminarProducto(e.data.id);
+                    } else if(e.data.callback === "EliminarProveedor"){
+                        document.getElementById("mdlDetalleProveedor").style.display = "none";
+                        eliminarProveedor(e.data.id);
+                    }
+                   
+                } else {
+                    msg = 'Ha ocurrido un error, consulte a su administrador.';
                     alerta.notif('ok', e.data, 3000);
-                }
-                break;
-            case "EliminarMensaje":
-                if(e.ok){
-                    alerta.notif('ok', 'Mensaje eliminado correctamente.', 3000);
-                    ObtenerProductos();
-                } else{
-                    alerta.notif('fail', 'Ha ocurrido un error al eliminar el mensaje.', 3000);
                 }
                 break;
             default:

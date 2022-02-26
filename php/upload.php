@@ -1,4 +1,9 @@
 <?php
+
+session_start();
+include('dbconn.php');
+date_default_timezone_set('America/Mexico_City');
+
 $fileName = $_FILES['file']['name'];
 $fileTmpName = $_FILES['file']['tmp_name'];
 $fileSize = $_FILES['file']['size'];
@@ -12,6 +17,7 @@ $fileDestinationThumb = '/thumbnails';
 $response = new stdClass();
 $msg = "";
 $ok = true;
+
 if (in_array($fileActualExt, $allowed)) {
     if ($fileError === 0) {
         if ($fileSize > 2000) {
@@ -19,7 +25,11 @@ if (in_array($fileActualExt, $allowed)) {
             $fileNewName = $uniqueName.".". $fileActualExt;
             $destination = $fileDestination. $fileNewName;
             move_uploaded_file($fileTmpName, $destination);
-            makeThumbnails($destination, $fileActualExt, $fileNewName);
+            $thumb = makeThumbnails($destination, $fileActualExt, $fileNewName);
+            if($thumb){
+                $msg .= $fileNewName;
+                $ok = true;  
+            }
         } else{
             $msg .= "El tamaño del archivo es demasiado grande.";
             $ok = false;  
@@ -31,24 +41,22 @@ if (in_array($fileActualExt, $allowed)) {
 } else{
     $msg .= "Tipo de archivo no válido";
     $ok = false;
-
-    $response-> callback = 'UploadImage';
-    $response-> data = null;
-    $response-> ok = $ok;
-    echo json_encode($response);
-
 }
+
+$response-> callback = 'UploadImage';
+$response-> data = $msg;
+$response-> ok = $ok;
+echo json_encode($response);
 
 function makeThumbnails($updir, $img, $id)
 {
-    $response = new stdClass();
-    $thumbnail_width = 134;
-    $thumbnail_height = 134;
+    $thumbnail_width = 100;
+    $thumbnail_height = 100;
     $thumb_beforeword = "thumb";
     $imgcreatefrom = "";
     $fileDestination = '../uploads/';
     $fileDestinationThumb = '/thumbnails';
-    $arr_image_details = getimagesize($updir); // pass id to thumb name
+    $arr_image_details = getimagesize($updir);
     $original_width = $arr_image_details[0];
     $original_height = $arr_image_details[1];
     if ($original_width > $original_height) {
@@ -73,20 +81,17 @@ function makeThumbnails($updir, $img, $id)
         $imgcreatefrom = "ImageCreateFromPNG";
     }
     if ($imgt) {
+        
         $old_image = $imgcreatefrom($updir);
         $new_image = imagecreatetruecolor($thumbnail_width, $thumbnail_height);
+        $black = imagecolorallocate($new_image, 255, 255, 255);
+        imagefill($new_image, 0, 0, $black);
         imagecopyresized($new_image, $old_image, $dest_x, $dest_y, 0, 0, $new_width, $new_height, $original_width, $original_height);
         $imgt($new_image, "$fileDestination"."$fileDestinationThumb/"."$thumb_beforeword".'_'.$id);
-        $response-> callback = 'UploadImage';
-        $response-> data = null;
-        $response-> ok = true;
-        echo json_encode($response);
+        return true;
     } else{
-        $response-> callback = 'UploadImage';
-        $response-> data = null;
-        $response-> ok = false;
-        echo json_encode($response);
+        return false;
     }
 }
 
-?>git add
+?>

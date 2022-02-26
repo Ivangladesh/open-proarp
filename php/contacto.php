@@ -1,10 +1,10 @@
 <?php
     include('session.php');
     date_default_timezone_set('America/Mexico_City');
-  // define ("CaptchaPrivateKey", "6Le9QyUcAAAAAA6W1xX4saMhewADCLHXZKfxhI7C");
 
   $data = json_decode(file_get_contents('php://input'), true);
   if(isset($data['Action']) && !empty($data['Action'])) {
+    $_SESSION['LAST_ACTIVITY'] = time();
     $action = $data['Action'];
     switch($action) {
         case 'RegistrarMensaje' : RegistrarMensaje();
@@ -19,6 +19,7 @@
     $email = $session->data;
     $asunto = $data['Asunto'];
     $mensaje = $data['Mensaje'];
+    $response-> callback = 'RegistrarMensaje';
     if (!empty($email) && !empty($asunto) && !empty($mensaje)) {
       $pdo = OpenCon();
       $sp = "CALL spRegistrarMensajeContacto('$asunto','$mensaje', '$email')";
@@ -27,11 +28,9 @@
           $statement->execute();
           if($statement->rowCount() > 0){
             $insert = $statement->fetch();
-            $response-> callback = 'RegistrarMensaje';
             $response-> data = $insert[0];
             $response-> ok = true;
           } else{
-            $response-> callback = 'RegistrarMensaje';
             $response-> data = null;
             $response-> ok = false;
           }
@@ -40,10 +39,11 @@
             die();
         }
     } else{
-      $response-> callback = 'RegistrarMensaje';
       $response-> data = null;
       $response-> ok = false;
     }
 
     echo json_encode($response);
   }
+
+  ?>

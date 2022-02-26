@@ -1,4 +1,4 @@
-"use strict";
+//"use strict";
 
 let alerta = {};
 
@@ -40,6 +40,7 @@ alerta.confirm = function (data, callback) {
         .addEventListener("click", function () {
             callback({ callback: "Confirmar", ok: true, data: data });
             document.getElementById("mdlConfirm").style.display = "none";
+            this.removeEventListener('click', arguments.callee);
         });
     document
         .getElementById("btnCancelarConfirmacion")

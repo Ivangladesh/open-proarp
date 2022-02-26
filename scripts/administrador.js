@@ -1,34 +1,30 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /*     const frmContacto = document.getElementById('frmContacto');
-    
-        if(frmContacto !== null){
-            valid.setupForm(frmContacto);
-            document.getElementById("btnRegistrarMensajeContacto").addEventListener('click', function(e){
-                if(valid.form(frmContacto)){
-                    registrarUsuario();
-                }
-                e.preventDefault();
-            });btnCerrarModal
-        } */
+    let tipoUsuario, estadoUsuario;
 
+    const frmDetalleUsuario = document.getElementById('frmDetalleUsuario');
 
+    if(frmDetalleUsuario !== null){
+        valid.setupForm(frmDetalleUsuario);
+        document.getElementById("btnActualizarUsuario").addEventListener('click', function(e){
+            if(valid.form(frmDetalleUsuario)){
+                actualizarUsuario(e);
+            }
+            e.preventDefault();
+        });
+    }
+
+    document.getElementById("btnEliminarUsuario").addEventListener('click', function (e) {
+        let dataId = e.target.getAttribute("data-id");
+        let data = {callback : "EliminarUsuario", id : dataId}
+        alerta.confirm(data, handler);
+        e.preventDefault();
+    });
 
     document.getElementById("agregarImagen").addEventListener('click', function (e) {
         mostrarModalUploadImagen();
         e.preventDefault();
     });
-
-
-
-    // function processSelectedFiles(fileInput) {
-    //     var files = fileInput.files;
-
-    //     for (var i = 0; i < files.length; i++) {
-    //       alert("Filename " + files[i].name);
-    //     }
-    //   }
-
 
     document.getElementById("tblMensajes").addEventListener('click', function (e) {
         if (e.target.cellIndex < 5) {
@@ -39,6 +35,13 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
     });
 
+    document.getElementById("tblUsuarios").addEventListener('click', function (e) {
+        if (e.target.cellIndex < 5) {
+            let usuarioId = parseInt(e.target.parentNode.cells[0].id);
+            obtenerDetalleUsuario(usuarioId);
+        }
+        e.preventDefault();
+    });
 
     document.getElementById("tabMensajes").addEventListener('click', function (e) {
         ObtenerMensajes();
@@ -66,13 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
         table.removeChild(oldTbody);
         let longitud = datos.length - 1;
         for (let i = 0; i <= longitud; i++) {
-            // var element = $('<button class="btn btn-info">Modificar</button>').on('click', function(){
-            //     obtenerDetalleMensaje(datos[i].MensajeId);
-            // });
             var fechaFormateada = new Date(datos[i].FechaRecepcion).toLocaleDateString("es-MX");
             let newRow =
-                '<tr>' +
-                '<td style="display: none;" id=' + datos[i].MensajeId + '></td>' +
+                '<tr>' + '<td style="display: none;" id=' + datos[i].MensajeId + '></td>' +
                 '<td>' + datos[i].NombreCompleto + '</td>' +
                 '<td>' + datos[i].Asunto + '</td>' +
                 '<td>' + datos[i].EstadoMensaje + '</td>' +
@@ -104,7 +103,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 '<td>' + datos[i].FechaNacimiento + '</td>' +
                 '<td>' + datos[i].Tipo + '</td>' +
                 '<td>' + datos[i].EstadoUsuario + '</td>' +
-                // '<td style="text-align: center;"><button data-id=' + datos[i].UsuarioId + ' class="btn btn-cancel btn-eliminar button-sm">&#10006;</button></td>'+
                 '</tr>';
             let emptyRow = newTbody.insertRow(newTbody.rows.length);
             emptyRow.innerHTML = newRow;
@@ -125,6 +123,59 @@ document.addEventListener("DOMContentLoaded", function () {
         let datos = {
             Action: "ActualizarEstadoMensaje",
             MensajeId: mensajeId
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+
+    function actualizarUsuario(e) {
+       let nombre = document.getElementById('txtNombreUsr').value;
+       let paterno = document.getElementById('txtPaternoUsr').value;
+       let materno = document.getElementById('txtMaternoUsr').value;
+       let email = document.getElementById('txtEmailUsr').value;
+       let fecha = document.getElementById('txtFechaNacimientoUsr').value;
+       let tipo = document.getElementById('cmbTipoUsuario').value;
+       let estado = document.getElementById('cmbEstadoUsuario').value;
+       let dataId = e.target.getAttribute("data-id");
+        let datos = {
+            Action: "ActualizarUsuario",
+            UsuarioId: dataId,
+            Nombre: nombre,
+            Paterno: paterno,
+            Materno: materno,
+            Email: email,
+            FechaNacimiento: fecha,
+            Tipo: tipo,
+            Estado: estado
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+
+    function obtenerDetalleUsuario(usuarioId) {
+        let datos = {
+            Action: "ObtenerDetalleUsuario",
+            UsuarioId: usuarioId
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+
+    function obtenerTipoUsuario() {
+        let datos = {
+            Action: "ObtenerTipoUsuario"
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+    
+    function obtenerEstadoUsuario() {
+        let datos = {
+            Action: "ObtenerEstadoUsuario"
+        }
+        call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
+    }
+
+    function eliminarUsuario(id) {
+        let datos = {
+            Action: "EliminarUsuario",
+            UsuarioId: id
         }
         call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
     }
@@ -150,6 +201,69 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    const mostrarModalUsuario = (datos) => {
+        obtenerTipoUsuario();
+        obtenerEstadoUsuario();
+        document.getElementById('txtNombreUsr').value = datos.Nombres;
+        document.getElementById('txtPaternoUsr').value = datos.Paterno;
+        document.getElementById('txtMaternoUsr').value = datos.Materno;
+        document.getElementById('txtEmailUsr').value = datos.Email;
+        tipoUsuario = datos.TipoUsuario;
+        estadoUsuario = datos.EstadoUsuario;
+        document.getElementById('txtFechaNacimientoUsr').value = datos.FechaNacimiento;
+        document.getElementById('btnActualizarUsuario').setAttribute("data-id", datos.UsuarioId);
+        document.getElementById('btnEliminarUsuario').setAttribute("data-id", datos.UsuarioId);
+        document.getElementById('mdlDetallePersona').style.display = "block"
+    }
+
+    let poblarComboTipoUsuario = (datos) =>{
+		let select = document.getElementById("cmbTipoUsuario");
+		removeOptions(select);
+		let placeHolder = document.createElement("option");
+		placeHolder.text = "Seleccione...";
+		placeHolder.value = "";
+		placeHolder.disabled = true;
+		placeHolder.selected = true;
+		select.appendChild(placeHolder);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+			var option = document.createElement("option");
+			option.text = datos[i].Tipo;
+			option.value = datos[i].TipoUsuarioId;
+			select.appendChild(option);
+        };
+    }
+
+    let poblarComboEstadoUsuario = (datos) =>{
+		let select = document.getElementById("cmbEstadoUsuario");
+		removeOptions(select);
+		let placeHolder = document.createElement("option");
+		placeHolder.text = "Seleccione...";
+		placeHolder.value = "";
+		placeHolder.disabled = true;
+		placeHolder.selected = true;
+		select.appendChild(placeHolder);
+        let longitud = datos.length - 1;
+        for (let i = 0; i <= longitud; i++) {
+			var option = document.createElement("option");
+			option.text = datos[i].EstadoUsuario;
+			option.value = datos[i].EstadoUsuarioId;
+			select.appendChild(option);
+        };
+    }
+
+    function selectElement(id, valueToSelect) {    
+        let element = document.getElementById(id);
+        element.value = valueToSelect;
+    }
+
+	function removeOptions(selectElement) {
+		var i, L = selectElement.options.length - 1;
+		for(i = L; i >= 0; i--) {
+		   selectElement.remove(i);
+		}
+	 }
+
     function eliminarMensaje(id) {
         let datos = {
             Action: "EliminarMensaje",
@@ -163,7 +277,8 @@ document.addEventListener("DOMContentLoaded", function () {
         for (let i = 0, iLen = eliminarList.length; i < iLen; i++) {
             eliminarList[i].addEventListener("click", function () {
                 let rowId = parseInt(this.getAttribute('data-id'));
-                alerta.confirm(rowId, handler);
+                let data = {callback : "EliminarMensaje", id : rowId}
+                alerta.confirm(data, handler);
             });
         }
     }
@@ -171,6 +286,15 @@ document.addEventListener("DOMContentLoaded", function () {
     function handler(e) {
         let msg = "";
         switch (e.callback) {
+            case "ActualizarUsuario":
+                if (e.ok) {
+                    alerta.notif('ok', 'Actualización correcta', 3000);
+                    document.getElementById("mdlDetallePersona").style.display = "none";
+                    ObtenerUsuarios();
+                } else {
+                    alerta.notif('fail', 'Ha ocurrido un error.', 3000);
+                }
+                break;
             case "ObtenerUsuario":
                 if (!e.ok) {
                     alerta.notif('ok', e.data, 3000);
@@ -191,6 +315,23 @@ document.addEventListener("DOMContentLoaded", function () {
                     mostrarModal(e.data);
                 }
                 break;
+            case "ObtenerTipoUsuario":
+                if (e.ok) {
+                    poblarComboTipoUsuario(e.data);
+                    selectElement('cmbTipoUsuario', tipoUsuario);
+                }
+                break;
+            case "ObtenerEstadoUsuario":
+                if (e.ok) {
+                    poblarComboEstadoUsuario(e.data);
+                    selectElement('cmbEstadoUsuario', estadoUsuario);
+                }
+                break;
+            case "ObtenerDetalleUsuario":
+                if (e.ok) {
+                    mostrarModalUsuario(e.data);
+                }
+                break;
             case "ActualizarEstadoMensaje":
                 if (e.ok) {
                     ObtenerMensajes();
@@ -201,7 +342,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
             case "Confirmar":
                 if (e.ok) {
-                    eliminarMensaje(e.data);
+                    if(e.data.callback === "EliminarMensaje"){
+                        eliminarMensaje(e.data.id);
+                    } else if(e.data.callback === "EliminarUsuario"){
+                        eliminarUsuario(e.data.id);
+                    }
+                    document.getElementById("mdlDetallePersona").style.display = "none";
                 } else {
                     msg = 'Ha ocurrido un error al actualizar el estado del mensaje.';
                     alerta.notif('ok', e.data, 3000);
@@ -215,10 +361,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     alerta.notif('fail', 'Ha ocurrido un error al eliminar el mensaje.', 3000);
                 }
                 break;
+            case "EliminarUsuario":
+                if (e.ok) {
+                    alerta.notif('ok', 'Usuario eliminado correctamente.', 3000);
+                    ObtenerUsuarios();
+                } else {
+                    alerta.notif('fail', 'Ha ocurrido un error al eliminar el usuario.', 3000);
+                }
+                break;
             default:
                 break;
         }
     }
 
-
+    ObtenerMensajes();
 });
