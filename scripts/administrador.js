@@ -67,24 +67,29 @@ document.addEventListener("DOMContentLoaded", function () {
         var oldTbody = table.children[1];
         var newTbody = document.createElement('tbody');
         table.removeChild(oldTbody);
-        let longitud = datos.length - 1;
-        for (let i = 0; i <= longitud; i++) {
-            var fechaFormateada = new Date(datos[i].FechaRecepcion).toLocaleDateString("es-MX");
-            let newRow =
-                '<tr>' + '<td style="display: none;" id=' + datos[i].MensajeId + '></td>' +
-                '<td>' + datos[i].NombreCompleto + '</td>' +
-                '<td>' + datos[i].Asunto + '</td>' +
-                '<td>' + datos[i].EstadoMensaje + '</td>' +
-                '<td>' + fechaFormateada + '</td>' +
-                '<td style="text-align: center;"><button data-id=' + datos[i].MensajeId + ' class="btn btn-cancel btn-eliminar button-sm">&#10006;</button></td>' +
-                '</tr>';
-            let emptyRow = newTbody.insertRow(newTbody.rows.length);
-            emptyRow.innerHTML = newRow;
-            if (datos[i].EstadoMensaje === "Nuevo") {
-                emptyRow.classList.add('tr-new')
-            }
-        };
-        table.appendChild(newTbody);
+        if(datos.length > 0){
+            let longitud = datos.length - 1;
+            for (let i = 0; i <= longitud; i++) {
+                var fechaFormateada = new Date(datos[i].FechaRecepcion).toLocaleDateString("es-MX");
+                let newRow =
+                    '<tr>' + '<td style="display: none;" id=' + datos[i].MensajeId + '></td>' +
+                    '<td>' + datos[i].NombreCompleto + '</td>' +
+                    '<td>' + datos[i].Asunto + '</td>' +
+                    '<td>' + datos[i].EstadoMensaje + '</td>' +
+                    '<td>' + fechaFormateada + '</td>' +
+                    '<td style="text-align: center;"><button data-id=' + datos[i].MensajeId + ' class="btn btn-cancel btn-eliminar button-sm">&#10006;</button></td>' +
+                    '</tr>';
+                let emptyRow = newTbody.insertRow(newTbody.rows.length);
+                emptyRow.innerHTML = newRow;
+                if (datos[i].EstadoMensaje === "Nuevo") {
+                    emptyRow.classList.add('tr-new')
+                }
+            };
+            table.appendChild(newTbody);
+        } else{
+            alerta.info("fail", "No cuenta con registros.", 3000);
+        }
+
         eliminarEventListener();
     }
 

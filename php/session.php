@@ -164,7 +164,7 @@
 
         $data = json_decode(file_get_contents('php://input'), true);
         $pdo = OpenCon();
-        $caracteres = "(#|$|^|+|=|!|*|(|)|@|%|&)";
+        $caracteres = "/[#$^+=!*()@%&]/";
         $nombre = $data['Nombre'];
         $paterno = $data['Paterno'];
         $materno = $data['Materno'];
@@ -173,12 +173,13 @@
         $password = $data['Password'];
         $response = new stdClass();
         $response-> callback = 'RegistrarUsuario';
-        if(strlen($password) < 8){
+        $stringPassword = base64_decode($password);
+        if(strlen($stringPassword) < 8){
           $response-> callback = 'RegistrarUsuario';
           $response-> data = "La contraseña debe tener una longitud mínima de 8 caracteres.";
           $response-> ok = false;
           echo json_encode($response);
-        } else if(!preg_match($caracteres, $password)){
+        } else if(!preg_match($caracteres, $stringPassword)){
           $response-> callback = 'RegistrarUsuario';
           $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
           $response-> ok = false;
@@ -217,22 +218,18 @@
   }
 
   function ExisteEmail ($email){
-    $response = true;
+    $response = "";
     $pdo = OpenCon();
     $select = "CALL spValidarEmail('$email')";
     try {
         $statement=$pdo->prepare($select);
         $statement->execute();
-        if($statement->rowCount() > 0){
-            $response = true;
-          } else{
-            $response = false;
-          }
+        $response = $statement->fetch();
       } catch (PDOException $e) {
           print "¡Error!: " . $e->getMessage() . "<br/>";
           die();
       }
-    return $response;
+    return $response[0];
   }
 
   function ObtenerUsuario () { 
