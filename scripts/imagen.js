@@ -64,12 +64,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		if(allowed_mime_types.indexOf(file.type) == -1) {
             msg = 'Tipo de archivo no soportado.';
             alerta.notif('fail', msg, 3000);
+            e.preventDefault();
 			return;
 		}
 
 		if(file.size > allowed_size_mb*1024*1024) {
             msg = 'El tamaño del archivo excede al permitido.';
             alerta.notif('fail', msg, 3000);
+            e.preventDefault();
 			return;
 		}
 
