@@ -31,7 +31,7 @@
       #endregion
 
       #region ELIMINAR XAXX010101000
-      case 'EliminarMensaje' : EliminarMensaje();
+      case 'EliminarProducto' : EliminarProducto();
       break;
       case 'EliminarProveedor' : EliminarProveedor();
       break;
@@ -237,12 +237,13 @@
     $data = json_decode(file_get_contents('php://input'), true);
     $nombre = $data['Nombre'];
     $descripcion = $data['Descripcion'];
-    $estado = $data['Estado'];
+    $costo = $data['Compra'];
+    $proveedor = $data['ProveedorId'];
     $precioVenta = $data['PrecioVenta'];
     $fechaCompra = $data['FechaCompra'];
     $existencias = $data['Existencias'];
     $pdo = OpenCon();
-    $update = "CALL spInsertarProducto('$nombre','$descripcion','$estado','$precioVenta','$fechaCompra','$existencias')";
+    $update = "CALL spInsertarProducto('$nombre','$descripcion','$costo','$precioVenta','$existencias','$proveedor','$fechaCompra')";
     $response = new stdClass();
     $response-> callback = 'InsertarProducto';
     try {

@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", function () {
         valid.setupForm(frmNuevoProducto);
         document.getElementById("btnAceptarNuevoProducto").addEventListener('click', function(e){
             if(valid.form(frmNuevoProducto)){
-                //RegistrarMensaje();
+                InsertarProducto();
             }
             e.preventDefault();
         });
     }
 
     if(frmNuevoProveedor !== null){
-        valid.setupForm(frmNuevoProducto);
+        valid.setupForm(frmNuevoProveedor);
         document.getElementById("btnAceptarNuevoProveedor").addEventListener('click', function(e){
             if(valid.form(frmNuevoProveedor)){
                 //RegistrarMensaje();
@@ -27,7 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    
     if(frmDetalleProducto !== null){
         valid.setupForm(frmDetalleProducto);
         document.getElementById("btnAceptarProducto").addEventListener('click', function(e){
@@ -50,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-
     document.getElementById("inventario").addEventListener('click', function(e){
         ObtenerProductos();
         ObtenerProveedores();
@@ -58,10 +56,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     document.getElementById("agregarProducto").addEventListener('click', function (e) {
         mostrarModalNuevoProducto();
+        valid.resetValidations(frmNuevoProducto);
+        frmNuevoProducto.reset();
         e.preventDefault();
     });
     document.getElementById("agregarProveedor").addEventListener('click', function (e) {
         mostrarModalNuevoProveedor();
+        valid.resetValidations(frmNuevoProveedor);
+        frmNuevoProveedor.reset();
         e.preventDefault();
     });
 
@@ -95,6 +97,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function ObtenerDetalleProveedor(id) {
         let datos = {Action: "ObtenerDetalleProveedor", ProveedorId: id};
         call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
+    }
+
+    function ObtenerImagenesPorInventarioId(inventarioId) {
+        let datos = { Action: "ObtenerImagenesPorInventarioId", InventarioId : inventarioId };
+        call.post("../php/imagen.php", JSON.stringify(datos), handler, true);
     }
 
     function ActualizarProducto(id) {
@@ -143,7 +150,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function InsertarProducto() {
-        let datos = {Action: "InsertarProducto"};
+        let nombre = document.getElementById('txtNombreNuevoProd').value;
+        let descripcion = document.getElementById('txtDescripcionNuevoProd').value;
+        let fechaCompra = document.getElementById('txtFechaNuevoProd').value;
+        let precioVenta = document.getElementById('txtPrecioVentaNuevoProd').value;
+        let precioCompra = document.getElementById('txtPrecioCompraNuevoProd').value;
+        let existencias = document.getElementById('txtExistenciasNuevoProd').value;
+        let proveedorId = document.getElementById('cmbProveedorNuevoProd').value;
+        let datos = {
+            Action: "InsertarProducto",
+            Nombre :nombre,
+            Descripcion : descripcion,
+            PrecioVenta : precioVenta,
+            FechaCompra : fechaCompra,
+            Existencias : existencias,
+            ProveedorId : proveedorId,
+            Compra : precioCompra
+        };
         call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
     }
 
@@ -258,10 +281,34 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
+    let poblarImagenes = (datos, ok) => {
+        let divGaleria = document.getElementById('galeriaProducto');
+        divGaleria.innerHTML = "";
+        let longitud = datos.length - 1;
+        if(!ok){
+            divGaleria.innerHTML = datos;
+        } else{
+            for (let i = 0; i <= longitud; i++) {
+                let img = document.createElement("img");
+                let a = document.createElement("a");
+                img.setAttribute("src", datos[i].RutaThumb);
+                img.setAttribute("id", datos[i].ImagenId);
+                img.setAttribute("class", "img-producto");
+                img.setAttribute("alt", i + "imagen no encontrada");
+                a.setAttribute("href", datos[i].RutaFisica);
+                a.setAttribute("target", "_blank");
+                a.append(img);
+                divGaleria.append(a);
+            };
+        }
+
+    }
+
     document.getElementById("tblInventario").addEventListener('click', function (e) {
         if (e.target.cellIndex < 5) {
             let id = parseInt(e.target.parentNode.cells[0].id);
             ObtenerDetalleProducto(id);
+            ObtenerImagenesPorInventarioId(id);
         }
         e.preventDefault();
     });
@@ -398,6 +445,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     alerta.notif('fail', msgFail, 3000);
                 }
                 break;
+            case "ObtenerImagenesPorInventarioId":
+                if (e.ok) {
+                    poblarImagenes(e.data, e.ok);
+                } else{
+                    poblarImagenes(e.data, e.ok);
+                }
+                break;
             case "ActualizarProveedor":
                 if(e.ok){
                     alerta.notif('ok', 'Registro actualizado correctamente.', 3000);
@@ -430,6 +484,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     alerta.notif('ok', 'Registro eliminado correctamente.', 3000);
                     ObtenerProductos();
                     document.getElementById("mdlDetalleProducto").style.display = "none";
+                } else{
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "InsertarProducto":
+                if(e.ok){
+                    alerta.notif('ok', 'Registro realizado correctamente.', 3000);
+                    ObtenerProductos();
+                    document.getElementById("mdlNuevoProducto").style.display = "none";
                 } else{
                     alerta.notif('fail', msgFail, 3000);
                 }
