@@ -25,6 +25,9 @@ if (isset($data['Action']) && !empty($data['Action'])) {
     case 'ActualizarImagen':
       ActualizarImagen();
       break;
+    case 'ObtenerImagenesPorInventarioId':
+      ObtenerImagenesPorInventarioId();
+      break;
   }
 }
 
@@ -85,6 +88,34 @@ function ObtenerImagenes()
       $response->data = $r;
       $response->ok = true;
     }
+  } catch (PDOException $e) {
+    print "¡Error!: " . $e->getMessage() . "<br/>";
+    die();
+  }
+  echo json_encode($response);
+}
+
+function ObtenerImagenesPorInventarioId()
+{
+  $data = json_decode(file_get_contents('php://input'), true);
+  $id = $data['InventarioId'];
+  $pdo = OpenCon();
+  $select = "CALL spObtenerImagenPorInventarioId('$id')";
+  $response = new stdClass();
+  $response->callback = 'ObtenerImagenesPorInventarioId';
+  try {
+    $statement = $pdo->prepare($select);
+    $statement->execute();
+    if($statement->rowCount() > 0){
+      while ($r = $statement->fetchAll(PDO::FETCH_ASSOC)) {
+        $response->data = $r;
+        $response->ok = true;
+      }
+    } else{
+      $response->data = "Este producto no cuenta con imágenes disponibles.";
+      $response->ok = false;
+    };
+
   } catch (PDOException $e) {
     print "¡Error!: " . $e->getMessage() . "<br/>";
     die();

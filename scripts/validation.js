@@ -40,6 +40,50 @@ valid.equal = function (data) {
 
 
 /**
+ * Validación de rfc.
+ * @param {string} data Dato a validar.
+ * @returns {boolean}
+ */
+ valid.rfc = function (data) {
+    const regRFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
+    let tipo = regRFC.test(data.value);
+    let msg = "";
+    const errorId = data.id + "errorValid";
+    if (!tipo) {
+        msg = `RFC inválido`;
+        valid.addErrorMessageInput(data, msg);
+        data.classList.add("error");
+    } else {
+        data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
+    }
+    let resp = new ValidationResponse(tipo, true);
+    return resp;
+};
+
+/**
+ * Validación de número telefónico.
+ * @param {string} data Dato a validar.
+ * @returns {boolean}
+ */
+ valid.telefono = function (data) {
+    const regexNumero =  /^[\(]?[\+]?(\d{2}|\d{3})[\)]?[\s]?((\d{6}|\d{8})|(\d{3}[\*\.\-\s]){3}|(\d{2}[\*\.\-\s]){4}|(\d{4}[\*\.\-\s]){2})|\d{8}|\d{10}|\d{12}$/;
+    let tipo = regexNumero.test(data.value);
+    let msg = "";
+    const errorId = data.id + "errorValid";
+    if (!tipo) {
+        msg = `Número de teléfono inválido`;
+        valid.addErrorMessageInput(data, msg);
+        data.classList.add("error");
+    } else {
+        data.classList.remove("error");
+        valid.removeErrorMessageInput(errorId, null);
+    }
+    let resp = new ValidationResponse(tipo, true);
+    return resp;
+};
+
+/**
  * Validación de igualdad para contraseñas.
  * @param {string} data Dato a validar.
  * @returns {boolean}
@@ -146,7 +190,7 @@ valid.date = function (data) {
  **/
  valid.dateNoAge = function (data) {
     const regFecha = /^\d{4}-\d{2}-\d{2}$/;
-    let tipo = regFecha.test(data.value);
+    let tipo = regFecha.test(data.value); 
     let dateYear = new Date(data.value);
     let todaysYear = new Date();
     const errorId = data.id + "errorValid";
@@ -279,7 +323,7 @@ valid.addErrorMessageInput = function (data, msg) {
  * @param {string} class Clase del elemento html al que se le eliminará el mensaje de error.
  **/
 valid.removeErrorMessageInput = function (id, errorClass) {
-    if (id !== undefined) {
+    if (id !== null) {
         let elem = document.getElementById(id);
         if (elem !== null) {
             elem.remove();
@@ -293,6 +337,18 @@ valid.removeErrorMessageInput = function (id, errorClass) {
             elem[0].parentNode.removeChild(elem[0]);
         }
     }
+};
+
+/**
+ * Método que reestablece mensajes de error en una forma.
+ * @param {form} form Identificador del elemento form.
+ **/
+ valid.resetValidations = function (form) {
+    let controls = form.elements;
+    for (let i = 0, iLen = controls.length; i < iLen; i++) {
+        controls[i].classList.remove("error");
+    };
+    valid.removeErrorMessageInput(null, "error-password");
 };
 
 /**
@@ -370,8 +426,24 @@ valid.form = function (form) {
                         controls[i].classList.add("error");
                     }
                     break;
+                case "rfc":
+                    if (valid.rfc(controls[i]).tipo) {
+                        controls[i].classList.remove("error");
+                    } else {
+                        countOk += 1;
+                        controls[i].classList.add("error");
+                    }
+                    break;
                 case "dateNoAge":
                     if (valid.dateNoAge(controls[i]).tipo) {
+                        controls[i].classList.remove("error");
+                    } else {
+                        countOk += 1;
+                        controls[i].classList.add("error");
+                    }
+                    break;
+                case "telefono":
+                    if (valid.telefono(controls[i]).tipo) {
                         controls[i].classList.remove("error");
                     } else {
                         countOk += 1;
@@ -436,9 +508,14 @@ valid.setupForm = function (data) {
                     case "text":
                         valid.text(this);
                         break;
+                    case "rfc":
+                        valid.rfc(this);
+                        break;
                     case "password":
                         valid.equalPassword(this);
                         break;
+                    case "telefono":
+                        valid.telefono(this);
                     default:
                         this.classList.remove("error");
                         break;

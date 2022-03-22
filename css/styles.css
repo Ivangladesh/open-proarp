@@ -374,6 +374,11 @@ hr.divider-base {
     width: 33%;
     padding: 10px;
   }
+  .frm-col-2-5{
+    float: left;
+    width: 25%;
+    padding: 10px;
+  }
   .frm-col-2{
     float: left;
     width: 50%;
