@@ -1,0 +1,74 @@
+<div class="modal fade animate-bottom" id="mdlNuevoUsuario" style="display: none;">
+    <div class="modal-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                    <form id="frmNuevoUsuario">
+                        <div class="row">
+                            <h3>Datos</h3>
+                            <hr class="divider-base">
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for=txtNuevoNombre style="display:block">Nombres</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtNuevoNombre"  required>
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for=txtNuevoPaterno style="display:block">Apellido paterno</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtNuevoPaterno">
+                                </div>
+                            </div>
+                            <div class="frm-col-3-3">
+                                <div class="form-group">
+                                    <label for=txtNuevoMaterno style="display:block">Apellido materno</label>
+                                    <input type="text" data-id="text" class="form-control input-form" id="txtNuevoMaterno">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for=txtNuevoFecha style="display:block">Fecha de nacimiento</label>
+                                    <input type="date" data-id="date" min="1910-01-01" class="form-control input-form" id="txtNuevoFecha">
+                                </div>
+                            </div>
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for=txtNuevoEmail style="display:block">Email</label>
+                                    <input type="email" data-id="email" class="form-control input-form" id="txtNuevoEmail">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtPassword">Ingrese una contraseña:
+                                        <i class="tooltip">?
+                                            <span class="tooltiptext">Longitud mínima de 8 y máxima de 15 caracteres y debe contener por lo menos un caracter especial "#$^+=!*()@%&". Por ejemplo: contrasena123!, contrasen@
+                                            </span>
+                                        </i>
+                                    </label>
+                                    <input type="password" data-id="password" for="txtNuevoConfirmaPassword" class="form-control input-form" id="txtNuevoPassword">
+                                </div>
+                            </div>
+                            <div class="frm-col-2">
+                                <div class="form-group">
+                                    <label for="txtPassword">Confirme la contraseña: </label>
+                                    <input type="password"data-id="password" for="txtNuevoPassword" class="form-control input-form" id="txtNuevoConfirmaPassword">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="frm-col-1">
+                                <br>
+                                <button class="btn btn-primary" id="btnNuevoUsuario" data-id="frmNuevoUsuario">Registrar</button>
+                                <button class="btn btn-info btn-close-modal" id="btnCerrarModal" data-id="mdlNuevoUsuario">Cancelar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

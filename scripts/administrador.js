@@ -3,11 +3,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let tipoUsuario, estadoUsuario;
 
     const frmDetalleUsuario = document.getElementById('frmDetalleUsuario');
+    const frmNuevoUsuario = document.getElementById('frmNuevoUsuario');
 
     if(frmDetalleUsuario !== null){
         valid.setupForm(frmDetalleUsuario);
         document.getElementById("btnActualizarUsuario").addEventListener('click', function(e){
             if(valid.form(frmDetalleUsuario)){
+                actualizarUsuario(e);
+            }
+            e.preventDefault();
+        });
+    }
+
+    if(frmNuevoUsuario !== null){
+        valid.setupForm(frmNuevoUsuario);
+        document.getElementById("btnNuevoUsuario").addEventListener('click', function(e){
+            if(valid.form(frmNuevoUsuario)){
                 actualizarUsuario(e);
             }
             e.preventDefault();
@@ -23,6 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("agregarImagen").addEventListener('click', function (e) {
         mostrarModalUploadImagen();
+        e.preventDefault();
+    });
+
+    document.getElementById("agregarUsuario").addEventListener('click', function (e) {
+        mostrarModalNuevoUsuario();
         e.preventDefault();
     });
 
@@ -45,6 +61,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById("tabMensajes").addEventListener('click', function (e) {
         ObtenerMensajes();
+        e.preventDefault();
+    });
+
+    document.getElementById("tabNotificaciones").addEventListener('click', function (e) {
+        enviarCorreo();
         e.preventDefault();
     });
 
@@ -132,6 +153,17 @@ document.addEventListener("DOMContentLoaded", function () {
         call.post("../php/administrador.php", JSON.stringify(datos), handler, true);
     }
 
+    function enviarCorreo() {
+        let datos = {
+            Action: "EnviarCorreo",
+            Nombre : "Ivan Sanchez",
+            Email : "ivangladesh@gmail.com",
+            Telefono : "5551856522",
+            Mensaje : "HOLA MUNDO"
+        }
+        call.post("../php/email.php", JSON.stringify(datos), handler, true);
+    }
+
     function actualizarUsuario(e) {
        let nombre = document.getElementById('txtNombreUsr').value;
        let paterno = document.getElementById('txtPaternoUsr').value;
@@ -204,6 +236,10 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('txtArchivoNombre').innerHTML = fileName;
             e.preventDefault();
         });
+    }
+
+    const mostrarModalNuevoUsuario = () => {
+        document.getElementById('mdlNuevoUsuario').style.display = "block"
     }
 
     const mostrarModalUsuario = (datos) => {

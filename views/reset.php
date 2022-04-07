@@ -53,95 +53,15 @@ if (isset($_SESSION['SessionStorage'])) {
             <br>
             <div class="container-fluid" id="content">
                 <?php
-                if (isset($_SESSION['SessionStorage'])) {
-                    readfile('../views/partials/_main.html');
-                    readfile('../views/partials/_contacto.html');
-                    if ($tipo == 1) {
-                        readfile('../views/partials/_administrador.html');
-                    }
-                    if ($tipo == 1 || $tipo == 2) {
-                        readfile('../views/partials/_inventario.html');
-                    }
-                } else {
-                    readfile('../views/partials/_registro.html');
-                    readfile('../views/partials/_login.html');
-                    readfile('../views/partials/_resetPassword.html');
-                }
+                    readfile('../views/partials/_newPassword.html');
                 ?>
             </div>
         </main>
     </div>
-    <?php
-    readfile('../views/partials/_footer.html');
-    readfile('../views/partials/modals/_modal-mensaje.html');
-    readfile('../views/partials/modals/_modal-confirm.html');
-    if (isset($_SESSION['SessionStorage'])) {
-        if ($tipo == 1) {
-            readfile('../views/partials/modals/_modal-upload-imagen.html');
-            readfile('../views/partials/modals/_modal-detalle-persona.html');
-            readfile('../views/partials/modals/_modal-nuevo-usuario.html');
-        }
-        if ($tipo == 1 || $tipo == 2) {
-            readfile('../views/partials/modals/_modal-nuevo-producto.html');
-            readfile('../views/partials/modals/_modal-nuevo-proveedor.html');
-            readfile('../views/partials/modals/_modal-detalle-producto.html');
-            readfile('../views/partials/modals/_modal-detalle-proveedor.html');
-        }
-    }
-    ?>
 </body>
 <script src="../scripts/alert.js?v=1.000"></script>
 <script src="../scripts/ajax.js?v=1.000"></script>
 <script src="../scripts/validation.js?v=1.000"></script>
 <script src="../scripts/zero.js?v=1.001"></script>
 <script src="../scripts/resetPassword.js?v=1.001"></script>
-<?php
-if (isset($_SESSION['SessionStorage'])) {
-    echo '<script>
-    const cerrarSesion = () =>{
-        if(sessionStorage.getItem("Session") !== null){
-            sessionStorage.removeItem("Session");
-        };
-        call.post("../php/session.php", JSON.stringify({ Action: "CerrarSesion"}), handler, true);
-    }
-    function handler(e){
-        if(e.callback === "EstadoSesion"){
-            console.info(e.ok + " " + e.data);
-        } else{
-            if(e.ok){
-                alerta.notif("info", e.data, 2000);
-                setTimeout(function(){
-                    location.reload();
-                },2100);
-            }else{
-                console.log(e);
-            }
-        }
-
-    }
-    setTimeout(function(){
-        if (sessionStorage.getItem("Session") !== null) {
-            setInterval(sessionStatus, 10000);
-        };
-    },5000);
-
-    function sessionStatus() {
-        console.log("Check session");
-        call.post("../php/session.php", JSON.stringify({
-            Action: "EstadoSesion"
-        }), handler, true);
-    }
-    </script>';
-    echo '<script src="../scripts/contacto.js?v=1.001"></script>';
-    if ($tipo == 1) {
-        echo '<script src="../scripts/administrador.js?v=1.002"></script>';
-        echo '<script src="../scripts/imagen.js?v=1.003"></script>';
-    }
-    if ($tipo == 1 || $tipo == 2) {
-        echo '<script src="../scripts/inventario.js?v=1.001"></script>';
-    }
-} else {
-    echo '<script src="../scripts/registro.js?v=1.001"></script>';
-}
-?>
 </html>
