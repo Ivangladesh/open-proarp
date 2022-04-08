@@ -79,6 +79,7 @@ if (isset($_SESSION['SessionStorage'])) {
         if ($tipo == 1) {
             readfile('../views/partials/modals/_modal-upload-imagen.html');
             readfile('../views/partials/modals/_modal-detalle-persona.html');
+            readfile('../views/partials/modals/_modal-nuevo-usuario.html');
         }
         if ($tipo == 1 || $tipo == 2) {
             readfile('../views/partials/modals/_modal-nuevo-producto.html');

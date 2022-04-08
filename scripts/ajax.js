@@ -25,7 +25,7 @@ call.send = function (url, callback, method, data, async) {
           if(request.responseText !== ""){
             callback(JSON.parse(request.responseText));
           } else{
-            console.table(JSON.parse(request));
+            console.table(request);
             callback({ok:false,data:null,callback:data.Action});
           }        
       }

@@ -564,7 +564,7 @@ table tr.header, table tr:hover {
   height: 7rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
-  z-index: 15;
+  z-index: 3;
 }
 
 .canvas{

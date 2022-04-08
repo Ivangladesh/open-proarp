@@ -223,6 +223,7 @@
 
   /* VENTANA MODAL */
 .modal {
+  overflow-y: initial !important;
   display: none;
   position: fixed;
   z-index: 3;
@@ -237,6 +238,8 @@
 }
 
 .modal-content {
+  /* height: 80vh; */
+  overflow-y: auto;
   background-color: #fefefe;
   margin: auto;
   border: 1px solid #888;
