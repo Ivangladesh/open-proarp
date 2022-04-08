@@ -1,8 +1,15 @@
+
 <?php
     session_start();
     include('dbconn.php');
     include('recaptcha.php');
+    include('email-template.php');
     date_default_timezone_set('America/Mexico_City');
+    $resetPath = '/proarp/views/validar.php';
+    if($_SERVER['SERVER_NAME'] == 'localhost'){
+      $resetPath = '/views/validar.php';
+    }
+
 
   $data = json_decode(file_get_contents('php://input'), true);
   if(isset($data['Action']) && !empty($data['Action'])) {
@@ -196,6 +203,10 @@
                       $user = $statement->fetch();
                       $response-> data = $user[0];
                       $response-> ok = true;
+                      if(!CorreoValidarCuenta($email)){
+                        $response-> data = "Ha ocurrido un error al enviar el correo de confirmación, consulte al administrador.";
+                        $response-> ok = false;
+                      }
                     } else{
                       $response-> data = "Ha ocurrido un error, consulte al administrador.";
                       $response-> ok = false;
@@ -292,3 +303,126 @@
     $response-> ok = true;
     echo json_encode($response);
   }
+
+  function CorreoValidarCuenta($email)
+  {
+      $response = false;
+      $data = json_decode(file_get_contents('php://input'), true);
+      $reCaptchaToken = $data['ReCaptchaToken'];
+      if(Recaptcha($reCaptchaToken)){
+          try{
+              $subject = "Validar cuenta";
+              $headers = 'MIME-Version: 1.0' . "\r\n";
+              $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+              $headers .= 'To: '.$email."\r\n";
+              $headers .= 'From: proarp@'.$_SERVER['SERVER_NAME'];
+              $stringToken = ObtenerDatosUsuario($email);
+              if($stringToken == null){
+                  $response = false;
+              }
+              $link = "https://".$_SERVER['SERVER_NAME']."/php/session.php/?validarCuenta=" . $stringToken;
+              $message =  ValidarCuenta($link);
+              if(mail($email,$subject,$message,$headers))
+              {
+                $response = true;
+              }
+              else{
+                $response = false;
+              }
+          } catch (PDOException $e) {
+              echo "¡Error!: " . $e->getMessage() . "<br/>";
+          }
+      }
+      return $response;
+  }
+
+  if(isset($_GET['validarCuenta'])){
+    $_SESSION['TempValidarSession'] = $_GET['validarCuenta'];
+    $response = new stdClass();
+    $token = $_GET['validarCuenta'];
+    list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($token));
+    $pdo = OpenCon();
+    $select = "CALL spValidarCuenta('$username', '$token')";
+    try {
+        $statement=$pdo->prepare($select);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+          $redirect = $protocol . $_SERVER['SERVER_NAME'] . $resetPath;
+          header('Location: '. $redirect);
+        } else{
+            echo "Datos inválidos";
+        }
+    } catch (PDOException $e) {
+        echo "¡Error!: " . $e->getMessage() . "<br/>";
+        die();
+    }
+    session_unset();
+    session_destroy();
+}
+
+function ObtenerDatosUsuario($email) {
+  $data = json_decode(file_get_contents('php://input'), true);
+  $email = $data['Email'];
+  
+  $response = "";
+    if (!empty($email)) {
+      $pdo = OpenCon();
+      $procedure = "CALL spObtenerUsuarioPorEmail('$email')";
+      try {
+        $statement=$pdo->prepare($procedure);
+        $statement->execute();
+        if($statement->rowCount() > 0){
+          $user = $statement->fetch();
+          $response = GenerarTokenEmail($user);
+          if($response == false){
+              return null;
+          }
+        }
+      } catch (PDOException $e) {
+          print "¡Error!: " . $e->getMessage() . "<br/>";
+          die();
+      }
+    }
+    return $response;
+
+}
+
+function GenerarTokenEmail ($r){
+  $id = $r['UsuarioId'];
+  $username = $r['Email'];
+  $nombreCompleto = $r['NombreCompleto'];
+  $tipo = $r['TipoUsuarioId'];
+  $response = null;
+  if (!empty($id) && !empty($username) && !empty($nombreCompleto) && !empty($tipo)) {
+      $pdo = OpenCon();
+      $hoy = date("Y-m-d H:i:s");
+      $token = base64_encode($tipo . '|' . $username . '|' . $nombreCompleto . '|'  . $id . '|' . $hoy);
+      $ok = GuardarCodigoTemporal($username,$token,$hoy);
+      if(!$ok){
+          return false;
+      } else{
+          return $token;
+      }
+  }        
+}
+
+    function GuardarCodigoTemporal ($email, $token, $date){
+        $response = false;
+        $data = json_decode(file_get_contents('php://input'), true);
+        $pdo = OpenCon();
+        $sp = "CALL spRegistrarCodigoTemporal('$email','$token','$date')";
+        try {
+            $statement=$pdo->prepare($sp);
+            $statement->execute();
+            if($statement->rowCount() > 0){
+                $response = true;
+            } else{
+                $response = false;
+            }
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
+    
+        return $response;
+    }

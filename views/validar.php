@@ -1,8 +1,6 @@
-<?php
-
-session_start();
-if (isset($_SESSION['TempSession'])) {
-    $session = $_SESSION['TempSession'];
+<?php session_start();
+if (isset($_SESSION['TempValidarSession'])) {
+    $session = $_SESSION['TempValidarSession'];
     list($tipo, $username, $nombre, $usuarioId, $fecha) = explode('|', base64_decode($session));
 }
 ?>
@@ -38,8 +36,24 @@ if (isset($_SESSION['TempSession'])) {
             <br>
             <div class="container-fluid" id="content">
                 <?php
-                    if (isset($_SESSION['TempSession'])) {
-                        readfile('../views/partials/_newPassword.html');
+                    if (isset($_SESSION['TempValidarSession'])) {
+                        echo
+                        '<div class="animate-bottom sub-container" id="div-inicio-sesion">
+                        <div class="container">
+                            <h1>Cuenta activada</h1>
+                            <div class="card animate-bottom">
+                                <hr class="divider-base">
+                                <div class="row">
+                                    <div class="card-body login">
+                                        <div class="row">
+                                            <h2 style="text-align : center">Cuenta validada</h2>
+                                            <button class="btn btn-default" id="aceptarValidarCuenta">Aceptar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>';
                     } else{
                         echo
                         '<div class="animate-bottom sub-container" id="div-inicio-sesion">
@@ -67,5 +81,5 @@ if (isset($_SESSION['TempSession'])) {
 <script src="../scripts/ajax.js?v=1.000"></script>
 <script src="../scripts/validation.js?v=1.000"></script>
 <script src="../scripts/zero.js?v=1.001"></script>
-<script src="../scripts/resetPassword.js?v=1.002"></script>
+<script src="../scripts/validarCuenta.js?v=1.002"></script>
 </html>

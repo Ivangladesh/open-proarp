@@ -1,95 +1,196 @@
 <?php require 'PHPMailer/PHPMailerAutoload.php';?>
 <?php
-
+    session_start();
     include('dbconn.php');
+    include('recaptcha.php');
+    include('email-template.php');
     date_default_timezone_set('America/Mexico_City');
+
+    $resetPath = '/proarp/views/reset.php';
+    $protocol = 'https://';
+
+    if($_SERVER['SERVER_NAME'] == 'localhost'){
+        $resetPath = '/views/reset.php';
+        $protocol = 'http://';
+    }
+
     $data = json_decode(file_get_contents('php://input'), true);
     if(isset($data['Action']) && !empty($data['Action'])) {
-    $_SESSION['LAST_ACTIVITY'] = time();
+    
     $action = $data['Action'];
         switch($action) {
             case 'EnviarCorreo' : _DummyCorreo();//EnviarCorreo();
             break;
+            case 'ActualizarContrasena' : ActualizarContrasena();//EnviarCorreo();
+            break;
         }
     }
     if(isset($_GET['token'])){
-
+        $_SESSION['TempSession'] = $_GET['token'];
+        $response = new stdClass();
         list($tipo, $username, $nombreCompleto, $id, $hoy) = explode('|', base64_decode($_GET['token']));
         $today = strtotime($hoy); 
         $secondDate = date("Y-m-d H:i:s");
         $from_time = strtotime($secondDate);
-
+        if(round(round(abs($today - $from_time) / 60,2)) <= 1440){
+            if(ValidarCodigoTemporal($username, $_GET['token'])){
+                header('Location: '. $protocol.$_SERVER['SERVER_NAME'].$resetPath);
+            } else{
+                echo "Datos inválidos";
+            }
+            
+        } else{
+            echo "El código ha expirado";
+            session_unset();
+            session_destroy();
+        }
         echo round(round(abs($today - $from_time) / 60,2)). " minute";
 
     }
 
     function _DummyCorreo (){
+        $response = new stdClass();
+        $response-> callback = 'EnviarCorreo';
         BloquearUsuario();
         $stringToken = ObtenerDatosUsuario();
-        $link = "https://ivangladesh.000webhostapp.com/php/email.php/?token=" . $stringToken;
-        echo $link;
+        if($stringToken == null){
+            $response-> data = "Token vacío";
+            $response-> ok = false;
+        } else{
+            $link = "https://".$_SERVER['SERVER_NAME']."/php/email.php/?token=".$stringToken;
+            $response-> data = ResetPassword($link);
+            $response-> ok = true;
+        }
+        echo ResetPassword($link);
     }
 
-    function GuardarCodigoTemporal (){
+    function ValidarCodigoTemporal ($email, $token){
+        $response = false;
+        $data = json_decode(file_get_contents('php://input'), true);
+        $pdo = OpenCon();
+        $sp = "CALL spValidarCuenta('$email','$token')";
+        try {
+            $statement=$pdo->prepare($sp);
+            $statement->execute();
+            if($statement->rowCount() > 0){
+                $response = true;
+            } else{
+                $response = false;
+            }
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
+    
+        return $response;
+    }
 
+    function GuardarCodigoTemporal ($email, $token, $date){
+        $response = false;
+        $data = json_decode(file_get_contents('php://input'), true);
+        $pdo = OpenCon();
+        $sp = "CALL spRegistrarCodigoTemporal('$email','$token','$date')";
+        try {
+            $statement=$pdo->prepare($sp);
+            $statement->execute();
+            if($statement->rowCount() > 0){
+                $response = true;
+            } else{
+                $response = false;
+            }
+        } catch (PDOException $e) {
+            print "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
+    
+        return $response;
     }
 
     function _EnviarCorreo()
     {
-        $tomail="ivangladesh@gmail.com";
-        $subject="Password Reset";
-        $headers  = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'To: '.$tomail."\r\n";
-        $link="https://ivangladesh.000webhostapp.com/views/reset_password.php";
-        $htmlContent = file_get_contents("email_template.html");
-        $message="<html><head></head><body><p>Click on the link below to reset your password</p><br><br><a href='".$link."'>Click here to reset your password</a></body></html>";
-        if(mail($tomail,$subject,$message,$headers))
-        {
-            $myobj=array('status'=>'success','message'=>'Check your mail to reset password!!');
-            echo json_encode($myobj);
+        $response = new stdClass();
+        $response->callback = 'EnviarCorreo';
+        $data = json_decode(file_get_contents('php://input'), true);
+        $reCaptchaToken = $data['ReCaptchaToken'];
+        if(Recaptcha($reCaptchaToken)){
+            try{
+                $tomail = $data['Email'];
+                if($tomail == 'ivan@gmail.com'){
+                    $tomail="ivangladesh@gmail.com";
+                }
+                $subject = "Reestablecer contraseña";
+                $headers = 'MIME-Version: 1.0' . "\r\n";
+                $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+                $headers .= 'To: '.$tomail."\r\n";
+                $headers .= 'From: proarp@'.$_SERVER['SERVER_NAME'];
+                $stringToken = ObtenerDatosUsuario();
+                if($stringToken == null){
+                    $response-> data = "Token vacío";
+                    $response-> ok = false;
+                }
+                $link = 'https://'.$_SERVER['SERVER_NAME']."/php/email.php/?token=".$stringToken;
+                $message =  ResetPassword($link);
+                if(mail($tomail,$subject,$message,$headers))
+                {
+                    $response-> data = "Correo enviado";
+                    $response-> ok = true;
+                }
+                else{
+                    $response-> data = "Ha ocurrido un error";
+                    $response-> ok = false;
+                }
+            } catch (PDOException $e) {
+                echo "¡Error!: " . $e->getMessage() . "<br/>";
+            }
         }
         else{
-            $myobj=array('status'=>'error','message'=>'Invalid e-mail!!');
-            echo json_encode($myobj);
+            $response-> data = "Validación recaptcha fallida";
+            $response-> ok = false;
         }
+        echo json_encode($response);
     }
 
     function ActualizarContrasena(){
         $data = json_decode(file_get_contents('php://input'), true);
-        $pdo = OpenCon();
-        $email = $data['Email'];
-        $password = $data['Password'];
-        $caracteres = "/[#$^+=!*()@%&]/";
-        $stringPassword = base64_decode($password);
-        if(strlen($stringPassword) < 8){
+        $reCaptchaToken = $data['ReCaptchaToken'];
+        if(Recaptcha($reCaptchaToken)){
+            $pdo = OpenCon();
+            $email = $data['Email'];
+            $password = $data['Contrasena'];
+            $caracteres = "/[#$^+=!*()@%&]/";
+            $stringPassword = base64_decode($password);
+            $response = new stdClass();
             $response-> callback = 'ActualizarContrasena';
-            $response-> data = "La contraseña debe tener una longitud mínima de 8 caracteres.";
-            $response-> ok = false;
-            echo json_encode($response);
-        } else if(!preg_match($caracteres, $stringPassword)){
-            $response-> callback = 'ActualizarContrasena';
-            $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
-            $response-> ok = false;
-            echo json_encode($response);
-        } else{
-            $procedure = "CALL spActualizarContrasena('$email', '$password')";
-            try {
-                $statement=$pdo->prepare($procedure);
-                $statement->execute();
-                if($statement->rowCount() > 0){
-                    $user = $statement->fetch();
-                    $response-> data = $user[0];
-                    $response-> ok = true;
-                    } else{
-                    $response-> data = "Ha ocurrido un error, consulte al administrador.";
-                    $response-> ok = false;
+            if(strlen($stringPassword) < 8){
+                $response-> data = "La contraseña debe tener una longitud mínima de 8 caracteres.";
+                $response-> ok = false;
+            } else if(!preg_match($caracteres, $stringPassword)){
+                $response-> data = "La contraseña debe tener por lo menos un caracter especial: # $ ^ + = ! * ( ) @ % &.";
+                $response-> ok = false;
+            } else{
+                $procedure = "CALL spActualizarContrasena('$email', '$password')";
+                try {
+                    $statement=$pdo->prepare($procedure);
+                    $statement->execute();
+                    if($statement->rowCount() > 0){
+                        $count = $statement->rowCount();
+                        $response->data = $count;
+                        $response->ok = true;
+                        } else{
+                        $response-> data = "Ha ocurrido un error, consulte al administrador.";
+                        $response-> ok = false;
+                        }
+                    } catch (PDOException $e) {
+                        print "¡Error!: " . $e->getMessage() . "<br/>";
+                        die();
                     }
-                } catch (PDOException $e) {
-                    print "¡Error!: " . $e->getMessage() . "<br/>";
-                    die();
-                }
+            }
+        }else{
+            $response-> data = "Validación recaptcha fallida";
+            $response-> ok = false;
         }
+        session_unset();
+        session_destroy();
         echo json_encode($response);
     }
 
@@ -98,10 +199,9 @@
 
     }
 
-    function ObtenerDatosUsuario () {
+    function ObtenerDatosUsuario() {
         $data = json_decode(file_get_contents('php://input'), true);
-        //$email = $data['Email'];
-        $email = "ivan@gmail.com";
+        $email = $data['Email'];
         $response = "";
           if (!empty($email)) {
             $pdo = OpenCon();
@@ -111,7 +211,10 @@
               $statement->execute();
               if($statement->rowCount() > 0){
                 $user = $statement->fetch();
-                $response = GenerarToken($user);
+                $response = GenerarTokenEmail($user);
+                if($response == false){
+                    return null;
+                }
               }
             } catch (PDOException $e) {
                 print "¡Error!: " . $e->getMessage() . "<br/>";
@@ -122,31 +225,23 @@
 
       }
 
-    function GenerarToken ($r){
+    function GenerarTokenEmail ($r){
         $id = $r['UsuarioId'];
         $username = $r['Email'];
         $nombreCompleto = $r['NombreCompleto'];
         $tipo = $r['TipoUsuarioId'];
         $response = null;
         if (!empty($id) && !empty($username) && !empty($nombreCompleto) && !empty($tipo)) {
-          $pdo = OpenCon();
-          $hoy = date("Y-m-d H:i:s");
-          return $token = base64_encode($tipo . '|' . $username . '|' . $nombreCompleto . '|'  . $id . '|' . $hoy);
-          $insert = "CALL spActualizarToken('$token', '$id')";
-          try {
-              $statement=$pdo->prepare($insert);
-              $statement->execute();
-              if($statement->rowCount() > 0){
-                  $count = $statement->rowCount();
-                  $response = $token;
-                }
-            } catch (PDOException $e) {
-                print "¡Error!: " . $e->getMessage() . "<br/>";
-                die();
+            $pdo = OpenCon();
+            $hoy = date("Y-m-d H:i:s");
+            $token = base64_encode($tipo . '|' . $username . '|' . $nombreCompleto . '|'  . $id . '|' . $hoy);
+            $ok = GuardarCodigoTemporal($username,$token,$hoy);
+            if(!$ok){
+                return false;
+            } else{
+                return $token;
             }
-        }
-        return $response;
-        
+        }        
       }
 
 
