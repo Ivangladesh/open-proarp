@@ -286,7 +286,7 @@
     '$telefonoAlternativo',
     '$nombreContacto',
     '$descripcion',
-    '$notas',
+    '$notas'
     )";
     $response = new stdClass();
     $response-> callback = 'InsertarProveedor';

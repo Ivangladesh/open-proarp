@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
         valid.setupForm(frmNuevoProveedor);
         document.getElementById("btnAceptarNuevoProveedor").addEventListener('click', function(e){
             if(valid.form(frmNuevoProveedor)){
-                //RegistrarMensaje();
+                InsertarProveedor();
             }
             e.preventDefault();
         });
@@ -171,7 +171,28 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function InsertarProveedor() {
-        let datos = {Action: "InsertarProveedor"};
+        let razonSocial = document.getElementById('txtRazonNuevoProv').value;
+        let marcaComercial = document.getElementById('txtMarcaNuevoProv').value;
+        let rfc = document.getElementById('txtRFCNuevoProv').value;
+        let direccion = document.getElementById('txtDireccionNuevoProv').value;
+        let telefono = document.getElementById('txtTelefonoNuevoProv').value;
+        let telefonoAlternativo = document.getElementById('txtTelefonoAltNuevoProv').value;
+        let nombreContacto = document.getElementById('txtContactoNuevoProv').value;
+        let descripcion = document.getElementById('txtDescripcionNuevoProv').value;
+        let notas = document.getElementById('txtNotasNuevoProv').value;
+
+        let datos = {
+            Action: "InsertarProveedor",
+            RazonSocial :razonSocial,
+            MarcaComercial : marcaComercial,
+            RFC : rfc,
+            Direccion : direccion,
+            Telefono : telefono,
+            TelefonoAlternativo : telefonoAlternativo,
+            NombreContacto : nombreContacto,
+            Descripcion : descripcion,
+            Notas : notas
+        };
         call.post("../php/inventario.php", JSON.stringify(datos), handler, true);
     }
 
@@ -493,6 +514,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     alerta.notif('ok', 'Registro realizado correctamente.', 3000);
                     ObtenerProductos();
                     document.getElementById("mdlNuevoProducto").style.display = "none";
+                } else{
+                    alerta.notif('fail', msgFail, 3000);
+                }
+                break;
+            case "InsertarProveedor":
+                if(e.ok){
+                    alerta.notif('ok', 'Registro realizado correctamente.', 3000);
+                    ObtenerProveedores();
+                    document.getElementById("mdlNuevoProveedor").style.display = "none";
                 } else{
                     alerta.notif('fail', msgFail, 3000);
                 }
