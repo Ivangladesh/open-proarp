@@ -64,11 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
     });
 
-    document.getElementById("tabNotificaciones").addEventListener('click', function (e) {
-        enviarCorreo();
-        e.preventDefault();
-    });
-
     document.getElementById("tabUsuarios").addEventListener('click', function (e) {
         ObtenerUsuarios();
         e.preventDefault();

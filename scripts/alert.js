@@ -19,7 +19,8 @@ alerta.notif = function (type, data, time) {
     } else if (type === "info") {
         divNot.classList.add("notification-info");
     }
-    divNot.innerHTML = `<p style="display:inline">${data} &nbsp </p><span id='closeAlert' style="cursor:pointer;float: right;" onclick='this.parentNode.parentNode.parentNode.removeChild(this.parentNode.parentNode); return false;'>x</span>`;
+    divNot.innerHTML = `<p style="display:inline">${data} &nbsp </p>
+    <span id='closeAlert' style="cursor:pointer;float: right;" onclick='this.parentNode.style.display = "none"'>x</span>`;
     document.getElementById("content").appendChild(divNot);
     setTimeout(function () {
         divNot.remove();
