@@ -1,7 +1,7 @@
 <div class="modal fade animate-bottom" id="mdlNuevoProveedor" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <span style="cursor:pointer;float: right;" onclick="document.getElementById('mdlDetalleProveedor').style.display = 'none'">x</span>
+            <span style="cursor:pointer;float: right;" onclick="document.getElementById('mdlNuevoProveedor').style.display = 'none'">x</span>
         </div>
         <div class="container">
             <div class="card">
@@ -14,13 +14,13 @@
                         <div class="row">
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtRazonNuevoProv" style="display:block">Razón social</label>
+                                    <label for="txtRazonNuevoProv" style="display:block">Razón social *</label>
                                     <input type="text" data-id="text" class="form-control input-form" id="txtRazonNuevoProv">
                                 </div>
                             </div>
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtMarcaNuevoProv" style="display:block">Marca comercial</label>
+                                    <label for="txtMarcaNuevoProv" style="display:block">Marca comercial *</label>
                                     <input type="text" data-id="text" class="form-control input-form" id="txtMarcaNuevoProv">
                                 </div>
                             </div>
@@ -28,13 +28,13 @@
                         <div class="row">
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtRFCNuevoProv" style="display:block">RFC</label>
+                                    <label for="txtRFCNuevoProv" style="display:block">RFC *</label>
                                     <input type="text" data-id="rfc" class="form-control input-form" id="txtRFCNuevoProv">
                                 </div>
                             </div>
                             <div class="frm-col-2">
                                 <div class="form-group">
-                                    <label for="txtDireccionNuevoProv" style="display:block">Dirección</label>
+                                    <label for="txtDireccionNuevoProv" style="display:block">Dirección *</label>
                                     <input type="text" data-id="text" class="form-control input-form" id="txtDireccionNuevoProv">
                                 </div>
                             </div>
@@ -42,19 +42,19 @@
                         <div class="row">
                             <div class="frm-col-3-3">
                                 <div class="form-group">
-                                    <label for="txtTelefonoNuevoProv" style="display:block">Teléfono</label>
+                                    <label for="txtTelefonoNuevoProv" style="display:block">Teléfono *</label>
                                     <input type="text" data-id="telefono" class="form-control input-form" id="txtTelefonoNuevoProv">
                                 </div>
                             </div>
                             <div class="frm-col-3-3">
                                 <div class="form-group">
-                                    <label for="txtTelefonoAltNuevoProv" style="display:block">Teléfono alternativo</label>
+                                    <label for="txtTelefonoAltNuevoProv" style="display:block">Teléfono alternativo *</label>
                                     <input type="text" data-id="telefono" class="form-control input-form" id="txtTelefonoAltNuevoProv">
                                 </div>
                             </div>
                             <div class="frm-col-3-3">
                                 <div class="form-group">
-                                    <label for="txtContactoNuevoProv" style="display:block">Contacto</label>
+                                    <label for="txtContactoNuevoProv" style="display:block">Contacto *</label>
                                     <input type="text" data-id="text" class="form-control input-form" id="txtContactoNuevoProv">
                                 </div>
                             </div>
@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="frm-col-1">
                                 <div class="form-group">
-                                    <label for="txtDescripcionNuevoProv" style="display:block">Descripción:</label>
+                                    <label for="txtDescripcionNuevoProv" style="display:block">Descripción *</label>
                                     <textarea rows="5" class="form-control input-form" id="txtDescripcionNuevoProv"></textarea>
                                 </div>
                             </div>
@@ -70,10 +70,14 @@
                         <div class="row">
                             <div class="frm-col-1">
                                 <div class="form-group">
-                                    <label for="txtNotasNuevoProv" style="display:block">Notas:</label>
+                                    <label for="txtNotasNuevoProv" style="display:block">Notas *</label>
                                     <textarea rows="5" class="form-control input-form" id="txtNotasNuevoProv"></textarea>
                                 </div>
                             </div>
+                        </div>
+                        <div class="frm-col-1"><label style="display:block">
+                            <small> * Campo obligatorio</small>
+                            </label>
                         </div>
                         <div class="row">
                             <div class="frm-col-1">

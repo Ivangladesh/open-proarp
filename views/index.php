@@ -22,6 +22,13 @@ if (isset($_SESSION['SessionStorage'])) {
 
 <body>
     <nav>
+        <?php
+            if (isset($_SESSION['SessionStorage'])) {
+            echo '<ul class="" style="justify-content: right;display: flex; flex-wrap: wrap;">
+                <li><small style="display: flex;">Sesión iniciada como:&nbsp<strong>'.$nombre.'</strong></small>
+                </ul>';
+            }
+        ?>
         <ul class="menu">
             <li class="logo"><img class="img-menu" src="../assets/proarp-arrow-low-min.png"></img></li>
             <?php
@@ -39,6 +46,7 @@ if (isset($_SESSION['SessionStorage'])) {
                     echo '<li class="item"><a href="#" class="nav-link" id="administrador" data-id="div-administrador">Administrador</a></li>';
                 }
                 echo '<li class="item button secondary"><a href="#" onclick="cerrarSesion()">Cerrar sesión</a></li>';
+                echo '<li class="item button secondary">'.$nombre.'</li>';
             } else {
                 echo
                 '<li class="item button"><a href="#" class="nav-link" id="login" data-id="div-inicio-sesion">Iniciar sesión</a></li>

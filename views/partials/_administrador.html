@@ -80,12 +80,28 @@
                     <div id="usuarios" class="tab-content" data-visible="false">
                         <h3>Usuarios</h3>
                         <hr class="divider-base">
+                        <div class="row">
+                            <div class="frm-col-2">
+                                <button id="agregarUsuario">Agregar usuario</button>
+                            </div>
+                        </div>
                         <div>
-                            <button id="agregarUsuario">Agregar usuario</button>
+                            
                         </div>
                         <br>
                         <hr class="divider-base">
                         <div>
+                            <div class="row">
+                                <div class="frm-col-1">
+                                    <div class="form-group">
+                                        <label for="txtBuscarUsuario" style="display:block">Buscar un usuario</label>
+                                        <input type="text" data-id="text" class="form-control input-form" id="txtBuscarUsuario">
+                                    </div>
+                                    <div class="form-group">
+                                        <button id="buscarUsuario">Buscar usuario</button>
+                                    </div>
+                                </div>
+                            </div>
                             <table style="width:100%" id="tblUsuarios" class="table table-dark">
                                 <thead>
                                     <tr>
